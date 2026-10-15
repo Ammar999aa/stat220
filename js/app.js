@@ -109,6 +109,8 @@ window.App = (function () {
     const chapters = {};
     C.topicOrder.forEach((id) => { const t = C.topics[id]; (chapters[t.ch] = chapters[t.ch] || []).push(t); });
     let h = '<div class="page wide"><h1>Learn</h1><p class="lead">Each page explains one idea in plain words, with examples. Practice problems sit right after each new idea. Do them as you read: the first one is always a quick warm-up.</p>';
+    const nf = Store.flagCount();
+    h += '<a class="card tech-card" href="#/flagged"><b>⚑ Flagged boxes (' + nf + ')</b><div class="muted small">' + (nf ? 'Revisit the definitions, theorems and examples you flagged.' : 'Click ⚑ on any box to save it here for later.') + '</div></a>';
     if (C.technique) h += '<a class="card tech-card" href="#/technique"><b>✍️ ' + esc(C.technique.title) + '</b><div class="muted small">' + esc(C.technique.summary || '') + '</div></a>';
     Object.keys(chapters).sort().forEach((ch) => {
       h += '<h2>Chapter ' + ch + ' · ' + CH_TITLES[ch] + '</h2><div class="topic-grid">';
@@ -123,17 +125,66 @@ window.App = (function () {
     return h + '</div>';
   }
 
-  function renderBlocks(blocks, counter) {
+  const KIND_NAME = { def: 'Definition', thm: 'Theorem', ex: 'Example', note: 'Note', warn: 'Watch out' };
+
+  // Flag keys for the boxes of a page (`src` is a topic id or 'technique'). A key depends on the box's
+  // kind, title and how many same-kind same-title boxes come before it, so editing text keeps flags.
+  function boxKeys(src, blocks) {
+    const seen = {};
     return blocks.map((b) => {
+      if (b.type !== 'box') return null;
+      const base = b.kind + '|' + (b.title || '');
+      seen[base] = (seen[base] || 0) + 1;
+      return src + '|' + hash(base + '|' + seen[base]);
+    });
+  }
+  function hash(str) { let h = 5381; for (let i = 0; i < str.length; i++) h = ((h * 33) ^ str.charCodeAt(i)) >>> 0; return h.toString(36); }
+
+  function boxHtml(b, key, extra) {
+    const on = Store.isFlagged(key);
+    return '<div class="box ' + b.kind + '" id="b-' + key.replace(/[^a-z0-9]/gi, '-') + '"><div class="box-title"><span>' + KIND_NAME[b.kind] + (b.title ? ' · ' + fmtInline(b.title) : '') + '</span>' + (extra || '') +
+      '<button class="flag-btn' + (on ? ' on' : '') + '" data-go="flag" data-key="' + esc(key) + '" title="' + (on ? 'Unflag' : 'Flag to revisit later') + '" aria-pressed="' + on + '">⚑</button></div><div class="prose">' + fmt(b.html) + '</div></div>';
+  }
+
+  function renderBlocks(blocks, counter, src) {
+    const keys = boxKeys(src, blocks);
+    return blocks.map((b, i) => {
       if (b.type === 'html') return '<div class="prose">' + fmt(b.html) + '</div>';
       if (b.type === 'h') return '<h2 id="' + slug(b.text) + '">' + esc(b.text) + '</h2>';
-      if (b.type === 'box') {
-        const kindName = { def: 'Definition', thm: 'Theorem', ex: 'Example', note: 'Note', warn: 'Watch out' }[b.kind];
-        return '<div class="box ' + b.kind + '"><div class="box-title">' + kindName + (b.title ? ' · ' + fmtInline(b.title) : '') + '</div><div class="prose">' + fmt(b.html) + '</div></div>';
-      }
+      if (b.type === 'box') return boxHtml(b, keys[i]);
       if (b.type === 'prob') { counter.n++; return Problem.html(b.id, { label: 'Practice ' + counter.n }); }
       return '';
     }).join('');
+  }
+
+  // All flagged boxes, in course order
+  function flaggedBoxes() {
+    const s = Store.me(); const out = [];
+    const scan = (src, blocks) => boxKeys(src, blocks).forEach((k, i) => { if (k && s.flags[k]) out.push({ src, key: k, b: blocks[i] }); });
+    if (C.technique) scan('technique', C.technique.blocks);
+    C.topicOrder.forEach((id) => scan(id, C.topics[id].blocks));
+    return out;
+  }
+
+  function pageFlagged(q) {
+    const all = flaggedBoxes();
+    const kinds = Object.keys(KIND_NAME).filter((k) => all.some((x) => x.b.kind === k));
+    const list = q.k ? all.filter((x) => x.b.kind === q.k) : all;
+    let h = '<div class="page"><div class="crumbs"><a href="#/learn">Learn</a></div><h1>⚑ Flagged</h1>' +
+      '<p class="lead">Definitions, theorems, examples and notes you flagged on the Learn pages. Click ⚑ on any box to add or remove it.</p>';
+    if (!all.length) return h + '<div class="card"><p class="muted">Nothing flagged yet. Open a <a href="#/learn">Learn</a> page and click the ⚑ in the corner of a box you want to come back to.</p></div></div>';
+    h += '<div class="toolbar"><a class="btn' + (q.k ? '' : ' primary') + '" href="#/flagged">All (' + all.length + ')</a>' +
+      kinds.map((k) => '<a class="btn' + (q.k === k ? ' primary' : '') + '" href="#/flagged?k=' + k + '">' + KIND_NAME[k] + ' (' + all.filter((x) => x.b.kind === k).length + ')</a>').join('') + '</div>';
+    let cur = null;
+    list.forEach((x) => {
+      if (x.src !== cur) {
+        cur = x.src;
+        h += '<h2>' + (x.src === 'technique' ? '<a href="#/technique">' + esc(C.technique.title) + '</a>' : '<a href="#/learn/' + x.src + '">' + esc(topicTitle(x.src)) + '</a>') + '</h2>';
+      }
+      const href = (x.src === 'technique' ? '#/technique' : '#/learn/' + x.src) + '?b=' + encodeURIComponent(x.key);
+      h += boxHtml(x.b, x.key, '<a class="box-ctx" href="' + href + '" title="Show it on its page">in context ↗</a>');
+    });
+    return h + '</div>';
   }
   function slug(s) { return 's-' + String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
 
@@ -148,7 +199,7 @@ window.App = (function () {
     return '<div class="page"><div class="crumbs"><a href="#/learn">Learn</a> › Chapter ' + t.ch + ' · ' + CH_TITLES[t.ch] + '</div>' +
       '<h1><span class="topic-num">' + t.id + '</span> ' + esc(t.title) + '</h1>' +
       '<div class="topic-meta">' + bar(m) + '<span class="muted small">' + pct(m) + ' mastery (practice + drills)</span></div>' + toc +
-      renderBlocks(t.blocks, { n: 0 }) +
+      renderBlocks(t.blocks, { n: 0 }, id) +
       ((C.drills[id] || []).length ? '<div class="card end-card">Done reading? <a href="#/drills?t=' + id + '">Do the ' + C.drills[id].length + ' drills for this topic →</a></div>' : '') +
       '<div class="pager">' + (prev ? '<a href="#/learn/' + prev + '">← ' + esc(topicTitle(prev)) + '</a>' : '<span></span>') +
       (next ? '<a href="#/learn/' + next + '">' + esc(topicTitle(next)) + ' →</a>' : '<span></span>') + '</div></div>';
@@ -156,7 +207,7 @@ window.App = (function () {
 
   function pageTechnique() {
     const t = C.technique; if (!t) return notFound();
-    return '<div class="page"><div class="crumbs"><a href="#/learn">Learn</a></div><h1>' + esc(t.title) + '</h1>' + renderBlocks(t.blocks, { n: 0 }) + '</div>';
+    return '<div class="page"><div class="crumbs"><a href="#/learn">Learn</a></div><h1>' + esc(t.title) + '</h1>' + renderBlocks(t.blocks, { n: 0 }, 'technique') + '</div>';
   }
 
   function pageDrills(q) {
@@ -445,6 +496,10 @@ window.App = (function () {
       delete gradeState[id];
       toast('Saved ' + score + '/' + ex.total + (gained ? ' · +' + gained + ' XP' : ''));
       location.hash = '#/exams';
+    } else if (go === 'flag') {
+      const on = Store.toggleFlag(b.dataset.key);
+      document.querySelectorAll('.flag-btn').forEach((x) => { if (x.dataset.key === b.dataset.key) { x.classList.toggle('on', on); x.setAttribute('aria-pressed', on); x.title = on ? 'Unflag' : 'Flag to revisit later'; } });
+      toast(on ? 'Flagged ⚑' : 'Unflagged');
     } else if (go === 'print') window.print();
     else if (go === 'switch') choosePlayer(b.dataset.name);
     else if (go === 'export') {
@@ -489,6 +544,7 @@ window.App = (function () {
     if (!s) { pill.textContent = ''; return; }
     const xp = Store.totalXP();
     pill.innerHTML = 'Lv ' + XP.level(xp).n + ' · <b>' + xp + '</b> XP';
+    document.getElementById('flagCount').textContent = Store.flagCount() || '';
     document.getElementById('sidebarFoot').innerHTML = esc(s.name) + ' · 🔥 ' + Store.streak();
   }
   setInterval(tickTimer, 1000);
@@ -533,6 +589,7 @@ window.App = (function () {
     else if (a === 'learn' && !b) html = pageLearn();
     else if (a === 'learn') html = pageTopic(b);
     else if (a === 'technique') { html = pageTechnique(); nav = 'learn'; }
+    else if (a === 'flagged') html = pageFlagged(q);
     else if (a === 'drills' && !b) html = pageDrills(q);
     else if (a === 'drills') html = pageDrill(b);
     else if (a === 'homework' && !b) html = pageHomeworkList();
@@ -552,6 +609,9 @@ window.App = (function () {
     updateChrome(); tickTimer();
     if (q.p) {
       const el = document.getElementById('p-' + q.p);
+      if (el) { el.scrollIntoView({ block: 'center' }); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 2000); }
+    } else if (q.b) {
+      const el = document.getElementById('b-' + q.b.replace(/[^a-z0-9]/gi, '-'));
       if (el) { el.scrollIntoView({ block: 'center' }); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 2000); }
     } else if (q.t) {
       const el = document.getElementById('dg-' + q.t.replace('.', '-'));

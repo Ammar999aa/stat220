@@ -11,7 +11,7 @@ window.Store = (function () {
       const raw = localStorage.getItem(KEY);
       if (raw) {
         const r = JSON.parse(raw);
-        if (r && r.players) return r;
+        if (r && r.players) { Object.values(r.players).forEach(fixup); return r; }
       }
     } catch (e) { console.warn('Could not read saved progress', e); }
     return { current: null, players: {} };
@@ -22,11 +22,11 @@ window.Store = (function () {
 
   const keyOf = (name) => String(name).trim().toLowerCase();
   function blank(name) {
-    return { name, created: Date.now(), updated: Date.now(), attempts: {}, events: [], days: {}, exams: {}, examRun: null };
+    return { name, created: Date.now(), updated: Date.now(), attempts: {}, events: [], days: {}, exams: {}, examRun: null, flags: {} };
   }
   function fixup(s) {
     s.attempts = s.attempts || {}; s.events = s.events || []; s.days = s.days || {};
-    s.exams = s.exams || {}; if (s.examRun === undefined) s.examRun = null;
+    s.exams = s.exams || {}; s.flags = s.flags || {}; if (s.examRun === undefined) s.examRun = null;
     return s;
   }
 
@@ -89,6 +89,16 @@ window.Store = (function () {
     save();
     return { gained, r, improved: !prev || RANK[r] > RANK[prev.r] };
   }
+
+  // Flagged Learn blocks: flags[key] = time flagged
+  function isFlagged(key) { const s = me(); return !!(s && s.flags[key]); }
+  function toggleFlag(key) {
+    const s = me(); if (!s) return false;
+    if (s.flags[key]) delete s.flags[key]; else s.flags[key] = Date.now();
+    save();
+    return !!s.flags[key];
+  }
+  function flagCount() { const s = me(); return s ? Object.keys(s.flags).length : 0; }
 
   function status(pid) { const s = me(); return s && s.attempts[pid] ? s.attempts[pid].r : null; }
 
@@ -236,6 +246,6 @@ window.Store = (function () {
   return {
     me, localPlayers, setPlayer, save, on, record, status, totalXP, weekXP, solved, attempted, streak,
     mastery, masteryOf, overallMastery, topicProbIds, examBest, startExam, cancelExam, finishExam,
-    exportJSON, importJSON, resetMe, summary, dayKey, Sync, keyOf,
+    exportJSON, importJSON, resetMe, summary, dayKey, Sync, keyOf, isFlagged, toggleFlag, flagCount,
   };
 })();

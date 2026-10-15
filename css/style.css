@@ -313,3 +313,15 @@ input:focus { outline: 2px solid var(--accent-soft); border-color: var(--accent)
 .fig .odot { fill: var(--surface); stroke: var(--accent); stroke-width: 1.5; }
 .fig .t-acc { fill: var(--accent); }
 .fig .t-warn { fill: var(--warn); }
+.fig .t-muted { fill: var(--muted); }
+.prob-num .also { font-weight: 500; font-size: .78rem; margin-left: 6px; }
+
+/* Flagged boxes */
+.box-title { display: flex; align-items: center; gap: 8px; }
+.box-title > span:first-child { flex: 1; }
+.flag-btn { background: none; border: 0; cursor: pointer; font-size: 1rem; line-height: 1; padding: 2px 4px; border-radius: 6px; color: var(--muted); opacity: .45; }
+.flag-btn:hover { opacity: 1; background: var(--surface-2); }
+.flag-btn.on { color: var(--warn); opacity: 1; }
+.box-ctx { font-weight: 500; text-transform: none; letter-spacing: 0; font-size: .78rem; }
+.box.flash { animation: flash 2s; }
+.nav-count { font-size: .75rem; color: var(--muted); font-weight: 600; margin-left: 4px; }
