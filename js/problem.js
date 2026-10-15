@@ -165,14 +165,14 @@ window.Problem = (function () {
   }
 
   function check(el, p) {
-    let allOk = true, parseErr = false, empty = false;
+    let allOk = true, parseErr = false, setErr = false, empty = false;
     p.a.parts.forEach((spec, i) => {
       let input;
       if (spec.kind === 'choice') input = el.querySelector('.choice-group[data-part="' + i + '"]').dataset.sel;
       else input = el.querySelector('input[data-part="' + i + '"]').value;
       if (input === undefined || String(input).trim() === '') { empty = true; allOk = false; setMark(el, i, null); return; }
       const r = Check.part(spec, input);
-      if (r.msg === 'parse') parseErr = true;
+      if (r.msg === 'parse') { parseErr = true; if (spec.kind !== 'choice' && /[{}]/.test(input)) setErr = true; }
       if (!r.ok) allOk = false;
       setMark(el, i, r.ok);
     });
@@ -185,7 +185,7 @@ window.Problem = (function () {
       const g = el.querySelector('.grade'); if (g) g.classList.remove('hidden');
     } else {
       fb.className = 'ans-feedback bad';
-      fb.textContent = empty ? 'Fill in every box first.' : parseErr ? "Couldn't read that — see “Answer format”." : '✗ Not quite. Re-check your work, or take a hint.';
+      fb.textContent = empty ? 'Fill in every box first.' : setErr ? 'This box needs a number, not a set. |A| means how many elements A has.' : parseErr ? "Couldn't read that — see “Answer format”." : '✗ Not quite. Re-check your work, or take a hint.';
     }
   }
   function setMark(el, i, ok) {

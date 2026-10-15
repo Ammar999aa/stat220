@@ -313,5 +313,3 @@ input:focus { outline: 2px solid var(--accent-soft); border-color: var(--accent)
 .fig .odot { fill: var(--surface); stroke: var(--accent); stroke-width: 1.5; }
 .fig .t-acc { fill: var(--accent); }
 .fig .t-warn { fill: var(--warn); }
-.fig .t-muted { fill: var(--muted); }
-.prob-num .also { font-weight: 500; font-size: .78rem; margin-left: 6px; }

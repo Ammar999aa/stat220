@@ -26,7 +26,7 @@ P({ k: 'g', lvl: 2, q: R`A box has red and blue balls; you draw with replacement
 ]);
 
 DRILLS('1.1', [
-  { k: '01', lvl: 1, q: R`Die: $A = \{1,2,3\}$, $B = \{3,4\}$. $|A\cup B|$?`, h: [R`Don't double-count 3.`], a: '4', s: R`$\{1,2,3,4\}$.` },
+  { k: '01', lvl: 1, q: R`Die: $A = \{1,2,3\}$, $B = \{3,4\}$. How many outcomes are in $A\cup B$? (This count is written $|A\cup B|$.) Answer with a number.`, h: [R`First write out $A\cup B$, then count it.`, R`Don't double-count 3.`], a: '4', s: R`$A\cup B = \{1,2,3,4\}$, so $|A\cup B| = 4$. Bars $|\cdot|$ around a set mean "how many elements it has", so the answer is a number, not the set itself. Check: $|A|+|B|-|A\cap B| = 3+2-1 = 4$.` },
   { k: '02', lvl: 1, q: R`$A\cap A^c = ?$`, h: [R`Can an outcome be both in and not in $A$?`], a: { choice: ['∅', 'Ω', 'A'], v: 0 }, s: R`$\emptyset$.` },
   { k: '03', lvl: 1, q: R`Three coin tosses: $|\Omega|$ and the number of outcomes with exactly two heads?`, h: [R`$2^3$; choose positions of heads.`], a: [[R`$|\Omega|$`, '8'], ['two heads', '3']], s: R`$8$ and $\binom32 = 3$.` },
   { k: '04', lvl: 2, q: R`$A_i = [\tfrac1i, 1]$. $\bigcup_iA_i = ?$`, h: [R`Is 0 ever included?`], a: { choice: ['[0,1]', '(0,1]', '{1}'], v: 1 }, s: R`$(0,1]$: every $x>0$ eventually enters, 0 never does.` },
