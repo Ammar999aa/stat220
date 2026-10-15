@@ -1,0 +1,23 @@
+STUDYPLAN({
+  intro: R`Seven days, ordered so each topic builds on the last. The heaviest exam topics (joint densities, transformations, expectation, MGFs) get the most time. Each topic is "done" when its mastery bar reaches about 60%. Expect roughly **4–6 focused hours a day**. If you fall behind, skip the 0-point **C** homework problems and the drill questions you already find easy.`,
+  days: [
+    { date: '2026-10-15', label: 'Thu Oct 15', title: 'Probability basics + random variables',
+      note: 'Fast pass through Ch.1: it is foundational but rarely a full exam question on its own.',
+      items: [{ type: 'topic', id: '1.1' }, { type: 'topic', id: '1.2' }, { type: 'topic', id: '1.3' }, { type: 'topic', id: '1.4' }, { type: 'topic', id: '1.5' }, { type: 'topic', id: '1.6' }, { type: 'hw', id: 'hw1' }, { type: 'topic', id: '2.1' }] },
+    { date: '2026-10-16', label: 'Fri Oct 16', title: 'Densities, distributions, joint distributions',
+      items: [{ type: 'topic', id: '2.2' }, { type: 'topic', id: '2.3' }, { type: 'topic', id: '2.4' }, { type: 'topic', id: '2.5' }, { type: 'topic', id: '2.6' }, { type: 'topic', id: '2.7' }] },
+    { date: '2026-10-17', label: 'Sat Oct 17', title: 'Conditionals and transformations (exam Ex.1–2 material)',
+      items: [{ type: 'topic', id: '2.8' }, { type: 'topic', id: '2.9' }, { type: 'topic', id: '2.10' }, { type: 'topic', id: '2.11' }, { type: 'hw', id: 'hw2' }, { type: 'hw', id: 'hw3' }] },
+    { date: '2026-10-18', label: 'Sun Oct 18', title: 'Expectation, variance, covariance',
+      items: [{ type: 'topic', id: '3.1' }, { type: 'topic', id: '3.2' }, { type: 'topic', id: '3.3' }, { type: 'topic', id: '3.4' }, { type: 'topic', id: '3.5' }, { type: 'hw', id: 'hw4' }] },
+    { date: '2026-10-19', label: 'Mon Oct 19', title: 'Conditional expectation, MGFs, inequalities',
+      note: 'HW6 B is due Wed 8:30 on Blackboard. It is graded, so solve it yourself first and use the app\'s solutions only to check afterwards.',
+      items: [{ type: 'topic', id: '3.6' }, { type: 'topic', id: '3.7' }, { type: 'hw', id: 'hw5' }, { type: 'topic', id: '4.1' }, { type: 'topic', id: '4.2' }, { type: 'topic', id: '4.3' }, { type: 'topic', id: '4.4' }, { type: 'topic', id: '4.5' }, { type: 'hw', id: 'hw6' }, { type: 'exam', id: 'mid2025', mode: 'run' }] },
+    { date: '2026-10-20', label: 'Tue Oct 20', title: 'Timed exams + cheat sheet',
+      note: 'Morning: Mock 1 timed. Afternoon: Mock 2 timed. Evening: write your A4 cheat sheet by hand, then Mock 3 if you have energy.',
+      items: [{ type: 'link', href: '#/technique', text: 'Exam technique page' }, { type: 'exam', id: 'mock1', mode: 'run' }, { type: 'exam', id: 'mock2', mode: 'run' }, { type: 'link', href: '#/cheatsheet', text: 'Cheat sheet: write your own version' }, { type: 'exam', id: 'mock3', mode: 'run' }, { type: 'exam', id: 'mock4', mode: 'practice' }, { type: 'drills', text: 'Drills: "Random missed/partly question" until you are tired' }] },
+    { date: '2026-10-21', label: 'Wed Oct 21', title: 'Exam day (08:30–09:50)',
+      note: 'Light review only: skim your cheat sheet and the "Common mistakes" box. Bring your KAUST ID, the cheat sheet and a simple calculator.',
+      items: [{ type: 'link', href: '#/technique', text: 'Re-read: common mistakes' }] },
+  ],
+});
