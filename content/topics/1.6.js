@@ -39,4 +39,34 @@ DRILLS('1.6', [
   { k: '06', lvl: 2, q: R`Of three coins, one is two-headed and two are fair. Pick one at random and toss it: heads. $P(\text{two-headed})$?`, h: [R`$\frac{1/3}{1/3 + \frac23\cdot\frac12}$.`], a: '1/2', s: R`$\frac{1/3}{2/3} = \frac12$.` },
   { k: '07', lvl: 1, q: R`$P(B\mid A) = 0.5$, $P(B\mid A^c) = 0.2$, $P(A) = 0.4$. Find $P(B)$.`, h: [R`Total probability over $\{A, A^c\}$.`], a: '0.32', s: R`$0.5(0.4) + 0.2(0.6) = 0.32$.` },
   { k: '08', lvl: 2, q: R`Same numbers. Find $P(A\mid B)$.`, h: [R`Bayes.`], a: '0.625', s: R`$\frac{0.2}{0.32} = 0.625$.` },
+  { k: '09', lvl: 3, q: R`Urn 1 has 3 red and 2 blue balls; urn 2 has 2 red and 4 blue balls. A ball is drawn at random from urn 1 and, **without being looked at**, moved into urn 2. Then a ball is drawn from urn 2, and it is red. Find the probability that the moved ball was red.`,
+    h: [R`The partition: $T_R$ = "moved ball was red" ($\frac35$), $T_B$ = "moved ball was blue" ($\frac25$).`, R`After the move urn 2 has 7 balls. Given $T_R$ it has 3 red; given $T_B$ it has 2 red.`, R`Bayes: $P(T_R\mid R) = \frac{P(R\mid T_R)P(T_R)}{P(R\mid T_R)P(T_R) + P(R\mid T_B)P(T_B)}$.`],
+    a: '9/13',
+    s: R`Partition on the moved ball: $P(T_R) = \frac35$, $P(T_B) = \frac25$. Urn 2 then has 7 balls, with $3$ red (if $T_R$) or $2$ red (if $T_B$). So $P(R\mid T_R) = \frac37$ and $P(R\mid T_B) = \frac27$.
+
+Total probability: $P(R) = \frac37\cdot\frac35 + \frac27\cdot\frac25 = \frac{9}{35} + \frac{4}{35} = \frac{13}{35}$.
+
+Bayes: $$P(T_R\mid R) = \frac{9/35}{13/35} = \frac{9}{13}\approx0.692.$$
+Seeing red in urn 2 raises the probability that a red ball was moved from the prior $0.6$ to $0.69$. (Trap: the answer is not $\frac35$. The moved ball was never seen, but the later draw still carries information about it.)` },
+  { k: '10', lvl: 4, q: R`(Exam-style.) A shop buys a component from supplier 1 (60% of stock) or supplier 2 (40%). A supplier-1 component survives each day with probability $0.9$, a supplier-2 component with probability $0.7$; **given the supplier**, days are independent. A random component is installed. Let $S_k$ = "it survives day $k$" (so surviving 3 days means $S_1\cap S_2\cap S_3$).
+
+(a) Find $P(\text{survives the first 3 days})$.
+
+(b) Given it survived 3 days, find $P(\text{supplier 2})$.
+
+(c) Given it survived 3 days, find $P(\text{it also survives day 4})$.
+
+(d) Are $S_1$ and $S_2$ independent?`,
+    h: [R`Condition on the supplier. Given supplier 1, surviving 3 days has probability $0.9^3$ (conditional independence).`, R`(c) $P(\text{survive 4}\mid\text{survive 3}) = \frac{P(\text{survive 4 days})}{P(\text{survive 3 days})}$, since surviving 4 days implies surviving 3. Compute the numerator by total probability too. Equivalently: average $0.9$ and $0.7$ with the **posterior** weights from (b).`, R`(d) Compare $P(S_1\cap S_2) = 0.6(0.9^2) + 0.4(0.7^2)$ with $P(S_1)^2$. Independent given the supplier does **not** mean independent.`],
+    a: [['(a)', '0.5746'], ['(b)', '0.1372/0.5746'], ['(c)', '0.4897/0.5746'], ['(d) independent?', { choice: ['Yes', 'No'], v: 1 }]],
+    s: R`**(a)** Total probability over the supplier:
+$$P(\text{3 days}) = 0.6\cdot0.9^3 + 0.4\cdot0.7^3 = 0.6(0.729) + 0.4(0.343) = 0.4374 + 0.1372 = 0.5746.$$
+
+**(b)** Bayes: $P(\text{sup. 2}\mid\text{3 days}) = \frac{0.1372}{0.5746}\approx0.239$. The prior was $0.4$: surviving is evidence for the more reliable supplier.
+
+**(c)** "Survives 4 days" $\subseteq$ "survives 3 days", so
+$$P(S_4\mid\text{3 days}) = \frac{P(\text{4 days})}{P(\text{3 days})} = \frac{0.6\cdot0.9^4 + 0.4\cdot0.7^4}{0.5746} = \frac{0.39366 + 0.09604}{0.5746} = \frac{0.4897}{0.5746}\approx0.852.$$
+Check with posterior weights: $0.761\cdot0.9 + 0.239\cdot0.7\approx0.852$ ✓. Trap: the answer is neither $0.9$ nor $0.7$, nor the prior average $0.6(0.9) + 0.4(0.7) = 0.82$. Survival so far shifts the weight towards supplier 1.
+
+**(d)** $P(S_1) = 0.6(0.9) + 0.4(0.7) = 0.82$, so $P(S_1)^2 = 0.6724$. But $P(S_1\cap S_2) = 0.6(0.81) + 0.4(0.49) = 0.486 + 0.196 = 0.682$. Since $0.682\ne0.6724$, **not independent**: $S_1$ tells you something about the supplier, and that changes the chance of $S_2$. Days are independent only *conditionally* on the supplier.` },
 ]);

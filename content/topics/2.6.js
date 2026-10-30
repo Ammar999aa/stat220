@@ -212,4 +212,29 @@ Total: $\tfrac12 + \tfrac{7}{20} = \tfrac{17}{20}$.` },
     s: R`As in the 2025 midterm: $1 = c\int f_Z(x)F_Z(x)\dd x = c/2$, so $c = 2$. Then $f_X(x) = 2f_Z(x)F_Z(x) = 2e^{-x}(1-e^{-x}) = 2e^{-x} - 2e^{-2x}$ for $x>0$, and
 $$E(X) = \int_0^\infty x(2e^{-x} - 2e^{-2x})\dd x = 2\cdot1 - 2\cdot\tfrac14 = \tfrac32.$$
 ($X$ is the maximum of two independent $\operatorname{Exp}(1)$ variables.)` },
+  { k: '17', lvl: 3, q: R`Let $f(x,y) = c\,xy$ on the triangle $x>0$, $y>0$, $x+y<1$ (0 otherwise). Find $c$, the marginal $f_X(x)$ for $0<x<1$, and $P(Y>2X)$.`,
+    h: [R`For fixed $x\in(0,1)$, $y\in(0,1-x)$. The inner integral is $\int_0^{1-x}y\dd y = \frac{(1-x)^2}{2}$.`, R`$\int_0^1x(1-x)^2\dd x = \frac1{12}$ (a Beta integral: $\frac{\Gamma(2)\Gamma(3)}{\Gamma(5)}$).`, R`Draw the lines $y = 2x$ and $x + y = 1$: they meet at $x = \frac13$. So in $\{y>2x\}$, $x\in(0,\frac13)$ and $y\in(2x, 1-x)$.`],
+    a: [['$c$', '24'], ['$f_X(x)$', '12*x*(1-x)^2', { x: [0, 1] }], ['$P(Y>2X)$', '7/27']],
+    s: R`**$c$.** $c>0$ for non-negativity, and
+$$\int_0^1\!\int_0^{1-x}c\,xy\dd y\dd x = c\int_0^1x\frac{(1-x)^2}{2}\dd x = \frac c2\cdot\frac{1}{12} = \frac{c}{24} = 1\Rightarrow c = 24.$$
+
+**Marginal.** $f_X(x) = \int_0^{1-x}24xy\dd y = 12x(1-x)^2$ for $0<x<1$, a $\operatorname{Beta}(2,3)$ density.
+
+**$P(Y>2X)$.** The region $\{y>2x\}$ inside the triangle needs $2x<1-x$, i.e. $x<\frac13$ (trap: not $x<\frac12$). For such $x$, $y$ runs from $2x$ to $1-x$:
+$$\int_0^{1/3}\!\int_{2x}^{1-x}24xy\dd y\dd x = 12\int_0^{1/3}x\big[(1-x)^2 - 4x^2\big]\dd x = 12\int_0^{1/3}(x - 2x^2 - 3x^3)\dd x$$
+$$= 12\left[\frac{x^2}{2} - \frac{2x^3}{3} - \frac{3x^4}{4}\right]_0^{1/3} = 12\left(\frac1{18} - \frac{2}{81} - \frac{1}{108}\right) = 12\cdot\frac{7}{324} = \frac{7}{27}.$$` },
+  { k: '18', lvl: 4, q: R`$(X,Y)$ has joint PDF $f(x,y) = c\,x\,e^{-x(1+y)}$ for $x>0$, $y>0$ (0 otherwise). (a) Find $c$. (b) Find the marginals $f_X$ and $f_Y$, with their supports. (c) Find $P(XY>1)$.`,
+    h: [R`The order of integration matters. Integrate over $y$ first: $\int_0^\infty e^{-xy}\dd y = \frac1x$, which cancels the factor $x$.`, R`For $f_Y$, integrate over $x$ with $y$ fixed: $\int_0^\infty x\,e^{-x(1+y)}\dd x$ is a Gamma integral with $\alpha = 2$, $\beta = \frac1{1+y}$.`, R`For (c), fix $x$: $xy>1\iff y>\frac1x$. Then $\int_{1/x}^\infty e^{-xy}\dd y = \frac{e^{-1}}{x}$.`],
+    a: [['$c$', '1'], ['$f_X(x)$', 'exp(-x)', { x: [0, 4] }], ['$f_Y(y)$', '1/(1+y)^2', { y: [0, 4] }], ['$P(XY>1)$', 'exp(-1)']],
+    s: R`**(a)** $f\ge0$ requires $c>0$. Integrating $y$ first:
+$$\int_0^\infty\!\int_0^\infty c\,xe^{-x}e^{-xy}\dd y\dd x = c\int_0^\infty xe^{-x}\cdot\frac1x\dd x = c\int_0^\infty e^{-x}\dd x = c = 1.$$
+So $c = 1$.
+
+**(b)** $f_X(x) = \int_0^\infty xe^{-x}e^{-xy}\dd y = e^{-x}$ for $x>0$: $X\sim\operatorname{Exp}(1)$.
+
+$f_Y(y) = \int_0^\infty x\,e^{-x(1+y)}\dd x = \beta^2\Gamma(2)$ with $\beta = \frac{1}{1+y}$, so $f_Y(y) = \frac{1}{(1+y)^2}$ for $y>0$. (This is the $\theta = 2$ case of $c(1+y)^{-\theta}$; check $\int_0^\infty(1+y)^{-2}\dd y = 1$ ✓.)
+
+**(c)** For fixed $x>0$, $\{xy>1\} = \{y>1/x\}$:
+$$P(XY>1) = \int_0^\infty xe^{-x}\int_{1/x}^\infty e^{-xy}\dd y\dd x = \int_0^\infty xe^{-x}\cdot\frac{e^{-1}}{x}\dd x = e^{-1}\int_0^\infty e^{-x}\dd x = e^{-1}.$$
+(Given $X = x$, the $y$-part $xe^{-xy}$ is an $\operatorname{Exp}(\beta = 1/x)$ density, so $XY$ given $X$ is $\operatorname{Exp}(1)$: that explains the $e^{-1}$.)` },
 ]);

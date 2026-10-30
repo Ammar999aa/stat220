@@ -52,4 +52,27 @@ DRILLS('2.2', [
   { k: '11', lvl: 2, q: R`$f(x) = 4$ on $(0,\frac14)$. Is it a valid PDF, even though $f>1$?`, h: [R`Integral?`], a: { choice: ['Yes', 'No'], v: 0 }, s: R`$\int_0^{1/4}4\dd x = 1$ and $f\ge0$. Valid: densities can exceed 1.` },
   { k: '12', lvl: 3, q: R`$X$ has the trapezoid density from HW2 B1 ($k = \tfrac12$). Find $P(X>2.5)$.`, h: [R`$\int_{2.5}^3\frac12(3-x)\dd x$.`], a: '1/16',
     s: R`$\int_{2.5}^3\frac{3-x}{2}\dd x = \frac12\cdot\frac{(0.5)^2}{2} = \frac1{16}$.` },
+  { k: '13', lvl: 3, q: R`$P(X = k) = \dfrac{c}{k(k+1)}$ for $k = 1, 2, 3, \dots$ Find $c$, $P(X\ge10)$, and $P(X\text{ is even})$.`,
+    h: [R`Partial fractions: $\frac{1}{k(k+1)} = \frac1k - \frac1{k+1}$. The sum telescopes.`, R`$P(X\ge n) = c\sum_{k\ge n}\left(\frac1k - \frac1{k+1}\right)$ also telescopes.`, R`Even $k = 2m$: $\sum_{m\ge1}\left(\frac1{2m} - \frac1{2m+1}\right) = \frac12 - \frac13 + \frac14 - \frac15 + \cdots$. Compare with $\log 2 = 1 - \frac12 + \frac13 - \frac14 + \cdots$.`],
+    a: [['$c$', '1'], [R`$P(X\ge10)$`, '1/10'], [R`$P(X\text{ even})$`, '1-log(2)']],
+    s: R`**$c$.** $\sum_{k=1}^{n}\left(\frac1k - \frac1{k+1}\right) = 1 - \frac1{n+1}\to1$, so $c = 1$ (and $c>0$ makes the PMF non-negative).
+
+**Tail.** $P(X\ge n) = \sum_{k\ge n}\left(\frac1k - \frac1{k+1}\right) = \frac1n$, so $P(X\ge10) = \frac1{10}$.
+
+**Even.** $P(X\text{ even}) = \sum_{m\ge1}\left(\frac1{2m} - \frac1{2m+1}\right) = \frac12 - \frac13 + \frac14 - \frac15 + \cdots$. The alternating harmonic series is $1 - \frac12 + \frac13 - \cdots = \log2$, so $\frac12 - \frac13 + \frac14 - \cdots = 1 - \log2$. Hence $P(X\text{ even}) = 1 - \log2\approx0.307$.` },
+  { k: '14', lvl: 4, q: R`Let $f(x) = c\,(1+x)^{-\theta}$ for $x\ge0$ (0 otherwise), where $\theta$ is a real parameter. (a) For which $\theta$ can $f$ be made a valid PDF by choosing $c$? (b) For those $\theta$, find $c$ and the median of $X$. (c) For $\theta = 4$, find $P(X>3\mid X>1)$.`,
+    h: [R`Non-negativity needs $c>0$. The real question is when $\int_0^\infty(1+x)^{-\theta}\dd x<\infty$. Treat $\theta = 1$ separately (antiderivative $\log$).`, R`For $\theta\ne1$: $\int_0^\infty(1+x)^{-\theta}\dd x = \left[\frac{(1+x)^{1-\theta}}{1-\theta}\right]_0^\infty$. When is the limit at $\infty$ finite?`, R`$P(X>x) = \int_x^\infty c(1+t)^{-\theta}\dd t = (1+x)^{-(\theta-1)}$. Set it equal to $\frac12$ for the median.`, R`Conditional: $\frac{P(X>3)}{P(X>1)}$.`],
+    a: [[R`(a) values of $\theta$`, { choice: ['θ > 0', 'θ > 1', 'θ ≥ 1', 'θ > 2'], v: 1 }], ['$c$', 'theta-1', { theta: [1.5, 5] }], ['median', '2^(1/(theta-1))-1', { theta: [1.5, 5] }], [R`$P(X>3\mid X>1)$, $\theta=4$`, '1/8']],
+    s: R`**(a)** We need $c>0$ and $\int_0^\infty(1+x)^{-\theta}\dd x$ finite.
+- $\theta = 1$: $\int_0^\infty\frac{\dd x}{1+x} = [\log(1+x)]_0^\infty = \infty$.
+- $\theta\ne1$: $\int_0^\infty(1+x)^{-\theta}\dd x = \left[\frac{(1+x)^{1-\theta}}{1-\theta}\right]_0^\infty$. If $\theta<1$ the exponent $1-\theta>0$ and this is $\infty$. If $\theta>1$ it equals $0 - \frac{1}{1-\theta} = \frac{1}{\theta-1}$.
+
+So a valid density exists **iff $\theta>1$**. (For $\theta\le1$ no constant can fix it, like $\frac1{1+x}$ in the slides.)
+
+**(b)** $c\cdot\frac{1}{\theta-1} = 1\Rightarrow c = \theta-1$. Survival function: $P(X>x) = \int_x^\infty(\theta-1)(1+t)^{-\theta}\dd t = (1+x)^{-(\theta-1)}$. Median: $(1+m)^{-(\theta-1)} = \frac12\iff 1+m = 2^{1/(\theta-1)}$, so
+$$m = 2^{1/(\theta-1)} - 1.$$
+
+**(c)** With $\theta = 4$, $P(X>x) = (1+x)^{-3}$, and $\{X>3\}\subseteq\{X>1\}$:
+$$P(X>3\mid X>1) = \frac{4^{-3}}{2^{-3}} = \frac{8}{64} = \frac18.$$
+(Unlike the exponential, this is **not** memoryless: $P(X>2) = 3^{-3} = \frac1{27}\ne\frac18$.)` },
 ]);

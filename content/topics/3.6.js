@@ -83,4 +83,35 @@ DRILLS('3.6', [
     s: R`With $a = \lambda-\mu$, the conditional density is $\frac{ae^{-ax}}{1-e^{-ac}}$ on $(0,c)$, so
 $$E[X\mid X+Y=c] = \frac{1}{a} - \frac{c}{e^{ac}-1}.$$
 With $a = c = 1$: $1 - \frac1{e-1}\approx0.418$, a bit less than $c/2$ because $X$ has the higher rate (it tends to be smaller).`, src: 'HW5 C1(b)' },
+  { k: '14', lvl: 3, q: R`A miner is trapped in a room with three doors. Door 1 leads to safety after 3 hours. Door 2 leads back to the same room after 5 hours, and door 3 leads back after 7 hours. Let $T$ be the time until he reaches safety.
+(a) Each time, he picks a door uniformly at random, forgetting earlier attempts. Find $E(T)$.
+(b) Now he remembers and never retries a door. Find $E(T)$.`,
+    h: [R`(a) Condition on the first door $D$: $E(T\mid D=1) = 3$, $E(T\mid D=2) = 5 + E(T)$, because after door 2 he is back at the start with no memory, so the remaining time has the same distribution as $T$.`, R`Tower rule: $E(T) = \frac13\big[3 + (5+E(T)) + (7+E(T))\big]$. Solve for $E(T)$.`, R`(b) His order of doors is a uniformly random permutation. $T = 3 + 5\cdot\mathbb 1\{\text{door 2 before door 1}\} + 7\cdot\mathbb 1\{\text{door 3 before door 1}\}$.`],
+    a: [['(a) no memory', '15'], ['(b) with memory', '9']],
+    s: R`**(a)** By iterated expectations, conditioning on the first door $D$:
+$$E(T) = \tfrac13E(T|D=1) + \tfrac13E(T|D=2) + \tfrac13E(T|D=3) = \tfrac13\big[3 + 5 + E(T) + 7 + E(T)\big].$$
+So $3E(T) = 15 + 2E(T)$, i.e. $E(T) = 15$ hours.
+
+**(b)** Now $T = 3 + 5I_2 + 7I_3$, where $I_k = 1$ if door $k$ is tried before door 1. By symmetry each of these orderings has probability $\tfrac12$, so by linearity $E(T) = 3 + \tfrac52 + \tfrac72 = 9$ hours.
+
+The trap in (a) is to treat "back to the room" as the end of the story. The key step is that $E(T\mid D=2) = 5 + E(T)$ involves the unknown itself, giving an equation to solve.` },
+  { k: '15', lvl: 4, q: R`(Exam style.) The rate $\Lambda\sim\operatorname{Unif}(0,2)$, and given $\Lambda = \lambda$, the count $N\sim\operatorname{Poisson}(\lambda)$.
+(a) Find $E(N)$ and $\operatorname{var}(N)$.
+(b) Find $\operatorname{cov}(N,\Lambda)$.
+(c) Find $P(N=0)$.
+(d) Find $E(\Lambda\mid N=0)$.`,
+    h: [R`$E(N\mid\Lambda) = \operatorname{var}(N\mid\Lambda) = \Lambda$. Then the tower rule and the law of total variance.`, R`$E(N\Lambda) = E\big[E(N\Lambda\mid\Lambda)\big] = E\big[\Lambda E(N\mid\Lambda)\big]$ (taking out what is known).`, R`$P(N=0) = E\big[P(N=0\mid\Lambda)\big] = E(e^{-\Lambda})$.`, R`Bayes for densities: $f_{\Lambda|N}(\lambda\mid0) = \frac{P(N=0\mid\lambda)f_\Lambda(\lambda)}{P(N=0)}\propto e^{-\lambda}$ on $(0,2)$. Integrate $\lambda e^{-\lambda}$ by parts.`],
+    a: [['$E(N)$', '1'], [R`$\operatorname{var}(N)$`, '4/3'], [R`$\operatorname{cov}(N,\Lambda)$`, '1/3'], ['$P(N=0)$', '(1-exp(-2))/2'], [R`$E(\Lambda\mid N=0)$`, '(1-3*exp(-2))/(1-exp(-2))']],
+    s: R`$\Lambda$ has $E(\Lambda) = 1$, $\operatorname{var}(\Lambda) = \frac{4}{12} = \frac13$, $E(\Lambda^2) = \frac43$.
+
+**(a)** $E(N) = E[E(N|\Lambda)] = E(\Lambda) = 1$.
+$\operatorname{var}(N) = E[\operatorname{var}(N|\Lambda)] + \operatorname{var}[E(N|\Lambda)] = E(\Lambda) + \operatorname{var}(\Lambda) = 1 + \frac13 = \frac43$. (Bigger than the mean: a mixed Poisson is overdispersed.)
+
+**(b)** $E(N\Lambda) = E[\Lambda\,E(N|\Lambda)] = E(\Lambda^2) = \frac43$, so $\operatorname{cov}(N,\Lambda) = \frac43 - 1\cdot1 = \frac13$ $(=\operatorname{var}\Lambda)$.
+
+**(c)** $P(N=0) = E(e^{-\Lambda}) = \int_0^2e^{-\lambda}\frac12\dd\lambda = \frac{1-e^{-2}}{2}\approx0.432$.
+
+**(d)** $f_{\Lambda|N}(\lambda|0) = \frac{e^{-\lambda}\cdot\frac12}{(1-e^{-2})/2} = \frac{e^{-\lambda}}{1-e^{-2}}$ on $(0,2)$. With $\int_0^2\lambda e^{-\lambda}\dd\lambda = \big[-\lambda e^{-\lambda}\big]_0^2 + \int_0^2e^{-\lambda}\dd\lambda = -2e^{-2} + 1 - e^{-2} = 1 - 3e^{-2}$:
+$$E(\Lambda\mid N=0) = \frac{1-3e^{-2}}{1-e^{-2}}\approx0.687.$$
+Seeing no events pulls the rate below its prior mean of 1, as it should.` },
 ]);

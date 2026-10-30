@@ -37,4 +37,33 @@ DRILLS('4.2', [
   { k: '06', lvl: 2, q: R`400 coin-flip results give $\bar x = 0.3$. Upper end of the 95% Hoeffding confidence interval for $p$?`, h: [R`$0.3 + \sqrt{\log40/800}$.`], a: '0.3+sqrt(log(40)/800)', s: R`$\varepsilon = \sqrt{3.689/800}\approx0.068$, so the interval is about $(0.232, 0.368)$.` },
   { k: '07', lvl: 3, q: R`$Y_1,\dots,Y_{10}$ independent, mean zero, with $-1\le Y_i\le2$. Optimized Hoeffding bound for $P(\sum Y_i\ge15)$?`, h: [R`$\exp\left(-\frac{2\varepsilon^2}{\sum(b_i-a_i)^2}\right)$ with $\sum = 90$.`], a: 'exp(-5)', s: R`$\exp\left(-\frac{2\cdot225}{90}\right) = e^{-5}\approx0.0067$.` },
   { k: '08', lvl: 2, q: R`In the Bernoulli Hoeffding derivation, $h(t) = \frac{t^2}{8n} - t\varepsilon$. Find the minimizer $t^*$ for $n = 10$, $\varepsilon = 0.3$.`, h: [R`$t^* = 4n\varepsilon$.`], a: '12', s: R`$h'(t) = \frac{t}{4n} - \varepsilon = 0\Rightarrow t^* = 4n\varepsilon = 12$.` },
+  { k: '09', lvl: 3, q: R`You roll a fair die $n$ times and let $\bar X_n$ be the average roll ($\mu = 3.5$). (a) Using Hoeffding (general form, optimized), find the smallest $n$ that guarantees $P(|\bar X_n - 3.5|\ge0.5)\le0.05$. (b) Find the smallest $n$ that Chebyshev guarantees for the same thing, using the exact variance of a die roll.`,
+    h: [R`The Bernoulli formula $2e^{-2n\varepsilon^2}$ assumes values in $[0,1]$. Here each roll lies in $[1,6]$: the width is $b - a = 5$, not 6. Put $Y_i = \frac{X_i - 3.5}{n}$, so $b_i - a_i = \frac5n$ and $\sum Y_i = \bar X_n - 3.5$.`, R`The optimized general bound is $\exp\left(-\frac{2\varepsilon^2}{\sum(b_i-a_i)^2}\right)$, here with $\sum(b_i-a_i)^2 = n\cdot\frac{25}{n^2} = \frac{25}{n}$. Double it for the two-sided event.`, R`Die variance: $E(X^2) - \mu^2 = \frac{91}{6} - \frac{49}{4} = \frac{35}{12}$, so $\operatorname{var}(\bar X_n) = \frac{35}{12n}$.`],
+    a: [['(a) Hoeffding n', '185'], ['(b) Chebyshev n', '234']],
+    s: R`**(a)** With $Y_i = (X_i - 3.5)/n$: $E(Y_i) = 0$, $Y_i\in\left[-\frac{2.5}{n}, \frac{2.5}{n}\right]$, so $(b_i - a_i)^2 = \frac{25}{n^2}$ and $S = \sum(b_i-a_i)^2 = \frac{25}{n}$. The optimized Hoeffding bound is
+$$P(\bar X_n - 3.5\ge\varepsilon)\le\exp\left(-\frac{2\varepsilon^2}{S}\right) = \exp\left(-\frac{2n\varepsilon^2}{25}\right).$$
+The same holds for the lower tail (apply it to $-Y_i$), so $P(|\bar X_n - 3.5|\ge\varepsilon)\le2e^{-2n\varepsilon^2/25}$. With $\varepsilon = 0.5$: $2e^{-n/50}\le0.05\iff n\ge50\log40\approx184.4$, so $n = 185$.
+
+(Trap: using width 6 gives $n\ge72\log40\approx266$, a valid but needlessly large answer. The width of $\{1,\dots,6\}$ is 5.)
+
+**(b)** $\operatorname{var}(X_i) = \frac{35}{12}$, so Chebyshev gives $P(|\bar X_n - 3.5|\ge0.5)\le\frac{35/12}{0.25n} = \frac{35}{3n}$. We need $\frac{35}{3n}\le0.05$, i.e. $n\ge\frac{700}{3}\approx233.3$, so $n = 234$.
+
+Hoeffding still wins, but by less than for coin flips: it only uses the range, and a die's variance $\frac{35}{12}\approx2.92$ is not far below the largest variance possible on $[1,6]$, which is $\frac{25}{4} = 6.25$.` },
+  { k: '10', lvl: 4, q: R`(A/B test) $X_1,\dots,X_n\iid\operatorname{Ber}(p_1)$ and, independently, $Z_1,\dots,Z_n\iid\operatorname{Ber}(p_2)$. Let $D = \bar X_n - \bar Z_n$ and $\delta = p_1 - p_2$.
+(a) Use the general Hoeffding inequality (optimize over $t$) to show $P(|D - \delta|\ge\varepsilon)\le2e^{-n\varepsilon^2}$. Enter the one-sided bound for $n = 500$, $\varepsilon = 0.1$.
+(b) Give the half-width $\varepsilon_n$ of a 95% confidence interval $D\pm\varepsilon_n$ for $\delta$ when $n = 400$.
+(c) With $n = 400$ you observe $\bar x = 0.42$ and $\bar z = 0.35$. Does the interval rule out $\delta = 0$?`,
+    h: [R`Write $D - \delta$ as a sum of $2n$ independent, mean-zero terms: $\frac{X_i - p_1}{n}$ for $i\le n$, and $-\frac{Z_j - p_2}{n}$ for $j\le n$.`, R`Each term has range width $\frac1n$, so $\sum(b_i-a_i)^2 = 2n\cdot\frac{1}{n^2} = \frac2n$, twice what a single sample gives.`, R`Optimizing $-t\varepsilon + \frac{t^2}{8}S$ gives $e^{-2\varepsilon^2/S}$. Then set $2e^{-n\varepsilon^2} = \alpha$ and solve for $\varepsilon$.`],
+    a: [['(a) one-sided bound', 'exp(-5)'], ['(b) half-width', 'sqrt(log(40)/400)'], ['(c) rules out δ = 0?', { choice: ['Yes', 'No'], v: 1 }]],
+    s: R`**(a)** Define $Y_i = \frac{X_i - p_1}{n}$ for $i = 1,\dots,n$ and $Y_{n+j} = -\frac{Z_j - p_2}{n}$ for $j = 1,\dots,n$. These $2n$ variables are independent with mean 0, and $\sum_{i=1}^{2n}Y_i = \bar X_n - \bar Z_n - (p_1 - p_2) = D - \delta$. Each lies in an interval of width $\frac1n$ (e.g. $Y_i\in[-\frac{p_1}{n}, \frac{1-p_1}{n}]$), so $S = \sum(b_i - a_i)^2 = \frac{2n}{n^2} = \frac2n$.
+
+General Hoeffding: $P(D - \delta\ge\varepsilon)\le\exp\left(-t\varepsilon + \frac{t^2S}{8}\right)$. The exponent is minimized at $t^* = \frac{4\varepsilon}{S}$, giving $-\frac{2\varepsilon^2}{S} = -n\varepsilon^2$. So $P(D - \delta\ge\varepsilon)\le e^{-n\varepsilon^2}$. Applying the same argument to $-Y_i$ bounds the lower tail, hence $P(|D-\delta|\ge\varepsilon)\le2e^{-n\varepsilon^2}$.
+
+With $n = 500$, $\varepsilon = 0.1$: one-sided bound $e^{-5}\approx0.0067$.
+
+Note the exponent is $n\varepsilon^2$, not $2n\varepsilon^2$: the difference of two means is noisier than one mean, because both samples contribute.
+
+**(b)** $2e^{-n\varepsilon_n^2} = 0.05\iff\varepsilon_n = \sqrt{\frac{\log40}{n}} = \sqrt{\frac{\log40}{400}}\approx0.096$.
+
+**(c)** $D = 0.07$, so the interval is about $(-0.026, 0.166)$. It contains 0, so this data **cannot** rule out $p_1 = p_2$ at the 95% level, even though $\bar x>\bar z$.` },
 ]);

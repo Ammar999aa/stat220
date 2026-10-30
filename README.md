@@ -3,7 +3,7 @@
 A browser study app for STAT 220 (KAUST, Fall 2026) Midterm 1, which covers Chapters 1–4 and Homeworks 1–6. It has:
 
 - 29 topic pages with practice problems woven into the explanations;
-- 320 numbered drills;
+- 378 numbered drills;
 - all homework problems with solutions;
 - the real 2025 midterm and 4 mock exams, each with an 80-minute timed mode;
 - a 2-page A4 cheat sheet;

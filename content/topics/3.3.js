@@ -69,4 +69,26 @@ DRILLS('3.3', [
     a: [['$P(X = 3/4)$', '1/8'], ['$E(X)$', '47/96']],
     s: R`Density $4x$ on $(0,\tfrac12)$, $4(1-x)$ on $(\tfrac12,\tfrac34)$, plus a jump of $\tfrac18$ at $\tfrac34$.
 $E(X) = \tfrac16 + \tfrac{11}{48} + \tfrac{3}{32} = \tfrac{16+22+9}{96} = \tfrac{47}{96}$.`, src: 'HW4 C2' },
+  { k: '16', lvl: 3, q: R`$X\sim\operatorname{Poisson}(\lambda = 1)$ and $Y = 2^X$. Find $E(Y)$ and $\operatorname{var}(Y)$.`,
+    h: [R`LOTUS: $E(2^X) = \sum_{x\ge0}2^x\frac{e^{-\lambda}\lambda^x}{x!} = e^{-\lambda}\sum_{x\ge0}\frac{(2\lambda)^x}{x!}$. Recognize the exponential series.`, R`For the variance you need $E(Y^2) = E(4^X)$. Same trick with $4\lambda$.`, R`Trap: $E(2^X)\ne2^{E(X)} = 2$.`],
+    a: [['$E(Y)$', 'e'], [R`$\operatorname{var}(Y)$`, 'e^3-e^2']],
+    s: R`For any $s>0$, by LOTUS and $\sum_x\frac{a^x}{x!} = e^a$:
+$$E(s^X) = \sum_{x\ge0}s^x\frac{e^{-\lambda}\lambda^x}{x!} = e^{-\lambda}e^{s\lambda} = e^{\lambda(s-1)}.$$
+With $s = 2$: $E(Y) = e^{\lambda} = e$. With $s = 4$ (since $Y^2 = 4^X$): $E(Y^2) = e^{3\lambda} = e^3$. Hence
+$$\operatorname{var}(Y) = e^{3} - e^{2}\approx12.70.$$
+Note $E(2^X) = e\approx2.72>2 = 2^{E(X)}$: a convex function of $X$ has a bigger mean than the function of the mean (Jensen, Ch.4).` },
+  { k: '17', lvl: 4, q: R`(Exam style.) An insurance policy has a deductible of $2$: if a loss $X$ occurs, the insurer pays $(X-2)^+ = \max(X-2,0)$. In a given year a loss occurs with probability $0.2$, and given that it occurs, $X\sim\operatorname{Exp}(\beta = 5)$. With no loss the payment is $0$. Let $Y$ be the insurer's payment.
+(a) Find $P(Y>0)$.
+(b) Show that given $Y>0$, $Y\sim\operatorname{Exp}(5)$.
+(c) Find $E(Y)$ and $\operatorname{var}(Y)$.`,
+    h: [R`$Y>0$ requires a loss **and** $X>2$.`, R`Memorylessness: $P(X-2>y\mid X>2) = \frac{e^{-(y+2)/5}}{e^{-2/5}}$. So $Y = I\cdot W$ where $I\sim\operatorname{Ber}(q)$ with $q = P(Y>0)$, $W\sim\operatorname{Exp}(5)$, independent.`, R`Then $E(Y^k) = q\,E(W^k)$: $E(Y) = 5q$ and $E(Y^2) = q\cdot2\cdot5^2$. Finish with $\operatorname{var}(Y) = E(Y^2) - E(Y)^2$.`, R`Trap: $\operatorname{var}(Y)$ is **not** $q\operatorname{var}(W)$. That misses the spread between "pay nothing" and "pay something".`],
+    a: [['$P(Y>0)$', '0.2*exp(-0.4)'], ['$E(Y)$', 'exp(-0.4)'], [R`$\operatorname{var}(Y)$`, '10*exp(-0.4)-exp(-0.8)']],
+    s: R`**(a)** $P(Y>0) = P(\text{loss})\,P(X>2\mid\text{loss}) = 0.2\,e^{-2/5} =: q\approx0.134$.
+
+**(b)** For $y>0$: $P(Y>y\mid Y>0) = P(X>2+y\mid X>2) = \frac{e^{-(2+y)/5}}{e^{-2/5}} = e^{-y/5}$, the $\operatorname{Exp}(5)$ survival function (memorylessness). So $Y = I\,W$ with $I\sim\operatorname{Ber}(q)$ and $W\sim\operatorname{Exp}(5)$ independent.
+
+**(c)** $Y^k = I\,W^k$ (since $I^k = I$), so $E(Y^k) = q\,E(W^k)$:
+$$E(Y) = 5q = e^{-0.4}\approx0.670,\qquad E(Y^2) = q\cdot2\cdot25 = 50q = 10e^{-0.4}.$$
+$$\operatorname{var}(Y) = 10e^{-0.4} - \left(e^{-0.4}\right)^2 = 10e^{-0.4} - e^{-0.8}\approx6.25.$$
+Compare with the wrong answer $q\operatorname{var}(W) = 25q\approx3.35$. (Cross-check with the law of total variance, topic 3.6: $E[\operatorname{var}(Y|I)] + \operatorname{var}[E(Y|I)] = 25q + 25q(1-q) = 50q - 25q^2$ ✓.)` },
 ]);

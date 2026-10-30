@@ -145,4 +145,34 @@ DRILLS('2.7', [
     s: R`$\int_0^\infty\int_0^x c e^{-x}\dd y\dd x = c\int_0^\infty xe^{-x}\dd x = c\,\Gamma(2) = c = 1$.
 
 Marginals: $f_X(x) = xe^{-x}$ ($x>0$, a $\operatorname{Gamma}(2,1)$), $f_Y(y) = \int_y^\infty e^{-x}\dd x = e^{-y}$ ($y>0$). Then $f_Xf_Y = xe^{-x}e^{-y} \ne e^{-x}\mathbb 1\{0<y<x\}$. Also, the support is not a product set. **Not independent.**` },
+  { k: '14', lvl: 3, q: R`Two fair dice are rolled. $X$ = first die, $Y$ = second die, $S = X + Y$, and $Z = S \bmod 6$ (the remainder of $S$ after division by 6, so $Z\in\{0,1,\dots,5\}$). Find $P(X = 1, Z = 0)$. Are $X$ and $Z$ independent? Are $X$ and $S$ independent?`,
+    h: [R`$Z$ is computed from $X$, so it is tempting to say "dependent". Don't guess: check the factorization $P(X = x, Z = r) = P(X = x)P(Z = r)$ cell by cell.`, R`Fix $X = x$. As $Y$ runs through $1,\dots,6$, the sum $x + Y$ runs through 6 consecutive integers, and 6 consecutive integers hit every remainder mod 6 exactly once. So $P(Z = r\mid X = x) = \tfrac16$ for every $x$ and $r$.`, R`For $X$ and $S$, one failing cell is enough. Try $P(X = 1, S = 12)$.`],
+    a: [['$P(X=1, Z=0)$', '1/36'], ['$X$, $Z$ independent?', { choice: ['Yes', 'No'], v: 0 }], ['$X$, $S$ independent?', { choice: ['Yes', 'No'], v: 1 }]],
+    s: R`**$P(X = 1, Z = 0)$.** With $X = 1$ we need $1 + Y$ to be a multiple of 6, i.e. $Y = 5$. So $P(X=1, Z=0) = P(X=1)P(Y=5) = \tfrac16\cdot\tfrac16 = \tfrac1{36}$.
+
+**$X$ and $Z$.** Fix any $x\in\{1,\dots,6\}$. The values $x+1, x+2, \dots, x+6$ are 6 consecutive integers, so they have 6 different remainders mod 6: each $r\in\{0,\dots,5\}$ comes from exactly one value of $Y$. Hence
+$$P(X = x, Z = r) = P(X = x)\,P(Y = \text{that one value}) = \tfrac16\cdot\tfrac16 = \tfrac1{36}.$$
+Summing over $x$: $P(Z = r) = 6\cdot\tfrac1{36} = \tfrac16$, so $Z$ is uniform on $\{0,\dots,5\}$, and every cell satisfies $P(X=x, Z=r) = \tfrac1{36} = P(X=x)P(Z=r)$. **$X\indep Z$**, even though $Z$ is computed from $X$.
+
+**$X$ and $S$.** $P(X = 1, S = 12) = 0$ (you need both dice to be 6), but $P(X=1)P(S=12) = \tfrac16\cdot\tfrac1{36} > 0$. **Not independent.**
+
+Lesson: "$Z$ is a function of $X$ (and something else)" does not imply dependence. Independence is a statement about probabilities, and you must check it with the factorization.` },
+  { k: '15', lvl: 4, q: R`(Exam style, 10 pt.) $X, Y\iid\operatorname{Exp}(1)$. Let $U = \min(X,Y)$ and $W = |X - Y|$.
+
+(a) For $u, w\ge0$, compute the joint survival function $P(U > u,\ W > w)$.
+
+(b) Deduce the distributions of $U$ and $W$.
+
+(c) Are $U$ and $W$ independent? Justify.`,
+    h: [R`$P(X = Y) = 0$, so split into $\{X<Y\}$ and $\{Y<X\}$. By symmetry the two pieces are equal: $P(U>u, W>w) = 2P(X<Y,\ X>u,\ Y > X + w)$.`, R`Condition on $X = x$ (with $x > u$): you need $Y > x + w$, which has probability $e^{-(x+w)}$. So the piece is $\int_u^\infty e^{-x}e^{-(x+w)}\dd x$.`, R`For (b) put $w = 0$ (then $\{W > 0\}$ has probability 1) or $u = 0$.`, R`For (c): if the joint survival function factors for all $u, w$, then so does the joint CDF, because $F_{U,W}(u,w) = 1 - P(U>u) - P(W>w) + P(U>u, W>w)$.`],
+    a: [[R`$P(U>u, W>w)$`, 'exp(-2*u-w)', { u: [0, 2], w: [0, 2] }], [R`$P(W>w)$`, 'exp(-w)', { w: [0, 3] }], ['Independent?', { choice: ['Yes', 'No'], v: 0 }]],
+    s: R`**(a)** Since $P(X=Y) = 0$ and the roles of $X, Y$ are symmetric,
+$$P(U>u, W>w) = 2P(X<Y,\ X>u,\ Y-X>w) = 2\int_u^\infty e^{-x}\,P(Y > x + w)\dd x = 2\int_u^\infty e^{-x}e^{-x-w}\dd x.$$
+(On $\{X<Y\}$: $U = X$ and $W = Y - X$.) Then
+$$= 2e^{-w}\left[-\tfrac12e^{-2x}\right]_u^\infty = e^{-2u}\,e^{-w},\qquad u, w\ge0.$$
+**(b)** $u$ any, $w = 0$: $P(U>u) = e^{-2u}$, so $U\sim\operatorname{Exp}(\tfrac12)$ (mean $\tfrac12$; the rates add). $u = 0$: $P(W>w) = e^{-w}$, so $W\sim\operatorname{Exp}(1)$.
+
+**(c)** $P(U>u, W>w) = e^{-2u}e^{-w} = P(U>u)P(W>w)$ for all $u, w\ge0$. Then the joint CDF also factors:
+$$F_{U,W}(u,w) = 1 - e^{-2u} - e^{-w} + e^{-2u}e^{-w} = (1 - e^{-2u})(1 - e^{-w}) = F_U(u)F_W(w).$$
+So **$U\indep W$**. (Intuition: memorylessness. Once the first of the two clocks rings at time $U$, the other one starts afresh and needs an extra $\operatorname{Exp}(1)$ time, whatever $U$ was.)` },
 ]);

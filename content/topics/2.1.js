@@ -67,4 +67,28 @@ DRILLS('2.1', [
   { k: '10', lvl: 3, q: R`Using continuity of probability, show $P(X<x) = \lim_{n\to\infty}F(x - \tfrac1n)$. For $F$ from the "mixed" example ($\frac x2$ on $[0,1)$, $\frac34$ on $[1,2)$, $1$ after), compute $P(X<1)$.`,
     h: [R`$\{X\le x - \frac1n\}\uparrow\{X<x\}$.`], a: '1/2',
     s: R`The events $\{X\le x-\frac1n\}$ increase to $\{X<x\}$, so $P(X<x) = \lim F(x-\frac1n) = F(x^-)$. Here $F(1^-) = \frac12$.` },
+  { k: '11', lvl: 3, q: R`$X$ has CDF
+$$F(x) = \begin{cases}0 & x<-1\\ \tfrac14 + \tfrac18(x+1) & -1\le x<1\\ \tfrac34 & 1\le x<2\\ 1 - \tfrac14e^{-(x-2)} & x\ge2.\end{cases}$$
+Find $P(X = -1)$, $P(-1<X<1)$ and $P(X>3\mid X\ge1)$.`,
+    h: [R`First locate every jump: compare $F(x)$ with the left limit $F(x^-)$ at $x = -1, 1, 2$. A jump of size $d$ at $x$ means $P(X = x) = d$.`, R`Strict inequalities matter when there are jumps: $P(X<b) = F(b^-)$ and $P(X\ge a) = 1 - F(a^-)$. So $P(-1<X<1) = F(1^-) - F(-1)$.`, R`For the conditional probability: $\{X>3\}\subseteq\{X\ge1\}$, so $P(X>3\mid X\ge1) = \frac{1-F(3)}{1-F(1^-)}$.`],
+    a: [['$P(X=-1)$', '1/4'], ['$P(-1<X<1)$', '1/4'], [R`$P(X>3\mid X\ge1)$`, 'exp(-1)/2']],
+    s: R`**Jumps.** At $-1$: $F(-1) - F(-1^-) = \frac14 - 0 = \frac14$. At $1$: $F(1^-) = \frac14 + \frac28 = \frac12$ and $F(1) = \frac34$, a jump of $\frac14$. At $2$: $F(2^-) = \frac34 = F(2)$, no jump. So $P(X=-1) = \frac14$.
+
+**$P(-1<X<1)$.** Exclude both endpoints: $P(X<1) - P(X\le-1) = F(1^-) - F(-1) = \frac12 - \frac14 = \frac14$. (The trap is to write $F(1) - F(-1) = \frac12$, which wrongly includes the atom at 1.)
+
+**Conditional.** $P(X\ge1) = 1 - F(1^-) = \frac12$, which includes the atom at 1. And $P(X>3) = 1 - F(3) = \frac14e^{-1}$. Since $\{X>3\}\subseteq\{X\ge1\}$,
+$$P(X>3\mid X\ge1) = \frac{\frac14e^{-1}}{\frac12} = \frac{e^{-1}}{2}\approx0.184.$$` },
+  { k: '12', lvl: 4, q: R`For constants $a, b$, let
+$$F(x) = \begin{cases}0 & x<0\\ \frac{x^2 + a}{4} & 0\le x<1\\ 1 - b\,e^{-(x-1)} & x\ge1.\end{cases}$$
+(a) Find $a$ and $b$ such that $F$ is the CDF of a random variable $X$ with $P(X = 0) = \frac18$ and $P(X = 1) = \frac14$, and check that $F$ is then a valid CDF. (b) Find the median $F^{-1}(\frac12)$. (c) Find $P(X>2\mid X\ge1)$.`,
+    h: [R`$P(X = x) = F(x) - F(x^-)$. At $0$ the left limit is $0$; at $1$ the left limit comes from the middle piece.`, R`For validity check all three properties: non-decreasing (including that each jump goes *up*), limits $0$ and $1$, right-continuity (each piece is closed on the left).`, R`Median: $F^{-1}(q) = \inf\{x: F(x)\ge q\}$. Compute $F(1^-)$ and $F(1)$: where does the level $\frac12$ get crossed?`, R`$P(X\ge1) = 1 - F(1^-)$, which includes the atom at 1.`],
+    a: [['$a$', '1/2'], ['$b$', '3/8'], ['median', '1'], [R`$P(X>2\mid X\ge1)$`, '3/(5*exp(1))']],
+    s: R`**(a)** Jump at 0: $F(0) - F(0^-) = \frac a4 - 0 = \frac18$, so $a = \frac12$. Then $F(1^-) = \frac{1 + 1/2}{4} = \frac38$. Jump at 1: $F(1) - F(1^-) = (1-b) - \frac38 = \frac14$, so $b = \frac38$.
+
+Validity: (i) on $[0,1)$, $\frac{x^2+1/2}{4}$ increases from $\frac18$ to $\frac38$; on $[1,\infty)$, $1 - \frac38e^{-(x-1)}$ increases from $\frac58$ to $1$; the jumps at $0$ ($0\to\frac18$) and at $1$ ($\frac38\to\frac58$) go up. Non-decreasing ✓. (ii) $F = 0$ for $x<0$ and $F(x)\to1$ as $x\to\infty$ ✓. (iii) Each piece is continuous and includes its left endpoint, so $F$ is right-continuous ✓.
+
+**(b)** $F(x)\le\frac38<\frac12$ for all $x<1$, while $F(1) = \frac58\ge\frac12$. So the first $x$ with $F(x)\ge\frac12$ is $x = 1$: the median is $\boxed{1}$. (Solving $\frac{x^2+1/2}{4} = \frac12$ gives $x = \sqrt{3/2}>1$, outside that piece: the equation $F(x) = \frac12$ has no solution, which is why the quantile is defined with $\inf$.)
+
+**(c)** $P(X\ge1) = 1 - F(1^-) = \frac58$ and $P(X>2) = 1 - F(2) = \frac38e^{-1}$. Since $\{X>2\}\subseteq\{X\ge1\}$,
+$$P(X>2\mid X\ge1) = \frac{\frac38e^{-1}}{\frac58} = \frac{3}{5e}\approx0.221.$$` },
 ]);

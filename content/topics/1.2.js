@@ -27,4 +27,41 @@ DRILLS('1.2', [
   { k: '06', lvl: 1, q: R`$B\subseteq A$, $P(A) = 0.5$, $P(B) = 0.2$. $P(A\setminus B)$?`, h: [R`$A$ = $B$ ∪ $(A\setminus B)$ disjointly.`], a: '0.3', s: R`$0.3$.` },
   { k: '07', lvl: 2, q: R`$P(A) = 0.4$, $P(B) = 0.5$, $P(A\cap B^c) = 0.3$. Find $P(A\cup B)$.`, h: [R`$P(A\cap B) = P(A) - P(A\cap B^c)$.`], a: '0.8', s: R`$P(A\cap B) = 0.1$, so $P(A\cup B) = 0.4 + 0.5 - 0.1 = 0.8$.` },
   { k: '08', lvl: 2, q: R`Fair coin forever: $B_n$ = "first $n$ tosses all tails". Find $\lim P(B_n)$ = P(never a head).`, h: [R`Decreasing sequence.`], a: '0', s: R`$P(B_n) = 2^{-n}\to0$, and $B_n\downarrow$ "never a head", so that event has probability 0.` },
+  { k: '09', lvl: 3, q: R`$P(A) = 0.5$, $P(B) = 0.4$, $P(C) = 0.3$, $P(A\cap B) = 0.2$, $P(A\cap C) = P(B\cap C) = 0.1$, $P(A\cap B\cap C) = 0.05$. Find $P(\text{exactly one of } A,B,C)$ and $P(\text{at least two of } A,B,C)$.`,
+    h: [R`Draw a 3-circle Venn diagram and fill it from the inside out: start with the triple overlap, then "exactly these two", then "only this one".`, R`"$A\cap B$ only" $= P(A\cap B) - P(A\cap B\cap C)$. "$A$ only" $= P(A) - P(A\cap B) - P(A\cap C) + P(A\cap B\cap C)$.`, R`Check: "exactly one" + "at least two" must equal $P(A\cup B\cup C)$ from inclusion–exclusion.`],
+    a: [['exactly one', '0.55'], ['at least two', '0.3']],
+    s: R`Fill the Venn diagram from the centre out.
+
+Triple: $0.05$.
+
+Exactly two: $A\cap B$ only $= 0.2 - 0.05 = 0.15$; $A\cap C$ only $= 0.1 - 0.05 = 0.05$; $B\cap C$ only $= 0.05$.
+
+Exactly one: $A$ only $= 0.5 - 0.15 - 0.05 - 0.05 = 0.25$; $B$ only $= 0.4 - 0.15 - 0.05 - 0.05 = 0.15$; $C$ only $= 0.3 - 0.05 - 0.05 - 0.05 = 0.15$.
+
+So $P(\text{exactly one}) = 0.25 + 0.15 + 0.15 = 0.55$ and $P(\text{at least two}) = 0.15 + 0.05 + 0.05 + 0.05 = 0.30$.
+
+General formulas: $P(\text{exactly one}) = \sum P(A_i) - 2\sum P(A_i\cap A_j) + 3P(A\cap B\cap C) = 1.2 - 0.8 + 0.15 = 0.55$ and $P(\text{at least two}) = \sum P(A_i\cap A_j) - 2P(A\cap B\cap C) = 0.4 - 0.1 = 0.3$. (Trap: $\sum P(A_i\cap A_j) = 0.4$ counts the triple region three times, but it should count once.)
+
+Check: $0.55 + 0.3 = 0.85 = 1.2 - 0.4 + 0.05 = P(A\cup B\cup C)$ ✓. All regions are $\ge0$, so these numbers really are consistent.` },
+  { k: '10', lvl: 4, q: R`(Exam-style.) Events $A_1, A_2, \dots$ satisfy $P(A_n) = 1 - 3^{-n}$.
+
+(a) Prove Boole's inequality $P\left(\bigcup_{i=1}^\infty E_i\right)\le\sum_{i=1}^\infty P(E_i)$ from the axioms, for any events $E_i$.
+
+(b) Use it on the complements to give a lower bound for $P(A_1\cap A_2\cap A_3)$.
+
+(c) Same for $P\left(\bigcap_{n=1}^\infty A_n\right)$.
+
+(d) Now suppose in addition that $A_1\subseteq A_2\subseteq\cdots$. Find $P\left(\bigcup_nA_n\right)$ and $P\left(\bigcap_nA_n\right)$ exactly.`,
+    h: [R`(a) Make the events disjoint: $D_1 = E_1$, $D_i = E_i\setminus(E_1\cup\cdots\cup E_{i-1})$. Then $\bigcup D_i = \bigcup E_i$ and $D_i\subseteq E_i$.`, R`(b, c) De Morgan: $\left(\bigcap A_n\right)^c = \bigcup A_n^c$, so $P\left(\bigcap A_n\right) = 1 - P\left(\bigcup A_n^c\right)\ge1 - \sum P(A_n^c)$. Here $P(A_n^c) = 3^{-n}$.`, R`(d) For an increasing sequence the union is the limit, so continuity applies. And the intersection of an increasing sequence is just its smallest set.`],
+    a: [['(b) bound', '14/27'], ['(c) bound', '1/2'], [R`(d) $P(\bigcup A_n)$`, '1'], [R`(d) $P(\bigcap A_n)$`, '2/3']],
+    s: R`**(a)** Let $D_1 = E_1$ and $D_i = E_i\setminus(E_1\cup\cdots\cup E_{i-1})$ for $i\ge2$. Each $D_i$ is "in $E_i$ but in no earlier $E_j$", so the $D_i$ are disjoint, $D_i\subseteq E_i$, and $\bigcup_iD_i = \bigcup_iE_i$ (every outcome in the union has a first $E_i$ that contains it). By axiom 3 and monotonicity,
+$$P\Big(\bigcup_iE_i\Big) = P\Big(\bigcup_iD_i\Big) = \sum_iP(D_i)\le\sum_iP(E_i).\ \blacksquare$$
+
+**(b)** By De Morgan $(A_1\cap A_2\cap A_3)^c = A_1^c\cup A_2^c\cup A_3^c$, so
+$$P(A_1\cap A_2\cap A_3)\ge1 - \left(\tfrac13 + \tfrac19 + \tfrac1{27}\right) = 1 - \tfrac{13}{27} = \tfrac{14}{27}.$$
+
+**(c)** Same argument with the countable union (this is where you need (a) for countably many events):
+$$P\Big(\bigcap_nA_n\Big)\ge1 - \sum_{n=1}^\infty3^{-n} = 1 - \frac{1/3}{1 - 1/3} = 1 - \frac12 = \frac12.$$
+
+**(d)** If $A_n\uparrow$, then $A_n\to\bigcup_nA_n$, so by continuity $P\left(\bigcup A_n\right) = \lim_n(1 - 3^{-n}) = 1$. The trap is the intersection: every $A_n$ contains $A_1$, so $\bigcap_nA_n = A_1$ and $P\left(\bigcap A_n\right) = P(A_1) = 1 - \frac13 = \frac23$. This is consistent with (c): the bound $\frac12$ is valid but not attained here. (The union bound is tight only when the complements $A_n^c$ are disjoint.)` },
 ]);

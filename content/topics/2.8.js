@@ -117,4 +117,44 @@ DRILLS('2.8', [
   { k: '12', lvl: 2, q: R`$f(x,y) = \tfrac{21}4x^2y$ on $x^2\le y\le1$, with $f_Y(y) = \tfrac72y^{5/2}$. Find $f_{X|Y}(x|y)$ for $-\sqrt y\le x\le\sqrt y$.`,
     h: [R`Divide and simplify powers of $y$.`], a: [['$f_{X|Y}(x|y)$', '3/2*x^2*y^(-3/2)', { x: [-0.3, 0.3], y: [0.2, 1] }]],
     s: R`$f_{X|Y}(x|y) = \frac{\tfrac{21}4x^2y}{\tfrac72y^{5/2}} = \frac32\,x^2y^{-3/2}$, $|x|\le\sqrt y$. Check: $\int_{-\sqrt y}^{\sqrt y}\tfrac32x^2y^{-3/2}\dd x = \tfrac32\cdot\tfrac23y^{3/2}y^{-3/2} = 1$ ✓.` },
+  { k: '13', lvl: 3, q: R`A coin has unknown heads probability $X\sim\operatorname{Unif}(0,1)$. Given $X = x$, it is tossed twice, so the number of heads is $Y\mid X=x\sim\operatorname{Bin}(2, x)$. Find $P(Y = 2)$, the conditional density $f_{X|Y}(x\mid 2)$, and $P(X > \tfrac12\mid Y = 2)$.`,
+    h: [R`This mixes a continuous $X$ with a discrete $Y$, but the rule is the same: joint = conditional × marginal, $f(x, y) = P(Y = y\mid X = x)f_X(x) = \binom2y x^y(1-x)^{2-y}$ on $0<x<1$.`, R`$P(Y = 2) = \int_0^1 x^2\cdot1\dd x$. (Trap: it is not $\tfrac14$. That would be the answer for a fair coin, $x = \tfrac12$.)`, R`Bayes: $f_{X|Y}(x\mid2) = \dfrac{P(Y=2\mid X=x)f_X(x)}{P(Y=2)}$. Check that it integrates to 1 on $(0,1)$.`],
+    a: [['$P(Y=2)$', '1/3'], [R`$f_{X|Y}(x\mid2)$`, '3*x^2', { x: [0, 1] }], [R`$P(X>\tfrac12\mid Y=2)$`, '7/8']],
+    s: R`**Joint.** $f(x, 2) = P(Y=2\mid X=x)f_X(x) = x^2$ for $0<x<1$.
+
+**Marginal of $Y$** (integrate $x$ out, as in the law of total probability):
+$$P(Y=2) = \int_0^1 x^2\dd x = \tfrac13.$$
+(Similarly $P(Y=1) = \int_0^1 2x(1-x)\dd x = \tfrac13$ and $P(Y=0) = \tfrac13$: with a uniform prior, $Y$ is uniform on $\{0,1,2\}$.)
+
+**Conditional of $X$ given $Y=2$:**
+$$f_{X|Y}(x\mid2) = \frac{x^2}{1/3} = 3x^2,\quad 0<x<1.$$
+Check: $\int_0^13x^2\dd x = 1$ ✓.
+
+**Probability:** $P(X>\tfrac12\mid Y=2) = \int_{1/2}^1 3x^2\dd x = 1 - \tfrac18 = \tfrac78$.
+
+Two heads in a row moves the coin's heads probability toward 1: before tossing, $P(X>\tfrac12) = \tfrac12$; after, it is $\tfrac78$.` },
+  { k: '14', lvl: 4, q: R`(Exam style, 20 pt.) $f_{X,Y}(x,y) = c\,(y - x)$ for $0 < x < y < 1$, and $0$ otherwise.
+
+(a) Find $c$.
+
+(b) Find $f_Y(y)$ and the conditional density $f_{X|Y}(x\mid y)$ for $0<x<y$.
+
+(c) Find $P(X < \tfrac14\mid Y = \tfrac12)$.
+
+(d) Find $P(Y > \tfrac34\mid X < \tfrac12)$. Note this conditions on an *event*, not on a value.`,
+    h: [R`(a) Inner integral over $x$ from $0$ to $y$: $\int_0^y(y-x)\dd x = \tfrac{y^2}2$.`, R`(b) The same inner integral gives $f_Y$. Then divide: $f_{X|Y} = f_{X,Y}/f_Y$, keeping the support $0<x<y$.`, R`(c) Plug $y = \tfrac12$ into the conditional density and integrate $x$ from $0$ to $\tfrac14$.`, R`(d) Use $P(A\mid B) = P(A\cap B)/P(B)$. For $P(X<\tfrac12)$ you need $f_X(x) = \int_x^1 c(y-x)\dd y$. For the numerator: every point with $x<\tfrac12<\tfrac34<y$ is in the support, so integrate over the rectangle $(0,\tfrac12)\times(\tfrac34,1)$.`],
+    a: [['$c$', '6'], [R`$f_{X|Y}(x\mid y)$`, '2*(y-x)/y^2', { x: [0, 0.3], y: [0.4, 1] }], [R`$P(X<\tfrac14\mid Y=\tfrac12)$`, '3/4'], [R`$P(Y>\tfrac34\mid X<\tfrac12)$`, '15/28']],
+    s: R`**(a)** $c(y-x) \ge 0$ on the support requires $c > 0$, and
+$$\int_0^1\!\!\int_0^y c(y-x)\dd x\dd y = c\int_0^1\Big[yx - \tfrac{x^2}2\Big]_0^y\dd y = c\int_0^1\tfrac{y^2}{2}\dd y = \frac c6 = 1\ \Rightarrow\ \boxed{c = 6}.$$
+**(b)** $f_Y(y) = \int_0^y 6(y-x)\dd x = 3y^2$ for $0<y<1$. So
+$$f_{X|Y}(x\mid y) = \frac{6(y-x)}{3y^2} = \frac{2(y-x)}{y^2},\quad 0<x<y.$$
+Check: $\int_0^y\frac{2(y-x)}{y^2}\dd x = \frac{2}{y^2}\cdot\frac{y^2}{2} = 1$ ✓. (Given $Y = y$, $X$ has a triangular density on $(0, y)$, highest near $0$.)
+
+**(c)** At $y = \tfrac12$: $f_{X|Y}(x\mid\tfrac12) = 8(\tfrac12 - x)$ on $(0,\tfrac12)$. So
+$$P(X<\tfrac14\mid Y=\tfrac12) = \int_0^{1/4}8\left(\tfrac12 - x\right)\dd x = 8\left(\tfrac18 - \tfrac1{32}\right) = \tfrac34.$$
+**(d)** Marginal of $X$: $f_X(x) = \int_x^1 6(y-x)\dd y = 3(1-x)^2$, $0<x<1$. Then $P(X<\tfrac12) = \int_0^{1/2}3(1-x)^2\dd x = 1 - \left(\tfrac12\right)^3 = \tfrac78$.
+
+Numerator: the rectangle $\{0<x<\tfrac12,\ \tfrac34<y<1\}$ lies inside the support, so
+$$P(X<\tfrac12, Y>\tfrac34) = \int_{3/4}^1\!\!\int_0^{1/2}6(y-x)\dd x\dd y = \int_{3/4}^1\left(3y - \tfrac34\right)\dd y = \tfrac32\left(1 - \tfrac9{16}\right) - \tfrac3{16} = \tfrac{21}{32} - \tfrac{6}{32} = \tfrac{15}{32}.$$
+$$P(Y>\tfrac34\mid X<\tfrac12) = \frac{15/32}{7/8} = \frac{15}{28}\approx0.536.$$` },
 ]);

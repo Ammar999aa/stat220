@@ -48,4 +48,29 @@ DRILLS('2.4', [
   { k: '10', lvl: 1, q: R`$X\sim\operatorname{Bin}(5,\frac12)$ and $Y\sim\operatorname{Bin}(5,\frac12)$ independent. $P(X+Y = 10)$?`, h: [R`$\operatorname{Bin}(10,\frac12)$.`], a: '1/1024', s: R`$2^{-10}$.` },
   { k: '11', lvl: 1, q: R`$X$ is a point mass at 3. Find $F(2.9)$ and $F(3)$.`, h: [R`Right-continuous step at 3.`], a: [['$F(2.9)$', '0'], ['$F(3)$', '1']], s: R`$0$ and $1$.` },
   { k: '12', lvl: 3, q: R`A box has 4 red and 6 blue balls. Draw **with** replacement 5 times. $P(\text{exactly 2 red})$?`, h: [R`$\operatorname{Bin}(5, 0.4)$.`], a: '10*0.4^2*0.6^3', s: R`$\binom52(0.4)^2(0.6)^3 = 10\cdot0.16\cdot0.216 = 0.3456$.` },
+  { k: '13', lvl: 3, q: R`Roll a fair die until the first six; $X$ = number of rolls. Find $P(X\text{ is even})$ and $P(X\le4\mid X\text{ even})$.`,
+    h: [R`$X\sim\operatorname{Geom}(\frac16)$ on $\{1,2,\dots\}$: $P(X = k) = \left(\frac56\right)^{k-1}\frac16$.`, R`$P(X\text{ even}) = \sum_{m\ge1}\left(\frac56\right)^{2m-1}\frac16$ is a geometric series with ratio $\left(\frac56\right)^2$.`, R`$\{X\le4\}\cap\{X\text{ even}\} = \{X\in\{2,4\}\}$.`],
+    a: [[R`$P(X\text{ even})$`, '5/11'], [R`$P(X\le4\mid X\text{ even})$`, '671/1296']],
+    s: R`**Even.** With $q = \frac56$, $p = \frac16$:
+$$P(X\text{ even}) = \sum_{m\ge1}q^{2m-1}p = \frac{qp}{1-q^2} = \frac{q\,p}{(1-q)(1+q)} = \frac{q}{1+q} = \frac{5/6}{11/6} = \frac5{11}.$$
+(Slightly less than $\frac12$: odd values, starting with $X = 1$, are a bit more likely.)
+
+**Conditional.** $P(X\in\{2,4\}) = \frac56\cdot\frac16 + \left(\frac56\right)^3\frac16 = \frac{5}{36} + \frac{125}{1296} = \frac{305}{1296}$. So
+$$P(X\le4\mid X\text{ even}) = \frac{305/1296}{5/11} = \frac{305\cdot11}{1296\cdot5} = \frac{671}{1296}\approx0.518.$$` },
+  { k: '14', lvl: 4, q: R`The number of flaws in a 4 m piece of cable is $\operatorname{Poisson}(2)$, independently from piece to piece. A piece is accepted if it has at most one flaw. (a) Find $p = P(\text{a piece is accepted})$. (b) Five pieces are inspected: find $P(\text{at least 2 accepted})$. (c) Pieces are inspected one by one: find $P(\text{the first rejected piece is the 3rd})$. (d) Given that a piece is rejected, find the probability that it has exactly 2 flaws.`,
+    h: [R`(a) $P(N\le1) = e^{-2}(1 + 2)$.`, R`(b) The number accepted among 5 independent pieces is $\operatorname{Bin}(5,p)$. Use the complement: $1 - P(0) - P(1)$.`, R`(c) The index of the first rejected piece is $\operatorname{Geom}(1-p)$: "success" now means *rejected*.`, R`(d) $P(N = 2\mid N\ge2) = \frac{P(N=2)}{1 - P(N\le1)}$.`],
+    a: [['$p$', '3*exp(-2)'], ['(b)', '1-(1-3*exp(-2))^5-5*3*exp(-2)*(1-3*exp(-2))^4'], ['(c)', '(3*exp(-2))^2*(1-3*exp(-2))'], ['(d)', '2*exp(-2)/(1-3*exp(-2))']],
+    s: R`Let $N\sim\operatorname{Poisson}(2)$ be the flaws in one piece.
+
+**(a)** $p = P(N = 0) + P(N = 1) = e^{-2} + 2e^{-2} = 3e^{-2}\approx0.406$.
+
+**(b)** Pieces are independent, each accepted w.p. $p$, so $A\sim\operatorname{Bin}(5,p)$ accepted pieces:
+$$P(A\ge2) = 1 - (1-p)^5 - 5p(1-p)^4\approx1 - 0.0739 - 0.2527 = 0.673.$$
+
+**(c)** The first rejection is at piece 3 iff pieces 1 and 2 are accepted and piece 3 is rejected. With $R\sim\operatorname{Geom}(1-p)$:
+$$P(R = 3) = p^2(1-p) = 9e^{-4}(1 - 3e^{-2})\approx0.098.$$
+(Trap: $(1-p)^2p$ would be "first *acceptance* at piece 3".)
+
+**(d)** Rejected means $N\ge2$, and $\{N = 2\}\subseteq\{N\ge2\}$:
+$$P(N = 2\mid N\ge2) = \frac{e^{-2}2^2/2!}{1 - 3e^{-2}} = \frac{2e^{-2}}{1 - 3e^{-2}}\approx0.456.$$` },
 ]);

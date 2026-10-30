@@ -40,4 +40,28 @@ DRILLS('4.4', [
   { k: '07', lvl: 2, q: R`$E(X) = -1$. Lower bound for $E(\max(X,0))$ from Jensen?`, h: [R`$\max(x,0)$ is convex.`], a: '0', s: R`$E\max(X,0)\ge\max(EX,0) = 0$. (Trivial here, but with $E(X) = 2$ you'd get $\ge2$.)` },
   { k: '08', lvl: 1, q: R`If $g$ is strictly convex and $E g(X) = g(E X)$, what can you conclude about $X$?`, h: [R`Equality case.`], a: { choice: ['X is constant (a.s.)', 'X is symmetric', 'Nothing'], v: 0 }, s: R`$X$ is almost surely constant.` },
   { k: '09', lvl: 2, q: R`Show $E|X|\ge|E(X)|$. If $X$ takes values $-3$ and $1$ with probability $\frac12$ each, compute both sides.`, h: [R`$|x|$ is convex.`], a: [['$E|X|$', '2'], ['$|E X|$', '1']], s: R`Jensen with $g = |\cdot|$. Here $E|X| = 2\ge|{-1}| = 1$.` },
+  { k: '10', lvl: 3, q: R`$X_1,\dots,X_n$ iid with variance $\sigma^2$, and $S^2 = \frac1{n-1}\sum(X_i - \bar X)^2$ is unbiased: $E(S^2) = \sigma^2$. (a) Is the sample standard deviation $S$ an unbiased estimator of $\sigma$? Use Jensen. (b) For $n = 2$ and $X_i\sim N(0,1)$, compute $E(S)$ exactly.`,
+    h: [R`$S = \sqrt{S^2}$ and $\sqrt{\cdot}$ is **strictly** concave. Jensen: $E\sqrt{S^2}\le\sqrt{E(S^2)}$. When is it an equality?`, R`For $n = 2$: $\bar X = \frac{X_1+X_2}2$, so $(X_1 - \bar X)^2 + (X_2 - \bar X)^2 = \frac{(X_1 - X_2)^2}{2}$ and $S = \frac{|X_1 - X_2|}{\sqrt2}$.`, R`$X_1 - X_2\sim N(0,2)$, and for $W\sim N(0,\tau^2)$, $E|W| = \tau\sqrt{2/\pi}$.`],
+    a: [['(a)', { choice: ['Unbiased: E(S) = σ', 'Biased downward: E(S) < σ', 'Biased upward: E(S) > σ'], v: 1 }], ['(b) E(S)', 'sqrt(2/pi)']],
+    s: R`**(a)** Since $\sqrt{\cdot}$ is concave, Jensen gives $E(S) = E\sqrt{S^2}\le\sqrt{E(S^2)} = \sigma$. Because $\sqrt{\cdot}$ is strictly concave, equality would need $S^2$ to be constant, which it is not (for any non-degenerate distribution). So $E(S)<\sigma$: $S$ **underestimates** $\sigma$ on average, even though $S^2$ is unbiased for $\sigma^2$. Unbiasedness is not preserved by nonlinear maps.
+
+**(b)** With $n = 2$, $X_1 - \bar X = \frac{X_1 - X_2}{2} = -(X_2 - \bar X)$, so $S^2 = \frac{1}{1}\cdot2\cdot\frac{(X_1 - X_2)^2}{4} = \frac{(X_1-X_2)^2}{2}$ and $S = \frac{|X_1 - X_2|}{\sqrt2}$. Now $W = X_1 - X_2\sim N(0,2)$, i.e. $W = \sqrt2Z$, and $E|Z| = 2\int_0^\infty z\frac{e^{-z^2/2}}{\sqrt{2\pi}}\dd z = \sqrt{\frac2\pi}$. Hence
+$$E(S) = \frac{\sqrt2\,E|Z|}{\sqrt2} = \sqrt{\frac2\pi}\approx0.798<1 = \sigma.$$` },
+  { k: '11', lvl: 4, q: R`(Gibbs' inequality) Let $p = (p_1,\dots,p_k)$ and $q = (q_1,\dots,q_k)$ be pmfs on $\{1,\dots,k\}$ with all entries positive. The Kullback–Leibler divergence is $D(p\,\|\,q) = \sum_ip_i\log\frac{p_i}{q_i}$.
+(a) Prove $D(p\,\|\,q)\ge0$, with equality iff $p = q$.
+(b) Compute $D(p\,\|\,q)$ and $D(q\,\|\,p)$ for $p = \left(\frac12,\frac14,\frac14\right)$ and $q = \left(\frac13,\frac13,\frac13\right)$.
+(c) As a corollary of (a) with $q$ uniform, what is the largest possible value of the entropy $H(p) = -\sum p_i\log p_i$ when $k = 3$?`,
+    h: [R`Define a random variable: let $I\sim p$ (so $P(I = i) = p_i$) and $X = \frac{q_I}{p_I}$. Then $-D(p\,\|\,q) = E(\log X)$.`, R`$\log$ is concave, so $E(\log X)\le\log E(X)$. Compute $E(X) = \sum_ip_i\frac{q_i}{p_i}$.`, R`Equality: $\log$ is strictly concave, so $X$ must be constant, i.e. $q_i = cp_i$ for all $i$; summing over $i$ forces $c = 1$.`, R`For (c): with $q_i = \frac1k$, $D(p\,\|\,q) = \log k - H(p)$.`],
+    a: [[R`$D(p\,\|\,q)$`, 'log(3)-1.5*log(2)'], [R`$D(q\,\|\,p)$`, 'log(32/27)/3'], ['(c) max entropy', 'log(3)']],
+    s: R`**(a)** Let $I$ take value $i$ with probability $p_i$, and $X = q_I/p_I>0$. Then
+$$-D(p\,\|\,q) = \sum_ip_i\log\frac{q_i}{p_i} = E(\log X)\le\log E(X) = \log\sum_ip_i\frac{q_i}{p_i} = \log\sum_iq_i = \log1 = 0,$$
+by Jensen ($\log$ concave). So $D(p\,\|\,q)\ge0$. Since $\log$ is strictly concave, equality requires $X$ to be constant: $q_i = cp_i$ for all $i$. Summing, $1 = c\cdot1$, so $c = 1$ and $p = q$. Conversely $p = q$ clearly gives 0.
+
+**(b)** $D(p\,\|\,q) = \sum p_i\log(3p_i) = \log3 + \sum p_i\log p_i = \log3 + \frac12\log\frac12 + 2\cdot\frac14\log\frac14 = \log3 - \frac32\log2\approx0.0589$.
+
+$D(q\,\|\,p) = \frac13\left[\log\frac{1/3}{1/2} + 2\log\frac{1/3}{1/4}\right] = \frac13\log\left(\frac23\cdot\frac{16}{9}\right) = \frac13\log\frac{32}{27}\approx0.0566$.
+
+Both are positive, but they differ: KL divergence is **not symmetric**, so it is not a distance.
+
+**(c)** With $q$ uniform, $D(p\,\|\,q) = \sum p_i\log(kp_i) = \log k - H(p)\ge0$, so $H(p)\le\log k$, with equality iff $p$ is uniform. For $k = 3$: $\max H = \log3\approx1.099$.` },
 ]);

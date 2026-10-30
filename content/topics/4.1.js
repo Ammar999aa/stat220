@@ -54,4 +54,33 @@ DRILLS('4.1', [
   { k: '10', lvl: 2, q: R`$Z\sim N(0,1)$, so $E(Z^4) = 3$. Use Markov on $Z^4$ to bound $P(|Z|>2)$.`, h: [R`$P(Z^4>16)$.`], a: '3/16', s: R`$\frac{3}{16}\approx0.1875$, better than Chebyshev's $0.25$. Higher moments give sharper bounds.` },
   { k: '11', lvl: 2, q: R`$X\sim\operatorname{Exp}(\beta = 2)$. Chebyshev bound for $P(|X-2|>4)$, and the exact probability.`, h: [R`$\operatorname{var} = 4$. $|X-2|>4\iff X>6$ (as $X>0$).`], a: [['bound', '1/4'], ['exact', 'exp(-3)']], s: R`Bound $\frac4{16} = \frac14$. Exact: $P(X>6) = e^{-3}\approx0.0498$.` },
   { k: '12', lvl: 3, q: R`$X$ takes values $0$ and $10$ with $P(X = 10) = 0.1$. Compute Markov's bound for $P(X\ge10)$ and compare with the truth.`, h: [R`$E(X) = 1$.`], a: '0.1', s: R`$\frac{E(X)}{10} = 0.1$, exactly the true probability. Markov's inequality cannot be improved in general: it is attained by two-point distributions like this one.` },
+  { k: '13', lvl: 3, q: R`$X\ge0$ has $E(X) = 10$ and $\operatorname{var}(X) = 4$. (a) Use Chebyshev to give a lower bound for $P(6<X<16)$. (b) Use Cantelli (one-sided Chebyshev) to bound $P(X\ge16)$. (c) Use Cantelli on each tail separately, $P(X\le6)$ and $P(X\ge16)$, and combine them into a second lower bound for $P(6<X<16)$.`,
+    h: [R`Chebyshev only controls intervals **symmetric** about $\mu = 10$. The interval $(6,16)$ is not symmetric, so use the largest symmetric interval inside it: $(6,14)$. Since $(6,14)\subseteq(6,16)$, a lower bound for the smaller interval is also one for the bigger.`, R`Cantelli is stated for mean 0. Apply it to $Y = X - 10$ for the upper tail, and to $Y = 10 - X$ for the lower tail: $P(Y\ge t)\le\frac{\sigma^2}{\sigma^2+t^2}$, with $t = 6$ and $t = 4$.`, R`For (c): $P(6<X<16) = 1 - P(X\le6) - P(X\ge16)$, so subtract both upper bounds from 1. Then compare with (a). Using more targeted tools piece by piece does not always win.`],
+    a: [['(a) Chebyshev lower bound', '3/4'], [R`(b) Cantelli bound on $P(X\ge16)$`, '1/10'], ['(c) combined lower bound', '7/10']],
+    s: R`**(a)** The trap is to plug in $t = 6$, the distance to the far endpoint. Chebyshev controls $|X - 10|$, so we need an interval symmetric about 10 that fits inside $(6,16)$; the largest is $(6,14)$, with $t = 4$:
+$$P(6<X<16)\ge P(|X-10|<4) = 1 - P(|X-10|\ge4)\ge1 - \frac{4}{16} = \frac34.$$
+**(b)** $Y = X - 10$ has mean 0 and variance 4. By Cantelli, $P(X\ge16) = P(Y\ge6)\le\frac{4}{4+36} = \frac1{10}$. (Two-sided Chebyshev would give $\frac{4}{36} = \frac19$, and Markov $\frac{10}{16}$. Cantelli is the sharpest of the three.)
+
+**(c)** $Y' = 10 - X$ also has mean 0 and variance 4, so $P(X\le6) = P(Y'\ge4)\le\frac{4}{4+16} = \frac15$. Hence
+$$P(6<X<16) = 1 - P(X\le6) - P(X\ge16)\ge1 - \frac15 - \frac1{10} = \frac{7}{10}.$$
+This is **weaker** than (a): $\frac{7}{10}<\frac34$. Adding two one-sided bounds wastes accuracy (on the symmetric interval, two Cantelli bounds give $1 - \frac25 = \frac35$, much worse than Chebyshev's $\frac34$). Use Cantelli for a single tail and Chebyshev for a two-sided interval.` },
+  { k: '14', lvl: 4, q: R`(Chernoff bound) Let $X = X_1 + X_2$ with $X_1, X_2\iid\operatorname{Exp}(\beta = 1)$.
+(a) Show that for every $0<s<1$ and $t>0$: $P(X\ge t)\le e^{-st}\,\psi_X(s)$, and find $\psi_X(s)$.
+(b) For $t = 10$, choose $s$ to minimize the bound. Give the optimal $s$ and the resulting bound.
+(c) Compare with Chebyshev's bound and with the exact value of $P(X\ge10)$.`,
+    h: [R`Same trick as in the proof of Hoeffding: for $s>0$, $\{X\ge t\} = \{e^{sX}\ge e^{st}\}$, and $e^{sX}\ge0$, so Markov applies to $e^{sX}$.`, R`The MGF of $\operatorname{Exp}(\beta)$ is $\frac{1}{1-\beta s}$ for $s<1/\beta$. For a sum of independent variables, the MGFs multiply: $\psi_X(s) = (1-s)^{-2}$.`, R`Minimize $\log$ of the bound, $-st - 2\log(1-s)$: the derivative is $-t + \frac{2}{1-s} = 0$, so $1 - s = \frac2t$.`, R`Chebyshev: $E(X) = 2$, $\operatorname{var}(X) = 2$, and $\{X\ge10\}\subseteq\{|X-2|\ge8\}$. Exact: $X\sim\operatorname{Gamma}(2,1)$, so $P(X\ge t) = \int_t^\infty xe^{-x}\dd x$ (integrate by parts).`],
+    a: [['optimal s', '4/5'], ['Chernoff bound', '25*exp(-8)'], ['Chebyshev bound', '1/32'], ['exact', '11*exp(-10)']],
+    s: R`**(a)** For $s>0$ the map $x\mapsto e^{sx}$ is increasing, so $\{X\ge t\} = \{e^{sX}\ge e^{st}\}$. Since $e^{sX}\ge0$ and (for $s<1$) $E(e^{sX})<\infty$, Markov gives
+$$P(X\ge t) = P(e^{sX}\ge e^{st})\le\frac{E(e^{sX})}{e^{st}} = e^{-st}\psi_X(s).$$
+Each $X_i$ has MGF $\psi(s) = \int_0^\infty e^{sx}e^{-x}\dd x = \frac1{1-s}$ for $s<1$. By independence, $\psi_X(s) = \psi(s)^2 = \frac{1}{(1-s)^2}$.
+
+**(b)** Minimize $g(s) = -st - 2\log(1-s)$ over $0<s<1$: $g'(s) = -t + \frac{2}{1-s} = 0\Rightarrow s^* = 1 - \frac2t$, and $g'' = \frac{2}{(1-s)^2}>0$, so it is a minimum. With $t = 10$: $s^* = \frac45$, and
+$$P(X\ge10)\le e^{-8}\cdot\frac{1}{(1/5)^2} = 25e^{-8}\approx0.0084.$$
+(In general the bound is $\left(\frac t2\right)^2e^{-(t-2)}$.)
+
+**(c)** $E(X) = 2$ and $\operatorname{var}(X) = 1 + 1 = 2$. Since $X\ge10\Rightarrow|X - 2|\ge8$, Chebyshev gives $P(X\ge10)\le\frac{2}{64} = \frac1{32}\approx0.031$. (Markov would give $\frac{2}{10} = 0.2$.)
+
+Exact: $X\sim\operatorname{Gamma}(2,1)$ with density $xe^{-x}$, so
+$$P(X\ge10) = \int_{10}^\infty xe^{-x}\dd x = \Big[-xe^{-x} - e^{-x}\Big]_{10}^\infty = 11e^{-10}\approx0.0005.$$
+Ranking: exact $0.0005<$ Chernoff $0.0084<$ Chebyshev $0.031<$ Markov $0.2$. Using the whole MGF (all moments) gives an exponentially decaying bound, which is why it beats the polynomial bounds far in the tail.` },
 ]);

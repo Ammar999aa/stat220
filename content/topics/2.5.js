@@ -52,4 +52,27 @@ DRILLS('2.5', [
   { k: '11', lvl: 2, q: R`Compute $\int_{-\infty}^\infty e^{-x^2/8}\dd x$.`, h: [R`$\sigma^2 = 4$.`], a: '2*sqrt(2*pi)', s: R`$\sigma\sqrt{2\pi}$ with $\sigma = 2$: $2\sqrt{2\pi}\approx5.013$.` },
   { k: '12', lvl: 2, q: R`$S$ = sum of 48 iid $\operatorname{Unif}(0,1)$. With $\Phi(1) = 0.8413$, approximate $P(S>26)$.`, h: [R`Mean $24$, variance $48/12 = 4$.`], a: '0.1587', s: R`$S\approx N(24,4)$, so $P(S>26)\approx1 - \Phi(1) = 0.1587$.` },
   { k: '13', lvl: 2, q: R`Pareto: $P(X>x) = x^{-3}$ for $x>1$. Find $P(X>2)$ and the density at $x = 2$.`, h: [R`$f = 3x^{-4}$.`], a: [['$P(X>2)$', '1/8'], ['$f(2)$', '3/16']], s: R`$2^{-3} = \frac18$; $f(x) = 3x^{-4}$, so $f(2) = \frac3{16}$.` },
+  { k: '14', lvl: 3, q: R`$X\sim N(\mu,\sigma^2)$ with $P(X\le8) = 0.8413$ and $P(X\le2) = 0.0228$. Using $\Phi(1) = 0.8413$, $\Phi(2) = 0.9772$ and $\Phi(1.5) = 0.9332$, find $\mu$, $\sigma$ and $P(X>9)$.`,
+    h: [R`$P(X\le x) = \Phi\left(\frac{x-\mu}{\sigma}\right)$. Turn each given probability into a $z$-value.`, R`$0.0228 = 1 - 0.9772 = \Phi(-2)$ by symmetry, so $\frac{2-\mu}\sigma = -2$. Similarly $\frac{8-\mu}\sigma = 1$.`, R`Two linear equations: $\mu + \sigma = 8$, $\mu - 2\sigma = 2$.`],
+    a: [[R`$\mu$`, '6'], [R`$\sigma$`, '2'], ['$P(X>9)$', '0.0668']],
+    s: R`$\Phi\left(\frac{8-\mu}{\sigma}\right) = 0.8413 = \Phi(1)$ gives $8 - \mu = \sigma$. And $0.0228 = 1 - \Phi(2) = \Phi(-2)$, so $\frac{2-\mu}{\sigma} = -2$, i.e. $\mu - 2\sigma = 2$. Subtracting: $3\sigma = 6$, so $\sigma = 2$ and $\mu = 6$.
+
+Then $P(X>9) = 1 - \Phi\left(\frac{9-6}{2}\right) = 1 - \Phi(1.5) = 0.0668$.
+
+(Trap: the second equation needs $\Phi(-z) = 1 - \Phi(z)$; the table only lists positive $z$.)` },
+  { k: '15', lvl: 4, q: R`$X$ has density $f(x) = c\,x^3e^{-x/2}$ for $x>0$. (a) Identify the distribution and find $c$. (b) Show that for $X\sim\operatorname{Gamma}(n,\beta)$ with integer $n$,
+$$P(X>x) = e^{-x/\beta}\sum_{k=0}^{n-1}\frac{(x/\beta)^k}{k!}.$$
+(c) Use (b) to compute $P(X>4)$ and $P(X\le4\mid X>2)$.`,
+    h: [R`Match $x^{\alpha-1}e^{-x/\beta}$: $\alpha = 4$, $\beta = 2$. Then $c = \frac1{\beta^\alpha\Gamma(\alpha)}$. (It is also $\chi^2_8$.)`, R`(b) Substitute $u = t/\beta$: $P(X>x) = \frac{1}{(n-1)!}\int_{x/\beta}^\infty u^{n-1}e^{-u}\dd u$. Integrate by parts once to get $\frac{(x/\beta)^{n-1}}{(n-1)!}e^{-x/\beta}$ plus the same expression with $n-1$; then induct down to $n = 1$ (the exponential).`, R`(c) With $n = 4$, $\beta = 2$: $P(X>x) = e^{-x/2}\left(1 + \frac x2 + \frac{x^2}{8} + \frac{x^3}{48}\right)$.`, R`$P(X\le4\mid X>2) = \frac{P(2<X\le4)}{P(X>2)} = 1 - \frac{P(X>4)}{P(X>2)}$.`],
+    a: [['$c$', '1/96'], ['$P(X>4)$', '19/3*exp(-2)'], [R`$P(X\le4\mid X>2)$`, '1-19/(8*exp(1))']],
+    s: R`**(a)** $x^{4-1}e^{-x/2}$ is the kernel of $\operatorname{Gamma}(4, 2)$ (equivalently $\chi^2_8$). By the Gamma integral, $\int_0^\infty x^3e^{-x/2}\dd x = 2^4\Gamma(4) = 16\cdot6 = 96$, so $c = \frac1{96}$.
+
+**(b)** Let $G_n(y) = \frac1{(n-1)!}\int_y^\infty u^{n-1}e^{-u}\dd u$. With $u = t/\beta$, $P(X>x) = G_n(x/\beta)$. Integrating by parts ($u^{n-1}$ differentiated, $e^{-u}$ integrated):
+$$G_n(y) = \frac{1}{(n-1)!}\Big[-u^{n-1}e^{-u}\Big]_y^\infty + \frac{1}{(n-2)!}\int_y^\infty u^{n-2}e^{-u}\dd u = \frac{y^{n-1}}{(n-1)!}e^{-y} + G_{n-1}(y).$$
+Since $G_1(y) = e^{-y}$ (exponential tail), repeating gives $G_n(y) = e^{-y}\sum_{k=0}^{n-1}\frac{y^k}{k!}$. (Interpretation: the $n$-th event of a Poisson process comes after $x$ iff fewer than $n$ events happen by $x$.)
+
+**(c)** With $n = 4$, $\beta = 2$:
+$$P(X>4) = e^{-2}\left(1 + 2 + \frac{4}{2} + \frac{8}{6}\right) = \frac{19}{3}e^{-2}\approx0.857,\qquad P(X>2) = e^{-1}\left(1 + 1 + \frac12 + \frac16\right) = \frac83e^{-1}.$$
+Since $\{X>4\}\subseteq\{X>2\}$,
+$$P(X\le4\mid X>2) = 1 - \frac{\frac{19}3e^{-2}}{\frac83e^{-1}} = 1 - \frac{19}{8e}\approx0.126.$$` },
 ]);

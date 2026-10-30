@@ -106,4 +106,33 @@ DRILLS('3.7', [
     s: R`$\psi_{\bar X_n}(t) = \prod_i\psi_{X_i}(t/n) = \left(1-\frac\beta nt\right)^{-n\alpha}$, the $\operatorname{Gamma}(n\alpha,\beta/n)$ MGF. Here $\operatorname{Gamma}(10, 0.2)$.` },
   { k: '16', lvl: 2, q: R`Does the standard Cauchy distribution have an MGF (finite in a neighbourhood of 0)?`, h: [R`Its mean is not even defined.`], a: { choice: ['Yes', 'No'], v: 1 },
     s: R`No. For any $t\ne0$, $E(e^{tX}) = \infty$ because $e^{tx}$ grows exponentially in one tail while the density only decays like $1/x^2$. A finite MGF near 0 would imply that all moments exist.` },
+  { k: '17', lvl: 3, q: R`$X\sim\operatorname{Poisson}(\lambda = 2)$. Find $E(X^3)$ and the third central moment $E\big[(X-\mu)^3\big]$.`,
+    h: [R`The CGF is $\varphi(t) = \lambda(e^t-1)$, so **every** derivative is $\lambda e^t$ and equals $\lambda$ at $0$.`, R`Fact (check it by differentiating $\log\psi$ three times): $\varphi'''(0) = E(X^3) - 3E(X^2)E(X) + 2E(X)^3 = E[(X-\mu)^3]$. So the third cumulant is the third central moment.`, R`Expand $E[(X-\mu)^3] = E(X^3) - 3\mu E(X^2) + 2\mu^3$ and solve for $E(X^3)$, using $E(X^2) = \lambda + \lambda^2$.`],
+    a: [['$E(X^3)$', '22'], [R`$E[(X-\mu)^3]$`, '2']],
+    s: R`$\varphi(t) = \log\psi(t) = \lambda(e^t - 1)$, so $\varphi'(0) = \varphi''(0) = \varphi'''(0) = \lambda$.
+
+With $m_k = \psi^{(k)}(0)$: $\varphi' = \psi'/\psi$, $\varphi'' = \psi''/\psi - (\psi'/\psi)^2$, $\varphi''' = \psi'''/\psi - 3\psi''\psi'/\psi^2 + 2(\psi'/\psi)^3$. At $0$ (where $\psi = 1$):
+$$\varphi'''(0) = m_3 - 3m_2m_1 + 2m_1^3 = E[(X-\mu)^3].$$
+So $E[(X-\mu)^3] = \lambda = 2$, and
+$$E(X^3) = E[(X-\mu)^3] + 3\mu E(X^2) - 2\mu^3 = \lambda + 3\lambda(\lambda+\lambda^2) - 2\lambda^3 = \lambda^3 + 3\lambda^2 + \lambda = 8 + 12 + 2 = 22.$$
+(Direct route: $\psi' = \lambda e^t\psi$, $\psi'' = (\lambda e^t + \lambda^2e^{2t})\psi$, $\psi''' = (\lambda e^t + 3\lambda^2e^{2t} + \lambda^3e^{3t})\psi$, so $\psi'''(0) = \lambda + 3\lambda^2 + \lambda^3 = 22$ ✓.) The positive third central moment says the Poisson is skewed to the right.` },
+  { k: '18', lvl: 4, q: R`(Exam style.) $X$ has the Laplace density $f_X(x) = \frac12e^{-|x|}$, $x\in\R$.
+(a) Derive $\psi_X(t)$ and state for which $t$ it exists.
+(b) Expand $\psi_X$ as a power series to read off all moments; give $E(X^4)$.
+(c) Let $Y_1,Y_2\iid\operatorname{Exp}(1)$. Use MGFs to show $Y_1 - Y_2$ has the Laplace distribution.
+(d) For $X_1,\dots,X_n$ iid Laplace, find $\psi_{\bar X_n}(t)$, and from its CGF find $\operatorname{var}(\bar X_n)$; enter it for $n = 10$.`,
+    h: [R`Split at 0: $\psi_X(t) = \frac12\int_0^\infty e^{-(1-t)x}\dd x + \frac12\int_{-\infty}^0e^{(1+t)x}\dd x$. Each piece needs its own condition on $t$.`, R`$\frac1{1-t^2} = \sum_{k\ge0}t^{2k}$, and $\psi(t) = \sum_k E(X^k)\frac{t^k}{k!}$. Match coefficients.`, R`$\psi_{Y_1-Y_2}(t) = \psi_{Y_1}(t)\,\psi_{Y_2}(-t)$ by independence. Then uniqueness.`, R`$\psi_{\bar X_n}(t) = [\psi_X(t/n)]^n$. CGF $-n\log(1-t^2/n^2)$; differentiate twice.`],
+    a: [[R`$\psi_X(t)$, $|t|<1$`, '1/(1-t^2)', { t: [-0.8, 0.8] }], ['$E(X^4)$', '24'], [R`$\operatorname{var}(\bar X_{10})$`, '1/5']],
+    s: R`**(a)** By the rule of the lazy statistician,
+$$\psi_X(t) = \frac12\int_0^\infty e^{tx}e^{-x}\dd x + \frac12\int_{-\infty}^0e^{tx}e^{x}\dd x = \frac12\cdot\frac{1}{1-t} + \frac12\cdot\frac1{1+t} = \frac{1}{1-t^2}.$$
+The first integral needs $t<1$, the second $t>-1$: so $\psi_X$ exists for $|t|<1$.
+
+**(b)** For $|t|<1$: $\frac1{1-t^2} = \sum_{k\ge0}t^{2k}$. Comparing with $\psi_X(t) = \sum_j E(X^j)\frac{t^j}{j!}$: odd moments are $0$ and $\frac{E(X^{2k})}{(2k)!} = 1$, so $E(X^{2k}) = (2k)!$. In particular $E(X^2) = 2 = \operatorname{var}(X)$ and $E(X^4) = 4! = 24$.
+
+**(c)** $\psi_{-Y_2}(t) = E(e^{-tY_2}) = \psi_{Y_2}(-t) = \frac1{1+t}$. By independence,
+$$\psi_{Y_1-Y_2}(t) = \frac{1}{1-t}\cdot\frac{1}{1+t} = \frac1{1-t^2},\quad|t|<1,$$
+which is $\psi_X$. By uniqueness of MGFs, $Y_1 - Y_2$ is Laplace.
+
+**(d)** $\psi_{\bar X_n}(t) = E\left(\prod_ie^{\frac tnX_i}\right) \underset{\text{indep.}}{=} \prod_i\psi_{X_i}\left(\frac tn\right) \underset{\text{i.d.}}{=} \left(1-\frac{t^2}{n^2}\right)^{-n}$, $|t|<n$.
+CGF: $\varphi(t) = -n\log\left(1 - \frac{t^2}{n^2}\right)$, $\varphi'(t) = \frac{2t/n}{1-t^2/n^2}$, so $\varphi''(0) = \frac2n$. Hence $\operatorname{var}(\bar X_n) = \frac2n$ ($=\sigma^2/n$ ✓), which is $\frac15$ for $n = 10$.` },
 ]);

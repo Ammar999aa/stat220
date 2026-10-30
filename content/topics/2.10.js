@@ -155,4 +155,31 @@ DRILLS('2.10', [
   { k: '14', lvl: 3, q: R`$X_1,\dots,X_n\iid$ with CDF $F$. Let $Y = \max_iX_i$, $Z = \min_iX_i$. For $n = 2$ and $F$ = $\operatorname{Unif}(0,1)$, find $P(Y\le\tfrac12, Z > \tfrac14)$.`,
     h: [R`$\{Y\le\tfrac12, Z>\tfrac14\}$ = all $X_i\in(\tfrac14,\tfrac12]$.`], a: '1/16',
     s: R`Both must lie in $(\tfrac14,\tfrac12]$: $(\tfrac14)^2 = \tfrac1{16}$.` },
+  { k: '15', lvl: 3, q: R`$X\sim\operatorname{Exp}(\beta = 1)$ and $Y\sim\operatorname{Exp}(\beta = \tfrac12)$ are independent, and $Z = X + Y$. Find $f_Z(z)$ for $z>0$ and $P(Z > 1)$.`,
+    h: [R`Read the scale carefully: $\beta = \tfrac12$ means mean $\tfrac12$, so $f_Y(y) = 2e^{-2y}$, not $\tfrac12e^{-y/2}$. Different scales, so $Z$ is **not** a Gamma.`, R`Convolution: $f_Z(z) = \int f_X(x)f_Y(z-x)\dd x$. Both densities must be positive, so $x>0$ and $z - x>0$: integrate $x$ from $0$ to $z$.`, R`$\int_0^z e^{-x}\,2e^{-2(z-x)}\dd x = 2e^{-2z}\int_0^z e^{x}\dd x$.`],
+    a: [['$f_Z(z)$', '2*(exp(-z)-exp(-2*z))', { z: [0, 4] }], ['$P(Z>1)$', '2*exp(-1)-exp(-2)']],
+    s: R`$f_X(x) = e^{-x}$ and $f_Y(y) = 2e^{-2y}$ for positive arguments. For $z>0$:
+$$f_Z(z) = \int_0^z e^{-x}\cdot2e^{-2(z-x)}\dd x = 2e^{-2z}\int_0^ze^{x}\dd x = 2e^{-2z}(e^z - 1) = 2\left(e^{-z} - e^{-2z}\right).$$
+Check: $\int_0^\infty 2(e^{-z}-e^{-2z})\dd z = 2(1 - \tfrac12) = 1$ ✓.
+$$P(Z>1) = \int_1^\infty2\left(e^{-z} - e^{-2z}\right)\dd z = 2e^{-1} - e^{-2}\approx0.600.$$` },
+  { k: '16', lvl: 4, q: R`(Exam style, 20 pt.) $X, Y\iid\operatorname{Exp}(\beta)$ and $R = X/Y$.
+
+(a) Find $F_R(r)$ for $r>0$. Show it does not depend on $\beta$.
+
+(b) Find $f_R(r)$.
+
+(c) Find $P(X > 2Y)$.
+
+(d) Is $E(R)$ finite?`,
+    h: [R`(a) $\{X/Y\le r\} = \{X\le rY\}$ because $Y>0$. Condition on $Y = y$: $P(X\le ry) = 1 - e^{-ry/\beta}$.`, R`$\int_0^\infty e^{-ry/\beta}\frac1\beta e^{-y/\beta}\dd y = \frac{1}{1+r}$.`, R`(c) is $1 - F_R(2)$.`, R`(d) $E(R) = \int_0^\infty\frac{r}{(1+r)^2}\dd r$. How does the integrand behave for large $r$?`],
+    a: [['$F_R(r)$', 'r/(1+r)', { r: [0, 5] }], ['$f_R(r)$', '1/(1+r)^2', { r: [0, 5] }], ['$P(X>2Y)$', '1/3'], [R`$E(R)$ finite?`, { choice: ['Yes', 'No'], v: 1 }]],
+    s: R`**(a)** Since $Y>0$, $\{R\le r\} = \{X\le rY\}$. Condition on $Y$ (independence lets us use the marginal of $X$):
+$$F_R(r) = \int_0^\infty P(X\le ry)\,f_Y(y)\dd y = \int_0^\infty\left(1 - e^{-ry/\beta}\right)\frac1\beta e^{-y/\beta}\dd y = 1 - \frac1\beta\int_0^\infty e^{-(1+r)y/\beta}\dd y = 1 - \frac{1}{1+r} = \frac{r}{1+r}.$$
+$\beta$ cancels. That makes sense: $X/Y$ does not change if both are measured in different units, and $\beta$ is just a unit of time.
+
+**(b)** $f_R(r) = \frac{d}{dr}\left(1 - \frac1{1+r}\right) = \frac{1}{(1+r)^2}$, $r>0$.
+
+**(c)** $P(X>2Y) = P(R>2) = 1 - \frac23 = \frac13$.
+
+**(d)** $E(R) = \int_0^\infty\frac{r}{(1+r)^2}\dd r$. For large $r$ the integrand behaves like $\frac1r$, whose integral diverges. Explicitly, $\int_0^M\frac{r}{(1+r)^2}\dd r = \log(1+M) + \frac{1}{1+M} - 1\to\infty$. So **$E(R) = \infty$**, even though $E(X) = \beta$ is finite. The culprit is $E(1/Y) = \int_0^\infty\frac1y\frac1\beta e^{-y/\beta}\dd y = \infty$: $Y$ is too often close to 0.` },
 ]);

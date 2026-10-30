@@ -62,4 +62,30 @@ DRILLS('3.5', [
   { k: '12', lvl: 1, q: R`With $\operatorname{var}(X) = 1$, $\operatorname{var}(Y) = 2$, $\operatorname{cov}(X,Y) = 0$, find $\operatorname{var}(2X + 3Y)$.`, h: [R`$a^2 + 2b^2$.`], a: '22', s: R`$4\cdot1 + 9\cdot2 = 22$.`, src: 'HW4 B3(d)' },
   { k: '13', lvl: 3, q: R`$X, Y$ have mean 0, variance 1 and correlation $\rho = 0.6$. Find $\operatorname{var}(Y - \rho X)$ and $\operatorname{cov}(X, Y - \rho X)$.`, h: [R`$\operatorname{var}(Y) + \rho^2\operatorname{var}(X) - 2\rho\operatorname{cov}(X,Y)$.`],
     a: [['variance', '0.64'], ['covariance', '0']], s: R`$1 + 0.36 - 2\cdot0.6\cdot0.6 = 0.64 = 1-\rho^2$. $\operatorname{cov}(X,Y-\rho X) = \rho - \rho = 0$: the residual after removing the linear part of $X$ is uncorrelated with $X$.` },
+  { k: '14', lvl: 3, q: R`A fair die is rolled $12$ times. $X$ = number of ones, $Y$ = number of sixes. Find $\operatorname{cov}(X,Y)$ and $\operatorname{corr}(X,Y)$.`,
+    h: [R`Indicators: $X = \sum_{i=1}^{12}A_i$, $Y = \sum_{j=1}^{12}B_j$ with $A_i = \mathbb 1\{\text{roll } i = 1\}$, $B_j = \mathbb 1\{\text{roll } j = 6\}$.`, R`Bilinearity: $\operatorname{cov}(X,Y) = \sum_i\sum_j\operatorname{cov}(A_i,B_j)$. For $i\ne j$ the rolls are independent. For $i = j$: can roll $i$ be both a 1 and a 6?`, R`$X$ and $Y$ are each $\operatorname{Bin}(12,\tfrac16)$, so you know their variances.`],
+    a: [[R`$\operatorname{cov}(X,Y)$`, '-1/3'], [R`$\operatorname{corr}(X,Y)$`, '-1/5']],
+    s: R`With the indicators above, $\operatorname{cov}(A_i,B_j) = 0$ for $i\ne j$ (different rolls are independent). For $i = j$, $A_iB_i = 0$ (one roll can't be both 1 and 6), so
+$$\operatorname{cov}(A_i,B_i) = E(A_iB_i) - E(A_i)E(B_i) = 0 - \tfrac1{36}.$$
+By bilinearity, $\operatorname{cov}(X,Y) = \sum_{i=1}^{12}\left(-\tfrac1{36}\right) = -\tfrac{12}{36} = -\tfrac13$.
+
+Each of $X, Y$ is $\operatorname{Bin}(12,\tfrac16)$ with variance $12\cdot\tfrac16\cdot\tfrac56 = \tfrac53$, so
+$$\operatorname{corr}(X,Y) = \frac{-1/3}{5/3} = -\frac15.$$
+The trap is to say "the rolls are independent, so $X\indep Y$": within one roll, a one and a six compete. More ones leave fewer rolls available for sixes, hence the negative correlation.` },
+  { k: '15', lvl: 4, q: R`(Exam style.) $f_{X,Y}(x,y) = c\,e^{-y}$ for $0<x<y$, and $0$ otherwise.
+(a) Find $c$.
+(b) Find the marginals $f_X$ and $f_Y$ and name them.
+(c) Find $\operatorname{cov}(X,Y)$ and $\operatorname{corr}(X,Y)$.
+(d) Find $\operatorname{var}(Y-X)$.`,
+    h: [R`Draw the support: $x$ runs over $(0,y)$ for each $y>0$. Do the $x$-integral first: $\int_0^y\dd x = y$.`, R`$f_X(x) = \int_x^\infty ce^{-y}\dd y$ and $f_Y(y) = \int_0^y ce^{-y}\dd x$. Compare with the $\operatorname{Exp}$ and $\operatorname{Gamma}$ densities to read off means and variances.`, R`$E(XY) = \int_0^\infty\int_0^y xy\,e^{-y}\dd x\dd y = \int_0^\infty\frac{y^3}2e^{-y}\dd y$, a Gamma integral.`, R`$\operatorname{var}(Y-X) = \operatorname{var}(Y) + \operatorname{var}(X) - 2\operatorname{cov}(X,Y)$.`],
+    a: [['$c$', '1'], ['$f_X(x)$, $x>0$', 'exp(-x)', { x: [0, 4] }], [R`$\operatorname{cov}(X,Y)$`, '1'], [R`$\operatorname{corr}(X,Y)$`, '1/sqrt(2)'], [R`$\operatorname{var}(Y-X)$`, '1']],
+    s: R`**(a)** $\int_0^\infty\int_0^y ce^{-y}\dd x\dd y = c\int_0^\infty ye^{-y}\dd y = c\,\Gamma(2) = c$, so $c = 1$ (and $c>0$ gives $f\ge0$).
+
+**(b)** $f_X(x) = \int_x^\infty e^{-y}\dd y = e^{-x}$, $x>0$: $X\sim\operatorname{Exp}(1)$, so $E(X) = 1$, $\operatorname{var}(X) = 1$.
+$f_Y(y) = \int_0^ye^{-y}\dd x = ye^{-y}$, $y>0$: $Y\sim\operatorname{Gamma}(2,1)$, so $E(Y) = 2$, $\operatorname{var}(Y) = 2$.
+
+**(c)** $E(XY) = \int_0^\infty ye^{-y}\left(\int_0^yx\dd x\right)\dd y = \frac12\int_0^\infty y^3e^{-y}\dd y = \frac{\Gamma(4)}{2} = 3$. So
+$$\operatorname{cov}(X,Y) = 3 - 1\cdot2 = 1,\qquad\operatorname{corr}(X,Y) = \frac{1}{\sqrt{1\cdot2}} = \frac1{\sqrt2}\approx0.707.$$
+
+**(d)** $\operatorname{var}(Y-X) = 2 + 1 - 2\cdot1 = 1$. (Interpretation: this is the joint law of $X$ and $Y = X + W$ with $W\sim\operatorname{Exp}(1)$ independent of $X$. Then $\operatorname{cov}(X,Y) = \operatorname{var}(X) = 1$ and $\operatorname{var}(Y-X) = \operatorname{var}(W) = 1$ ✓.)` },
 ]);

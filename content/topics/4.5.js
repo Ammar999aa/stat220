@@ -60,4 +60,33 @@ DRILLS('4.5', [
   { k: '06', lvl: 2, q: R`$\|X\|_2 = 3$, $\|Y\|_2 = 4$, and $\operatorname{corr}(X,Y) = 1$ with mean 0. Find $\|X+Y\|_2$.`, h: [R`Perfectly correlated: Minkowski holds with equality.`], a: '7', s: R`$E(X+Y)^2 = 9 + 16 + 2\cdot12 = 49$, so $\|X+Y\|_2 = 7$, equality in Minkowski.` },
   { k: '07', lvl: 1, q: R`When does Cauchy–Schwarz hold with equality?`, h: [R`Discriminant zero.`], a: { choice: ['When X and Y are independent', 'When one is a.s. a constant multiple of the other', 'Never'], v: 1 }, s: R`Equality iff $|X| = t|Y|$ a.s. for some constant $t$ (linear dependence).` },
   { k: '08', lvl: 2, q: R`$\operatorname{var}(X) = 1$, $\operatorname{var}(Y) = 4$, $\operatorname{cov}(X,Y) = 2$. What is $\operatorname{corr}(X,Y)$, and what does it imply?`, h: [R`$2/(1\cdot2)$.`], a: [[R`$\operatorname{corr}$`, '1']], s: R`$\operatorname{corr} = 1$: equality in Cauchy–Schwarz, so $Y = 2X + c$ almost surely.` },
+  { k: '09', lvl: 3, q: R`(Second-moment method) Let $X\ge0$ with $E(X) = 2$ and $E(X^2) = 5$. (a) Use Cauchy–Schwarz to find a lower bound for $P(X>0)$. (b) The bound is attained by a two-point distribution $P(X = 0) = 1 - \pi$, $P(X = c) = \pi$. Find $c$.`,
+    h: [R`Since $X\ge0$, $X = X\cdot\mathbb 1(X>0)$ (where $X = 0$ both sides are 0).`, R`Cauchy–Schwarz on the product $X\cdot\mathbb 1(X>0)$: $E(X)\le\sqrt{E(X^2)\,E\left(\mathbb 1(X>0)^2\right)}$, and $\mathbb 1^2 = \mathbb 1$, whose expectation is $P(X>0)$.`, R`Square and rearrange: $P(X>0)\ge\frac{(EX)^2}{E(X^2)}$. For (b), match $\pi c = 2$ and $\pi c^2 = 5$, with $\pi$ equal to the bound.`],
+    a: [['(a) lower bound', '4/5'], ['(b) c', '5/2']],
+    s: R`**(a)** Because $X\ge0$, $X = X\,\mathbb 1(X>0)$. By Cauchy–Schwarz,
+$$E(X) = E\big(X\cdot\mathbb 1(X>0)\big)\le\sqrt{E(X^2)}\sqrt{E\big(\mathbb 1(X>0)\big)} = \sqrt{E(X^2)\,P(X>0)}.$$
+Squaring: $P(X>0)\ge\frac{(EX)^2}{E(X^2)} = \frac45$.
+
+This is a *lower* bound on a probability. Markov and Chebyshev only give upper bounds on tails, so this is a genuinely different tool: a large second moment relative to the squared mean means $X$ might be 0 most of the time.
+
+**(b)** Equality in Cauchy–Schwarz needs $X$ to be proportional to $\mathbb 1(X>0)$, i.e. $X$ is constant ($= c$) on $\{X>0\}$. Then $E(X) = \pi c = 2$ and $E(X^2) = \pi c^2 = 5$, so $c = \frac{5}{2}$ and $\pi = \frac45$, which matches the bound exactly. So the bound $\frac45$ cannot be improved.` },
+  { k: '10', lvl: 4, q: R`(a) Prove the three-factor Hölder inequality
+$$E|XYZ|\le\|X\|_3\,\|Y\|_3\,\|Z\|_3,\qquad\|W\|_3 = \left(E|W|^3\right)^{1/3},$$
+using Hölder once and Cauchy–Schwarz once.
+(b) Let $U\sim\operatorname{Unif}(0,1)$ and take $X = Y = U$, $Z = 1 - U$. Compute the bound from (a) and the exact value of $E(XYZ)$.`,
+    h: [R`Group as $|X|\cdot|YZ|$ and use Hölder with $p = 3$, $q = \frac32$: $E|X||YZ|\le\|X\|_3\left(E|YZ|^{3/2}\right)^{2/3}$.`, R`Now $E|YZ|^{3/2} = E\left(|Y|^{3/2}|Z|^{3/2}\right)$. Apply Cauchy–Schwarz: $\le\sqrt{E|Y|^3\,E|Z|^3}$.`, R`Raise to the power $\frac23$: $\left(\sqrt{E|Y|^3E|Z|^3}\right)^{2/3} = \|Y\|_3\|Z\|_3$.`, R`$E(U^3) = E\left((1-U)^3\right) = \frac14$, and $E\left(U^2(1-U)\right) = \frac13 - \frac14$.`],
+    a: [['bound', '1/4'], ['exact', '1/12']],
+    s: R`**(a)** Hölder with $p = 3$, $q = \frac32$ (so $\frac13 + \frac23 = 1$) applied to $|X|$ and $|YZ|$:
+$$E|XYZ|\le\left(E|X|^3\right)^{1/3}\left(E|YZ|^{3/2}\right)^{2/3}.$$
+Cauchy–Schwarz applied to $|Y|^{3/2}$ and $|Z|^{3/2}$:
+$$E|YZ|^{3/2} = E\left(|Y|^{3/2}|Z|^{3/2}\right)\le\sqrt{E|Y|^3}\sqrt{E|Z|^3}.$$
+Raising to the power $\frac23$ gives $\left(E|YZ|^{3/2}\right)^{2/3}\le\left(E|Y|^3\right)^{1/3}\left(E|Z|^3\right)^{1/3} = \|Y\|_3\|Z\|_3$. Combining the two steps, $E|XYZ|\le\|X\|_3\|Y\|_3\|Z\|_3$. $\blacksquare$
+
+(The general rule: $E|XYZ|\le\|X\|_p\|Y\|_q\|Z\|_r$ whenever $\frac1p + \frac1q + \frac1r = 1$.)
+
+**(b)** $\|U\|_3^3 = \int_0^1u^3\dd u = \frac14$, and $1 - U\sim\operatorname{Unif}(0,1)$ too, so $\|1-U\|_3^3 = \frac14$. Bound: $\left(\frac14\right)^{1/3}\left(\frac14\right)^{1/3}\left(\frac14\right)^{1/3} = \frac14$.
+
+Exact: $E\left(U^2(1-U)\right) = \int_0^1(u^2 - u^3)\dd u = \frac13 - \frac14 = \frac1{12}$.
+
+The bound is 3 times too big. Hölder is tight only when $|X|^3, |Y|^3, |Z|^3$ are proportional, but here $U$ and $1 - U$ peak at opposite ends of $(0,1)$.` },
 ]);

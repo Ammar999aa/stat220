@@ -25,4 +25,38 @@ DRILLS('1.3', [
   { k: '06', lvl: 1, q: R`Urn with 4 red, 6 blue. Draw 2 without replacement. $P(\text{both red})$?`, h: [R`$\binom42/\binom{10}2$.`], a: '2/15', s: R`$\frac{6}{45} = \frac2{15}$.` },
   { k: '07', lvl: 1, q: R`$P(\text{at least one 6 in 4 rolls of a die})$?`, h: [R`Complement.`], a: '1-(5/6)^4', s: R`$1 - (5/6)^4\approx0.518$.` },
   { k: '08', lvl: 2, q: R`Two dice. $P(\max = 4)$?`, h: [R`$P(\max\le4) - P(\max\le3)$.`], a: '7/36', s: R`$\frac{16 - 9}{36} = \frac7{36}$.` },
+  { k: '09', lvl: 3, q: R`Five cards are dealt from a well-shuffled 52-card deck. Find $P(\text{two pair})$: two cards of one rank, two of another rank, and a fifth card of a third rank (e.g. 8♠ 8♦ K♣ K♥ 3♠).`,
+    h: [R`Build the hand step by step: choose the two ranks for the pairs, choose suits for each pair, then choose the fifth card. Divide by $\binom{52}5 = 2{,}598{,}960$.`, R`Trap: if you pick "first pair rank" ($13$ ways) and then "second pair rank" ($12$ ways), you count 8-8-K-K and K-K-8-8 as different hands. The two pairs play the same role, so choose their ranks together: $\binom{13}2$.`, R`Suits for one pair: $\binom42 = 6$. Fifth card: any of the $52 - 8 = 44$ cards whose rank is not one of the two pair ranks.`],
+    a: '198/4165',
+    s: R`All $\binom{52}5 = 2{,}598{,}960$ hands are equally likely. Count two-pair hands:
+
+ranks of the two pairs (unordered): $\binom{13}2 = 78$;
+
+suits within each pair: $\binom42\cdot\binom42 = 36$;
+
+the fifth card: any of the $44$ cards of the other 11 ranks.
+
+So $|A| = 78\cdot36\cdot44 = 123{,}552$ and
+$$P(\text{two pair}) = \frac{123552}{2598960} = \frac{198}{4165}\approx0.0475.$$
+The common mistake, $13\cdot12$ for the pair ranks, double counts and gives exactly twice this, $\approx0.095$. A check for double counting: ask "does each hand get built in exactly one way?". (Choosing the fifth card as $\binom{11}1\binom41$ gives the same $44$.)` },
+  { k: '10', lvl: 4, q: R`(Exam-style.) Five people leave their hats at a cloakroom, and the hats are handed back in a uniformly random order (all $5!$ permutations equally likely). Let $E_i$ = "person $i$ gets their own hat".
+
+(a) Find $P(E_i)$, $P(E_i\cap E_j)$ for $i\ne j$, and in general $P(E_{i_1}\cap\cdots\cap E_{i_r})$.
+
+(b) Use inclusion–exclusion to find $P(\text{at least one person gets their own hat})$.
+
+(c) Find $P(\text{nobody gets their own hat})$.
+
+(d) Find $P(\text{exactly two people get their own hats})$.`,
+    h: [R`(a) If $r$ specified people get their own hats, the other $5-r$ hats can be in any order: $(5-r)!$ permutations out of $5!$.`, R`(b) $P\left(\bigcup E_i\right) = \sum_r(-1)^{r+1}\binom5r\frac{(5-r)!}{5!} = \sum_{r=1}^5\frac{(-1)^{r+1}}{r!}$.`, R`(d) Choose the two lucky people ($\binom52$ ways); the remaining 3 hats must give **nobody** their own hat. Count those 3-person "derangements" by listing them.`],
+    a: [[R`(a) $P(E_i\cap E_j)$`, '1/20'], ['(b) at least one', '19/30'], ['(c) nobody', '11/30'], ['(d) exactly two', '1/6']],
+    s: R`**(a)** $P(E_i) = \frac{4!}{5!} = \frac15$. $P(E_i\cap E_j) = \frac{3!}{5!} = \frac1{20}$. In general, fixing $r$ people leaves $(5-r)!$ orders of the rest, so $P(E_{i_1}\cap\cdots\cap E_{i_r}) = \frac{(5-r)!}{5!}$.
+
+**(b)** There are $\binom5r$ ways to pick $r$ people, and $\binom5r\frac{(5-r)!}{5!} = \frac1{r!}$. By inclusion–exclusion
+$$P\Big(\bigcup_iE_i\Big) = 1 - \frac1{2!} + \frac1{3!} - \frac1{4!} + \frac1{5!} = \frac{120 - 60 + 20 - 5 + 1}{120} = \frac{76}{120} = \frac{19}{30}.$$
+
+**(c)** Complement: $1 - \frac{19}{30} = \frac{11}{30}\approx0.367$, i.e. $44$ of the $120$ permutations (close to $e^{-1}\approx0.368$, the limit as the number of people grows).
+
+**(d)** Choose the two people who get their own hats: $\binom52 = 10$ ways. The other three must all get wrong hats. For hats $1,2,3$ the only such orders are $(2,3,1)$ and $(3,1,2)$: 2 ways. So the count is $10\cdot2 = 20$ and $P = \frac{20}{120} = \frac16$.
+(Trap: $\binom52P(E_1\cap E_2) = \frac{10}{20} = \frac12$ is not the answer. $E_1\cap E_2$ also allows persons 3, 4, 5 to get their own hats, so that sum counts permutations with 3 or more matches several times. "Exactly two" needs the others to be **wrong**.)` },
 ]);

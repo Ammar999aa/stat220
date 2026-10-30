@@ -45,4 +45,29 @@ DRILLS('3.4', [
   { k: '10', lvl: 3, q: R`$X_i\iid\operatorname{Unif}(0,\theta)$. Show $2\bar X$ is unbiased for $\theta$ and find $\operatorname{var}(2\bar X)$ for $\theta = 6$, $n = 3$.`, h: [R`$E(X_i) = \theta/2$, $\operatorname{var}(X_i) = \theta^2/12$.`], a: '4',
     s: R`$E(2\bar X) = 2\cdot\frac\theta2 = \theta$ ✓. $\operatorname{var}(2\bar X) = 4\cdot\frac{\theta^2}{12n} = \frac{\theta^2}{3n} = \frac{36}{9} = 4$.` },
   { k: '11', lvl: 1, q: R`$X_1,\dots,X_9\iid\operatorname{Exp}(3)$. Find $\operatorname{var}(\bar X)$.`, h: [R`$\beta^2/n$.`], a: '1', s: R`$9/9 = 1$.` },
+  { k: '12', lvl: 3, q: R`$X_1,\dots,X_8$ iid with mean $\mu = 3$ and variance $\sigma^2 = 4$. The natural estimate of $\mu^2$ is $\bar X^2$.
+(a) Find $E(\bar X^2)$ and the bias $E(\bar X^2) - \mu^2$.
+(b) Find the constant $c$ such that $\bar X^2 - cS^2$ is unbiased for $\mu^2$ **for every** $\mu$ and $\sigma^2$.`,
+    h: [R`$E(\bar X^2) = \operatorname{var}(\bar X) + E(\bar X)^2$.`, R`The bias is $\sigma^2/n$, which depends on the unknown $\sigma^2$. Which statistic has expectation $\sigma^2$?`],
+    a: [[R`$E(\bar X^2)$`, '19/2'], ['bias', '1/2'], ['$c$', '1/8']],
+    s: R`**(a)** $E(\bar X^2) = \operatorname{var}(\bar X) + \mu^2 = \frac{\sigma^2}n + \mu^2 = \frac48 + 9 = \frac{19}2$. The bias is $\frac{\sigma^2}{n} = \frac12$: $\bar X^2$ overestimates $\mu^2$ on average. (Squaring is not linear, so unbiasedness of $\bar X$ does not carry over to $\bar X^2$.)
+
+**(b)** We can't subtract $\sigma^2/n$ because $\sigma^2$ is unknown, but $E(S^2) = \sigma^2$. So
+$$E\left(\bar X^2 - cS^2\right) = \mu^2 + \frac{\sigma^2}n - c\sigma^2 = \mu^2\ \text{ for all }\sigma^2\iff c = \frac1n = \frac18.$$` },
+  { k: '13', lvl: 4, q: R`(Exam style.) $X_1,\dots,X_n$ are iid with mean $\mu$ and variance $\sigma^2$.
+(a) Write $X_1 - \bar X_n$ as a linear combination of the **independent** $X_i$ and show $\operatorname{var}(X_1 - \bar X_n) = \frac{n-1}{n}\sigma^2$.
+(b) Show $E(X_1\bar X_n) = \frac{\sigma^2}{n} + \mu^2$.
+(c) Use (a) to give a second proof that $E(S_n^2) = \sigma^2$.
+Enter the values for $n = 5$, $\mu = 2$, $\sigma^2 = 10$.`,
+    h: [R`$X_1 - \bar X_n = \left(1-\frac1n\right)X_1 - \frac1n\sum_{j=2}^nX_j$. Now use $\operatorname{var}(\sum a_iX_i) = \sum a_i^2\operatorname{var}(X_i)$ for independent terms.`, R`$X_1\bar X_n = \frac1n X_1^2 + \frac1n\sum_{j\ge2}X_1X_j$. Use $E(X_1^2) = \sigma^2+\mu^2$ and independence for $j\ne1$.`, R`$E(X_i - \bar X_n) = 0$, so $E[(X_i - \bar X_n)^2] = \operatorname{var}(X_i - \bar X_n)$, and by symmetry this is the same for every $i$.`],
+    a: [[R`$\operatorname{var}(X_1-\bar X)$`, '8'], [R`$E(X_1\bar X)$`, '6'], [R`$E\sum_i(X_i-\bar X)^2$`, '40']],
+    s: R`**(a)** $X_1 - \bar X_n = \left(1-\frac1n\right)X_1 - \frac1n\sum_{j=2}^nX_j$, a linear combination of independent variables, so
+$$\operatorname{var}(X_1-\bar X_n) = \left(1-\frac1n\right)^2\sigma^2 + (n-1)\frac{\sigma^2}{n^2} = \frac{(n-1)\sigma^2}{n^2}\big[(n-1) + 1\big] = \frac{n-1}{n}\sigma^2.$$
+(Trap: $X_1$ and $\bar X_n$ are **not** independent, since $X_1$ is part of $\bar X_n$; so $\operatorname{var}(X_1)+\operatorname{var}(\bar X_n) = \sigma^2(1+\frac1n)$ is wrong.)
+
+**(b)** $E(X_1\bar X_n) = \frac1nE(X_1^2) + \frac1n\sum_{j=2}^nE(X_1)E(X_j) = \frac{\sigma^2+\mu^2}{n} + \frac{n-1}n\mu^2 = \frac{\sigma^2}{n} + \mu^2.$
+
+**(c)** $E(X_i - \bar X_n) = \mu - \mu = 0$, so $E[(X_i-\bar X_n)^2] = \operatorname{var}(X_i - \bar X_n) = \frac{n-1}n\sigma^2$, the same for every $i$ by symmetry (relabel the sample). Summing,
+$$E\left[\sum_{i=1}^n(X_i-\bar X_n)^2\right] = n\cdot\frac{n-1}{n}\sigma^2 = (n-1)\sigma^2\quad\Longrightarrow\quad E(S_n^2) = \sigma^2.$$
+With $n = 5$, $\mu = 2$, $\sigma^2 = 10$: $\operatorname{var}(X_1-\bar X) = \frac45\cdot10 = 8$, $E(X_1\bar X) = 2 + 4 = 6$, and $E\sum(X_i-\bar X)^2 = 4\cdot10 = 40$.` },
 ]);

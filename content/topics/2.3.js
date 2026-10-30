@@ -31,4 +31,31 @@ DRILLS('2.3', [
   { k: '08', lvl: 2, q: R`$X\sim N(5,9)$. With $\Phi^{-1}(0.95) = 1.645$, find the 95th percentile of $X$.`, h: [R`$\mu + \sigma z$.`], a: '9.935', s: R`$5 + 3(1.645) = 9.935$.` },
   { k: '09', lvl: 2, q: R`$X\sim\operatorname{Poisson}(1)$. Find the median.`, h: [R`$F(0) = e^{-1}\approx0.368$, $F(1) = 2e^{-1}\approx0.736$.`], a: '1', s: R`$F(0)<\frac12\le F(1)$, so the median is 1.` },
   { k: '10', lvl: 3, q: R`Logistic: $F(x) = \frac1{1+e^{-x}}$. Find $F^{-1}(0.9)$.`, h: [R`Solve: $e^{-x} = \frac1q - 1$.`], a: 'log(9)', s: R`$F^{-1}(q) = \log\frac{q}{1-q}$ (the logit). $\log9\approx2.197$.` },
+  { k: '11', lvl: 3, q: R`A device has lifetime $T\sim\operatorname{Exp}(\beta = 2)$ (in years), but it is replaced at age 2 if still working. Let $X = \min(T, 2)$ be the time in service. Find the first quartile, the median, and the 0.7-quantile of $X$.`,
+    h: [R`Find $F_X$. For $x<2$: $\{X\le x\} = \{T\le x\}$. For $x\ge2$: $X\le2$ always.`, R`So $F_X(x) = 1 - e^{-x/2}$ on $[0,2)$ and $F_X(x) = 1$ for $x\ge2$. There is a jump at 2: how big is it, and what is $F_X(2^-)$?`, R`For a level $q$: if $q\le F_X(2^-)$, solve $1 - e^{-x/2} = q$; otherwise the CDF first reaches $q$ at the jump, $x = 2$.`],
+    a: [['first quartile', '2*log(4/3)'], ['median', '2*log(2)'], ['0.7-quantile', '2']],
+    s: R`**CDF.** $F_X(x) = 0$ for $x<0$, $1 - e^{-x/2}$ for $0\le x<2$, and $1$ for $x\ge2$. At $x = 2$ it jumps from $F_X(2^-) = 1 - e^{-1}\approx0.632$ to $1$: $P(X = 2) = P(T\ge2) = e^{-1}$, the devices that are replaced.
+
+**Quantiles.** For $q\le1 - e^{-1}$ we can solve $1 - e^{-x/2} = q$: $F^{-1}(q) = -2\log(1-q)$.
+- $q = \frac14$: $-2\log\frac34 = 2\log\frac43\approx0.575$.
+- $q = \frac12$: $2\log2\approx1.386$.
+- $q = 0.7>1-e^{-1}$: solving would give $-2\log0.3\approx2.41$, but that is outside $[0,2)$, a trap. Since $F_X(x)<0.7$ for all $x<2$ and $F_X(2) = 1\ge0.7$, $F^{-1}(0.7) = \inf\{x: F_X(x)\ge0.7\} = 2$.
+
+In fact every $q\in(1-e^{-1}, 1]$ has quantile 2.` },
+  { k: '12', lvl: 4, q: R`$X$ has density
+$$f(x) = \begin{cases}c\,e^{x} & x<0,\\ c\,e^{-x/2} & x\ge0.\end{cases}$$
+(a) Find $c$. (b) Find the CDF $F$. (c) Find the first quartile, the median and the third quartile of $X$.`,
+    h: [R`$\int_{-\infty}^0e^x\dd x = 1$ and $\int_0^\infty e^{-x/2}\dd x = 2$.`, R`Compute $F$ separately on $x<0$ and $x\ge0$; for $x\ge0$ it is $F(0) + \int_0^x f$. What is $F(0)$?`, R`Before solving $F(x) = q$, decide which piece the quantile lies on by comparing $q$ with $F(0)$.`],
+    a: [['$c$', '1/3'], ['first quartile', 'log(3/4)'], ['median', '2*log(4/3)'], ['third quartile', '2*log(8/3)']],
+    s: R`**(a)** $f\ge0$ needs $c>0$, and $c\left(\int_{-\infty}^0e^x\dd x + \int_0^\infty e^{-x/2}\dd x\right) = c(1 + 2) = 3c = 1$, so $c = \frac13$.
+
+**(b)** For $x<0$: $F(x) = \int_{-\infty}^x\frac13e^t\dd t = \frac13e^x$. In particular $F(0) = \frac13$. For $x\ge0$:
+$$F(x) = \frac13 + \int_0^x\frac13e^{-t/2}\dd t = \frac13 + \frac23\left(1 - e^{-x/2}\right) = 1 - \frac23e^{-x/2}.$$
+
+**(c)** $F$ is continuous and strictly increasing, so solve $F(x) = q$, on the left piece if $q<\frac13$ and on the right piece if $q\ge\frac13$.
+- $q = \frac14<\frac13$: $\frac13e^x = \frac14\Rightarrow x = \log\frac34\approx-0.288$.
+- $q = \frac12$: $1 - \frac23e^{-x/2} = \frac12\Rightarrow e^{-x/2} = \frac34\Rightarrow x = 2\log\frac43\approx0.575$.
+- $q = \frac34$: $e^{-x/2} = \frac38\Rightarrow x = 2\log\frac83\approx1.962$.
+
+The quartiles are not symmetric around the median ($0.86$ below, $1.39$ above) because the right tail is longer.` },
 ]);

@@ -151,4 +151,39 @@ DRILLS('2.9', [
   { k: '14', lvl: 3, q: R`$X\sim\operatorname{Exp}(\beta)$ and $Y = e^X$. Show $Y$ is Pareto and find $P(Y > 4)$ when $\beta = \tfrac12$.`,
     h: [R`$P(Y>y) = P(X>\log y) = e^{-\log(y)/\beta} = y^{-1/\beta}$.`], a: '1/16',
     s: R`$P(Y>y) = y^{-1/\beta}$ for $y>1$, so $f_Y(y) = \frac1\beta y^{-1/\beta-1}$ (Pareto). With $\beta = \tfrac12$: $P(Y>4) = 4^{-2} = \tfrac1{16}$.`, src: 'Slides Ch.2' },
+  { k: '15', lvl: 3, q: R`$X\sim\operatorname{Exp}(1)$ and $Y = (X-1)^2$. Find $f_Y(\tfrac14)$ and $f_Y(4)$.`,
+    h: [R`Not monotone: $(x-1)^2\le y\iff 1-\sqrt y\le x\le 1+\sqrt y$. But $X>0$, so it matters whether the left end $1-\sqrt y$ is positive.`, R`For $0<y<1$: $A_y = [1-\sqrt y, 1+\sqrt y]$ lies inside $(0,\infty)$, so $F_Y(y) = e^{-(1-\sqrt y)} - e^{-(1+\sqrt y)}$. For $y\ge1$: only $x\le1+\sqrt y$ matters, so $F_Y(y) = 1 - e^{-(1+\sqrt y)}$.`, R`Differentiate with the chain rule: $\frac{d}{dy}\sqrt y = \frac1{2\sqrt y}$.`],
+    a: [['$f_Y(1/4)$', 'exp(-1/2)+exp(-3/2)'], ['$f_Y(4)$', 'exp(-3)/4']],
+    s: R`Use the 3-step method with $F_X(x) = 1 - e^{-x}$ for $x>0$.
+
+**Case $0<y<1$.** $A_y = \{x: (x-1)^2\le y\} = [1-\sqrt y,\ 1+\sqrt y]$, and $1-\sqrt y>0$, so both ends are in the support:
+$$F_Y(y) = F_X(1+\sqrt y) - F_X(1-\sqrt y) = e^{-(1-\sqrt y)} - e^{-(1+\sqrt y)},$$
+$$f_Y(y) = \frac{e^{-(1-\sqrt y)} + e^{-(1+\sqrt y)}}{2\sqrt y}.$$
+**Case $y\ge1$.** Now $1-\sqrt y\le0$, and $X$ is never below $0$, so only the right end counts:
+$$F_Y(y) = P(0<X\le1+\sqrt y) = 1 - e^{-(1+\sqrt y)},\qquad f_Y(y) = \frac{e^{-(1+\sqrt y)}}{2\sqrt y}.$$
+(The density has a downward jump at $y = 1$: values $y>1$ can only come from $x>2$.)
+
+**Values.** $y = \tfrac14$: $\sqrt y = \tfrac12$ and $2\sqrt y = 1$, so $f_Y(\tfrac14) = e^{-1/2} + e^{-3/2}\approx0.830$. $y = 4$: $\sqrt y = 2$, so $f_Y(4) = \frac{e^{-3}}{4}\approx0.0124$.` },
+  { k: '16', lvl: 4, q: R`(Exam style, 20 pt.) $X\sim\operatorname{Unif}\left(-\tfrac\pi2,\tfrac\pi2\right)$.
+
+(a) Show that $Y = \tan X$ is standard Cauchy. Enter $f_Y(y)$.
+
+(b) Let $W = Y^2$. Find $F_W(w)$ and $f_W(w)$ for $w > 0$.
+
+(c) Compute $P(W\le3)$ in two ways: from (b), and directly from $X$.`,
+    h: [R`(a) $\tan$ is strictly increasing on $(-\tfrac\pi2,\tfrac\pi2)$, so use the monotone formula with $s(y) = \arctan y$ and $s'(y) = \frac{1}{1+y^2}$. Also $f_X = \tfrac1\pi$.`, R`(b) Not monotone: $Y^2\le w\iff -\sqrt w\le Y\le\sqrt w$. Use the Cauchy CDF $F_Y(y) = \tfrac12 + \tfrac1\pi\arctan y$.`, R`(c) $\tan^2X\le3\iff|\tan X|\le\sqrt3\iff|X|\le\tfrac\pi3$.`],
+    a: [['$f_Y(y)$', '1/(pi*(1+y^2))', { y: [-4, 4] }], ['$f_W(w)$', '1/(pi*sqrt(w)*(1+w))', { w: [0.1, 5] }], [R`$P(W\le3)$`, '2/3']],
+    s: R`**(a)** $f_X(x) = \frac1\pi$ on $(-\frac\pi2,\frac\pi2)$. The map $t(x) = \tan x$ is strictly increasing there, onto all of $\R$, with inverse $s(y) = \arctan y$ and $s'(y) = \frac{1}{1+y^2}$. Monotone formula:
+$$f_Y(y) = f_X(s(y))\,|s'(y)| = \frac1\pi\cdot\frac1{1+y^2} = \frac{1}{\pi(1+y^2)},\quad y\in\R.$$
+This is the standard Cauchy density. Its CDF is $F_Y(y) = \frac12 + \frac1\pi\arctan y$.
+
+**(b)** For $w>0$, $A_w = \{y : y^2\le w\} = [-\sqrt w, \sqrt w]$. So
+$$F_W(w) = F_Y(\sqrt w) - F_Y(-\sqrt w) = \frac1\pi\arctan\sqrt w - \frac1\pi\arctan(-\sqrt w) = \frac2\pi\arctan\sqrt w,$$
+since $\arctan$ is odd. Differentiate with the chain rule:
+$$f_W(w) = \frac2\pi\cdot\frac{1}{1+w}\cdot\frac{1}{2\sqrt w} = \frac{1}{\pi\sqrt w\,(1+w)},\quad w>0.$$
+(It blows up at $w = 0$ but is integrable, and $F_W(\infty) = \frac2\pi\cdot\frac\pi2 = 1$ ✓.)
+
+**(c)** From (b): $F_W(3) = \frac2\pi\arctan\sqrt3 = \frac2\pi\cdot\frac\pi3 = \frac23$.
+
+Directly: $\tan^2X\le3\iff|X|\le\frac\pi3$ (because $|\tan|$ is increasing in $|x|$ on this interval). So $P(W\le3) = P(-\frac\pi3\le X\le\frac\pi3) = \frac{2\pi/3}{\pi} = \frac23$ ✓.` },
 ]);

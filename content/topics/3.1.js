@@ -117,4 +117,28 @@ DRILLS('3.1', [
     s: R`$E(X) = \frac2\pi\int_0^\infty\frac{x}{1+x^2}\dd x = \frac1\pi\big[\log(1+x^2)\big]_0^\infty = +\infty$. Here $X\ge0$, so there is no $\infty-\infty$ problem: the mean is **infinite** (exists, equals $+\infty$), unlike the two-sided Cauchy whose mean is undefined.` },
   { k: '15', lvl: 2, q: R`$X\sim\operatorname{Exp}(\beta)$. Use the tail formula to find $E(X)$ for $\beta = 5$.`, h: [R`$P(X>x) = e^{-x/\beta}$.`], a: '5',
     s: R`$\int_0^\infty e^{-x/5}\dd x = 5$.` },
+  { k: '16', lvl: 3, q: R`A stick of length 1 is broken at a uniform point $U\sim\operatorname{Unif}(0,1)$. Fix a point $p\in(0,1)$ on the stick, and let $L$ be the length of the piece that **contains** $p$. Find $E(L)$ for $p = \tfrac13$, and as a function of $p$.`,
+    h: [R`Write $L$ as a function of $U$. If $U<p$, the piece containing $p$ is $[U,1]$, of length $1-U$. If $U>p$, it is $[0,U]$, of length $U$.`, R`LOTUS with a split integral: $E(L) = \int_0^p(1-u)\dd u + \int_p^1u\dd u$.`, R`Sanity check before you trust your answer: each of the two pieces has mean length $\tfrac12$. Should the piece containing $p$ be longer or shorter on average? (A fixed point is more likely to land in a long piece.)`],
+    a: [[R`$E(L)$ for $p=\tfrac13$`, '13/18'], [R`$E(L)$ for general $p$`, '1/2+p-p^2', { p: [0, 1] }]],
+    s: R`$L = t(U)$ with $t(u) = 1-u$ for $u<p$ and $t(u) = u$ for $u>p$. By the rule of the lazy statistician,
+$$E(L) = \int_0^p(1-u)\dd u + \int_p^1u\dd u = \left(p - \frac{p^2}2\right) + \frac{1-p^2}{2} = \frac12 + p - p^2.$$
+For $p = \tfrac13$: $E(L) = \frac12 + \frac13 - \frac19 = \frac{9+6-2}{18} = \frac{13}{18}\approx0.722$.
+
+**The trap.** The left piece $U$ and the right piece $1-U$ both have mean $\tfrac12$, so it is tempting to answer $\tfrac12$. But $L$ is not "a piece chosen independently of the break": the piece containing $p$ is chosen *after* the break, and long pieces are more likely to cover $p$. So $E(L)\ge\tfrac12$, with the maximum $\tfrac34$ at $p = \tfrac12$. At $p=\tfrac12$ the piece containing the midpoint is always the longer piece, so this matches $E[\max(U,1-U)] = \tfrac34$.` },
+  { k: '17', lvl: 4, q: R`(Midterm style.) Let $Z_1,\dots,Z_n$ be iid copies of a non-negative random variable $Z$ with CDF $F_Z$, and let $M = \max_iZ_i$ and $m = \min_iZ_i$.
+(a) Show that $E(M) = \int_0^\infty\big[1 - F_Z(x)^n\big]\dd x$ and $E(m) = \int_0^\infty\big[1-F_Z(x)\big]^n\dd x$.
+(b) For $n = 3$ and $Z\sim\operatorname{Exp}(\beta = 2)$, compute $E(M)$, $E(m)$ and the expected range $E(M-m)$.`,
+    h: [R`$M,m\ge0$, so the tail formula applies: $E(M) = \int_0^\infty P(M>x)\dd x$.`, R`$\{M\le x\} = \bigcap_i\{Z_i\le x\}$ and $\{m>x\} = \bigcap_i\{Z_i>x\}$. Independence turns the intersection into a product, identical distribution makes every factor the same.`, R`For (b), $F_Z(x) = 1-e^{-x/2}$. Expand $1-(1-e^{-x/2})^3 = 3e^{-x/2} - 3e^{-x} + e^{-3x/2}$ and use $\int_0^\infty e^{-cx}\dd x = \frac1c$.`, R`The range needs no new integral: $E(M-m) = E(M) - E(m)$ by linearity.`],
+    a: [['$E(M)$', '11/3'], ['$E(m)$', '2/3'], ['$E(M-m)$', '3']],
+    s: R`**(a)** For $x\ge0$,
+$$P(M\le x) = P(Z_1\le x,\dots,Z_n\le x) \underset{\text{indep.}}{=} \prod_{i=1}^nP(Z_i\le x) \underset{\text{ident. distr.}}{=} F_Z(x)^n,$$
+so $P(M>x) = 1 - F_Z(x)^n$. Since $M\ge0$, the tail formula gives $E(M) = \int_0^\infty P(M>x)\dd x = \int_0^\infty\big[1-F_Z(x)^n\big]\dd x$.
+Likewise $P(m>x) = P(Z_1>x,\dots,Z_n>x) = \big[1-F_Z(x)\big]^n$, and $m\ge0$, so $E(m) = \int_0^\infty\big[1-F_Z(x)\big]^n\dd x$.
+
+**(b)** With $1-F_Z(x) = e^{-x/2}$:
+$$E(M) = \int_0^\infty\left(3e^{-x/2} - 3e^{-x} + e^{-3x/2}\right)\dd x = 3\cdot2 - 3\cdot1 + \frac23 = \frac{11}{3}.$$
+$$E(m) = \int_0^\infty e^{-3x/2}\dd x = \frac23\quad(\text{indeed } m\sim\operatorname{Exp}(\beta/n)).$$
+By linearity $E(M-m) = \frac{11}3 - \frac23 = 3$.
+
+(Check via memorylessness: the gaps between the ordered values are $\operatorname{Exp}(\beta/3)$, $\operatorname{Exp}(\beta/2)$, $\operatorname{Exp}(\beta)$, so $E(M) = \beta\left(\frac13+\frac12+1\right) = 2\cdot\frac{11}6 = \frac{11}3$ ✓.)` },
 ]);

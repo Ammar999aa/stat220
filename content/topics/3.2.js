@@ -72,4 +72,28 @@ DRILLS('3.2', [
     s: R`Yes: a finite $k$-th moment implies all lower moments are finite.` },
   { k: '13', lvl: 3, q: R`$X\sim\operatorname{Bin}(5, 0.4)$. Find $E[X(X-1)]$.`, h: [R`$E[X(X-1)] = \sum_x x(x-1)\binom nx p^x(1-p)^{n-x} = n(n-1)p^2$.`], a: '3.2',
     s: R`Pull out $n(n-1)p^2$ and the rest is a $\operatorname{Bin}(n-2,p)$ PMF summing to 1: $E[X(X-1)] = n(n-1)p^2 = 20\cdot0.16 = 3.2$.` },
+  { k: '14', lvl: 3, q: R`A coin with $P(\text{H}) = p$ is tossed $10$ times. A **run** is a maximal block of equal consecutive outcomes (e.g. HHTHTT has 4 runs: HH, T, H, TT). Find the expected number of runs for $p = 0.3$, and for a fair coin.`,
+    h: [R`Count where runs **start**. Toss 1 always starts a run. Toss $i\ge2$ starts a new run exactly when it differs from toss $i-1$.`, R`So $R = 1 + \sum_{i=2}^{10}I_i$ with $I_i = \mathbb 1\{\text{toss } i\ne\text{toss } i-1\}$, and $P(I_i = 1) = P(\text{HT or TH})$.`, R`The $I_i$ are dependent ($I_2$ and $I_3$ share toss 2). Does linearity care?`],
+    a: [[R`$p = 0.3$`, '4.78'], ['fair coin', '5.5']],
+    s: R`Write $R = 1 + \sum_{i=2}^{10}I_i$, where $I_i = 1$ if toss $i$ differs from toss $i-1$. Then $E(I_i) = P(\text{HT}) + P(\text{TH}) = 2p(1-p)$. By linearity (no independence needed, which is good, because neighbouring $I_i$ are dependent):
+$$E(R) = 1 + 9\cdot2p(1-p).$$
+For $p = 0.3$: $1 + 9\cdot0.42 = 4.78$. For $p = \tfrac12$: $1 + \tfrac92 = 5.5$.
+
+Common traps: forgetting the $+1$ for the first run, or using 10 indicators instead of 9 (there are only 9 adjacent pairs).` },
+  { k: '15', lvl: 4, q: R`(Exam style.) $X\sim\operatorname{Exp}(\beta = 2)$ and $Y\sim\operatorname{Gamma}(3,1)$ (shape 3, scale 1, density $\tfrac12y^2e^{-y}$, $y>0$) are independent, and $R = X/Y$.
+(a) Show that $E(Y^k) = \frac{\Gamma(3+k)}{\Gamma(3)}$ for every real $k>-3$, and that $E(Y^k) = \infty$ for $k\le-3$.
+(b) Find $E(1/Y)$, $E(R)$, $E(R^2)$ and $\operatorname{var}(R)$.
+(c) Is $E(Y^{-3})$ finite?`,
+    h: [R`$E(Y^k) = \frac{1}{2}\int_0^\infty y^{k+2}e^{-y}\dd y$. Near $y = 0$, $e^{-y}\approx1$, so it converges iff $k+2>-1$. When it converges it is a Gamma integral.`, R`$X$ and $1/Y$ are functions of independent variables, so they are independent: $E(X/Y) = E(X)E(1/Y)$ and $E(X^2/Y^2) = E(X^2)E(Y^{-2})$.`, R`$E(X^2) = 2\beta^2 = 8$. Trap: $E(X/Y)$ is **not** $E(X)/E(Y)$.`],
+    a: [['$E(1/Y)$', '1/2'], ['$E(R)$', '1'], ['$E(R^2)$', '4'], [R`$\operatorname{var}(R)$`, '3'], [R`$E(Y^{-3})$ finite?`, { choice: ['Yes', 'No'], v: 1 }]],
+    s: R`**(a)** By LOTUS, $E(Y^k) = \frac{1}{\Gamma(3)}\int_0^\infty y^{k+2}e^{-y}\dd y$. The integrand is fine at $\infty$ (the exponential wins). Near $0$ it behaves like $y^{k+2}$, which is integrable iff $k+2>-1$, i.e. $k>-3$. Then the integral is $\Gamma(k+3)$, so $E(Y^k) = \frac{\Gamma(3+k)}{\Gamma(3)} = \frac{\Gamma(3+k)}2$. For $k\le-3$ the integral diverges at 0.
+
+**(b)** $E(1/Y) = \frac{\Gamma(2)}{2} = \frac12$ and $E(Y^{-2}) = \frac{\Gamma(1)}{2} = \frac12$.
+By independence of $X$ and $Y$ (hence of $X$ and $1/Y$):
+$$E(R) = E(X)\,E(1/Y) = 2\cdot\tfrac12 = 1,\qquad E(R^2) = E(X^2)\,E(Y^{-2}) = 8\cdot\tfrac12 = 4,$$
+so $\operatorname{var}(R) = 4 - 1 = 3$.
+
+Note $E(R) = 1\ne\frac{E(X)}{E(Y)} = \frac23$: in general $E(1/Y)\ne1/E(Y)$ (here $\tfrac12>\tfrac13$).
+
+**(c)** No: $k = -3$ is exactly the boundary, $E(Y^{-3}) = \frac12\int_0^\infty y^{-1}e^{-y}\dd y = \infty$. So $E(R^3) = \infty$ too. Negative moments can fail to exist even when all positive moments are finite.` },
 ]);
