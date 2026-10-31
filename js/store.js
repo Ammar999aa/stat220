@@ -143,7 +143,7 @@ window.Store = (function () {
     let best = null;
     Object.keys(s.exams).forEach((id) => {
       const e = s.exams[id]; const ex = C.exams.find((x) => x.id === id);
-      if (e.best != null && ex) { const pct = Math.round((100 * e.best) / ex.total); if (best == null || pct > best) best = pct; }
+      if (e.best != null && ex && !ex.quiz) { const pct = Math.round((100 * e.best) / ex.total); if (best == null || pct > best) best = pct; }
     });
     return best;
   }

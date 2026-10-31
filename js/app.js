@@ -264,13 +264,19 @@ window.App = (function () {
       '<div class="card tip">How to use these: do the <b>2025 midterm in exam mode first</b>, on paper, with your cheat sheet. Then grade yourself honestly against the solutions. Use <b>practice mode</b> (hints and per-part solutions) for the mocks you are not ready to time yet.</div>' +
       (s.examRun ? '<div class="card warnbox">⏱ You have an exam running: <a href="#/exams/' + s.examRun.id + '/run">return to it →</a></div>' : '') +
       '<div class="topic-grid">';
-    C.exams.forEach((ex) => {
+    const card = (ex) => {
       const r = s.exams[ex.id];
-      h += '<div class="card exam-card"><div class="topic-name">' + esc(ex.title) + '</div><div class="muted small">' + esc(ex.summary || '') + '</div>' +
+      return '<div class="card exam-card"><div class="topic-name">' + esc(ex.title) + '</div><div class="muted small">' + esc(ex.summary || '') + '</div>' +
         (r && r.best != null ? '<div class="best">Best: <b>' + r.best + '</b> / ' + ex.total + ' (' + r.runs.length + ' attempt' + (r.runs.length > 1 ? 's' : '') + ')</div>' : '<div class="muted small">Not attempted yet</div>') +
         '<div class="btn-row"><a class="btn primary" href="#/exams/' + ex.id + '/run">⏱ Exam mode</a><a class="btn" href="#/exams/' + ex.id + '/practice">Practice mode</a></div></div>';
-    });
-    return h + '</div></div>';
+    };
+    h += C.exams.filter((ex) => !ex.quiz).map(card).join('') + '</div>';
+    const quizzes = C.exams.filter((ex) => ex.quiz);
+    if (quizzes.length) {
+      h += '<h2>Chapter quizzes</h2><p class="muted">Short mixed quizzes on one chapter, with new questions (not from the homework, drills or mocks). Use them after finishing that chapter\'s drills.</p>' +
+        '<div class="topic-grid">' + quizzes.map(card).join('') + '</div>';
+    }
+    return h + '</div>';
   }
 
   function examQuestionsHtml(ex, opts) {
