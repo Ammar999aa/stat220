@@ -325,3 +325,16 @@ input:focus { outline: 2px solid var(--accent-soft); border-color: var(--accent)
 .box-ctx { font-weight: 500; text-transform: none; letter-spacing: 0; font-size: .78rem; }
 .box.flash { animation: flash 2s; }
 .nav-count { font-size: .75rem; color: var(--muted); font-weight: 600; margin-left: 4px; }
+
+/* Drill + lesson split view (desktop only) */
+.crumbs-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.lesson-toggle { font-size: .82rem; padding: 4px 10px; }
+.lesson-toggle.sel { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+.lesson-pane { position: sticky; top: calc(var(--topbar) + 12px); max-height: calc(100vh - var(--topbar) - 24px); overflow-y: auto; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 20px; overscroll-behavior: contain; }
+.lesson-title { margin: .2em 0 .4em; }
+.split-drill { min-width: 0; }
+@media (max-width: 1099px) {
+  .lesson-toggle, .lesson-pane { display: none; }
+  .split { display: block; max-width: 780px; margin: 0 auto; }
+}

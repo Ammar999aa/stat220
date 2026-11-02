@@ -234,12 +234,21 @@ window.App = (function () {
     const i = list.indexOf(pid);
     if (i < 0) return notFound();
     const prev = list[i - 1], next = list[i + 1];
-    return '<div class="page"><div class="crumbs"><a href="#/drills">Drills</a></div>' +
+    const tid = C.probs[pid].topic, t = C.topics[tid];
+    const split = t && lessonSplit();
+    const drill = '<div class="crumbs crumbs-row"><a href="#/drills">Drills</a>' +
+      (t ? '<button class="btn lesson-toggle' + (split ? ' sel' : '') + '" data-go="lesson" aria-pressed="' + !!split + '" title="Show the lesson for this topic side by side">📖 ' + (split ? 'Hide' : 'Show') + ' lesson</button>' : '') + '</div>' +
       Problem.html(pid, { label: 'Question ' + (i + 1) }) +
       '<div class="pager">' + (prev ? '<a href="#/drills/' + prev + '">← Question ' + i + '</a>' : '<span></span>') +
       '<a href="#/drills">All questions</a>' +
-      (next ? '<a href="#/drills/' + next + '">Question ' + (i + 2) + ' →</a>' : '<span></span>') + '</div></div>';
+      (next ? '<a href="#/drills/' + next + '">Question ' + (i + 2) + ' →</a>' : '<span></span>') + '</div>';
+    if (!split) return '<div class="page">' + drill + '</div>';
+    return '<div class="split"><aside class="lesson-pane" data-topic="' + esc(tid) + '"><div class="crumbs"><a href="#/learn/' + tid + '">Lesson ↗</a></div>' +
+      '<h2 class="lesson-title"><span class="topic-num">' + t.id + '</span> ' + esc(t.title) + '</h2>' +
+      renderBlocks(t.blocks, { n: 0 }, tid) + '</aside><div class="split-drill">' + drill + '</div></div>';
   }
+  function lessonSplit() { try { return localStorage.getItem('stat220.lessonSplit') === '1'; } catch (e) { return false; } }
+  const lessonScroll = {}; // topic id -> scrollTop of the lesson pane, kept across drill navigation
 
   function pageHomeworkList() {
     let h = '<div class="page wide"><h1>Homework</h1><p class="lead">Every homework problem from HW1–HW6, with hints and clean step-by-step solutions. Typos in the official PDFs are fixed. HW6 had no official solutions, so these are written from scratch. In each set, <b>A</b> problems are warm-ups, <b>B</b> were graded, and <b>C</b> are "going beyond".</p><div class="topic-grid">';
@@ -506,6 +515,9 @@ window.App = (function () {
       const on = Store.toggleFlag(b.dataset.key);
       document.querySelectorAll('.flag-btn').forEach((x) => { if (x.dataset.key === b.dataset.key) { x.classList.toggle('on', on); x.setAttribute('aria-pressed', on); x.title = on ? 'Unflag' : 'Flag to revisit later'; } });
       toast(on ? 'Flagged ⚑' : 'Unflagged');
+    } else if (go === 'lesson') {
+      try { localStorage.setItem('stat220.lessonSplit', lessonSplit() ? '0' : '1'); } catch (err) {}
+      route();
     } else if (go === 'print') window.print();
     else if (go === 'switch') choosePlayer(b.dataset.name);
     else if (go === 'export') {
@@ -583,6 +595,8 @@ window.App = (function () {
   function route() {
     cleanup.forEach((f) => { try { f(); } catch (e) {} }); cleanup = [];
     sidebar.classList.remove('open'); scrim.classList.remove('show');
+    const oldPane = main.querySelector('.lesson-pane');
+    if (oldPane) lessonScroll[oldPane.dataset.topic] = oldPane.scrollTop;
     if (!C.topicOrder.length || !C.exams.length) {
       main.innerHTML = '<div class="page"><div class="card warnbox"><h3>Some files did not load</h3><p>The browser is probably using an old cached copy. Press <b>Cmd+Shift+R</b> (Windows: Ctrl+Shift+R) to reload, or open this page with <code>?fresh=' + Date.now() + '</code> added to the address.</p></div></div>';
       return;
@@ -611,6 +625,8 @@ window.App = (function () {
     else html = notFound();
     main.innerHTML = html;
     renderMath(main);
+    const pane = main.querySelector('.lesson-pane');
+    if (pane) pane.scrollTop = lessonScroll[pane.dataset.topic] || 0;
     document.querySelectorAll('[data-nav]').forEach((el) => el.classList.toggle('active', el.dataset.nav === nav));
     updateChrome(); tickTimer();
     if (q.p) {
