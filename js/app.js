@@ -111,7 +111,8 @@ window.App = (function () {
     let h = '<div class="page wide"><h1>Learn</h1><p class="lead">Each page explains one idea in plain words, with examples. Practice problems sit right after each new idea. Do them as you read: the first one is always a quick warm-up.</p>';
     const nf = Store.flagCount();
     h += '<a class="card tech-card" href="#/flagged"><b>⚑ Flagged boxes (' + nf + ')</b><div class="muted small">' + (nf ? 'Revisit the definitions, theorems and examples you flagged.' : 'Click ⚑ on any box to save it here for later.') + '</div></a>';
-    if (C.technique) h += '<a class="card tech-card" href="#/technique"><b>✍️ ' + esc(C.technique.title) + '</b><div class="muted small">' + esc(C.technique.summary || '') + '</div></a>';
+    if (C.prereqs) h += '<a class="card tech-card map-card" href="#/map"><b>🗺️ Lesson map</b><div class="muted small">See which lessons rely on which, so you know what to review first.</div></a>';
+    if (C.technique) h +='<a class="card tech-card" href="#/technique"><b>✍️ ' + esc(C.technique.title) + '</b><div class="muted small">' + esc(C.technique.summary || '') + '</div></a>';
     Object.keys(chapters).sort().forEach((ch) => {
       h += '<h2>Chapter ' + ch + ' · ' + CH_TITLES[ch] + '</h2><div class="topic-grid">';
       chapters[ch].forEach((t) => {
@@ -124,6 +125,80 @@ window.App = (function () {
     });
     return h + '</div>';
   }
+
+  // Hasse diagram of lesson prerequisites: foundations at the bottom, an edge means "directly relies on"
+  function pageMap() {
+    const P = C.prereqs || {};
+    const ids = C.topicOrder.filter((id) => P[id]);
+    // Transitive closure of "needs", then keep only covering edges (transitive reduction)
+    const anc = {};
+    const ancOf = (id) => anc[id] || (anc[id] = new Set(P[id].needs.flatMap((n) => [n, ...ancOf(n)])));
+    ids.forEach(ancOf);
+    const direct = {};
+    ids.forEach((id) => { direct[id] = P[id].needs.filter((n) => !P[id].needs.some((m) => m !== n && anc[m].has(n))); });
+    // Rank = longest path from a foundation
+    const rank = {};
+    const rk = (id) => rank[id] != null ? rank[id] : (rank[id] = direct[id].length ? 1 + Math.max(...direct[id].map(rk)) : 0);
+    ids.forEach(rk);
+    const R = Math.max(...ids.map((id) => rank[id]));
+    const rows = []; for (let r = 0; r <= R; r++) rows.push(ids.filter((id) => rank[id] === r));
+    // Order within rows to reduce crossings (barycenter sweeps)
+    const kids = {}; ids.forEach((id) => direct[id].forEach((n) => (kids[n] = kids[n] || []).push(id)));
+    const pos = {}; const setPos = () => rows.forEach((row) => row.forEach((id, i) => { pos[id] = (i + 0.5) / row.length; }));
+    setPos();
+    const bary = (id, nb) => nb.length ? nb.reduce((a, n) => a + pos[n], 0) / nb.length : pos[id];
+    for (let it = 0; it < 6; it++) {
+      for (let r = 1; r <= R; r++) { const w = {}; rows[r].forEach((id) => { w[id] = bary(id, direct[id]); }); rows[r].sort((a, b) => w[a] - w[b]); setPos(); }
+      for (let r = R - 1; r >= 0; r--) { const w = {}; rows[r].forEach((id) => { w[id] = bary(id, kids[id] || []); }); rows[r].sort((a, b) => w[a] - w[b]); setPos(); }
+    }
+    const NW = 168, NH = 46, GX = 24, GY = 50;
+    const maxW = Math.max(...rows.map((r) => r.length));
+    const W = maxW * (NW + GX), H = (R + 1) * (NH + GY);
+    const xy = {};
+    rows.forEach((row, r) => row.forEach((id, i) => {
+      const off = (W - row.length * (NW + GX)) / 2;
+      xy[id] = { x: off + i * (NW + GX) + GX / 2, y: (R - r) * (NH + GY) + GY / 2 };
+    }));
+    let edges = '', nodes = '';
+    ids.forEach((id) => direct[id].forEach((n) => {
+      const a = xy[id], b = xy[n];
+      const x1 = a.x + NW / 2, y1 = a.y + NH, x2 = b.x + NW / 2, y2 = b.y, my = (y1 + y2) / 2;
+      edges += '<path class="map-edge" data-from="' + id + '" data-to="' + n + '" d="M' + x1 + ',' + y1 + ' C' + x1 + ',' + my + ' ' + x2 + ',' + my + ' ' + x2 + ',' + y2 + '"/>';
+    }));
+    ids.forEach((id) => {
+      const t = C.topics[id], p = xy[id], m = Store.mastery(id);
+      nodes += '<a href="#/learn/' + id + '" class="map-node ch' + t.ch + '" data-node="' + id + '"><title>' + esc(t.id + ' ' + t.title) + '</title>' +
+        '<rect x="' + p.x + '" y="' + p.y + '" width="' + NW + '" height="' + NH + '" rx="9"/>' +
+        '<text x="' + (p.x + 10) + '" y="' + (p.y + 19) + '" class="map-id">' + id + '</text>' +
+        '<text x="' + (p.x + 10) + '" y="' + (p.y + 35) + '" class="map-name">' + esc(P[id].short) + '</text>' +
+        '<rect class="map-bar" x="' + (p.x + 10) + '" y="' + (p.y + NH - 6) + '" width="' + Math.round((NW - 20) * Math.min(1, m)) + '" height="2.5" rx="1"/></a>';
+    });
+    window.__mapAnc = anc;
+    return '<div class="page wide"><div class="crumbs"><a href="#/learn">Learn</a></div><h1>Lesson map</h1>' +
+      '<p class="lead">Which lessons rely on which. Foundations are at the bottom; a line going down from a lesson points to a lesson it directly uses. Hover a lesson to light up everything it builds on (and everything that builds on it). Click to open it. The thin green line under each name is your mastery.</p>' +
+      '<div class="map-key"><span class="ch1">Ch 1 · Probability</span><span class="ch2">Ch 2 · Random variables</span><span class="ch3">Ch 3 · Expectation</span><span class="ch4">Ch 4 · Inequalities</span></div>' +
+      '<div class="card map-wrap"><svg class="map" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '">' + edges + nodes + '</svg></div></div>';
+  }
+  document.addEventListener('mouseover', (e) => {
+    const svg = document.querySelector('svg.map'); if (!svg) return;
+    const n = e.target.closest && e.target.closest('[data-node]');
+    const id = n && n.dataset.node;
+    if (id === svg.dataset.hover) return;
+    svg.dataset.hover = id || '';
+    svg.classList.toggle('hovering', !!id);
+    if (!id) return;
+    const anc = window.__mapAnc;
+    const up = anc[id], down = new Set(Object.keys(anc).filter((k) => anc[k].has(id)));
+    svg.querySelectorAll('[data-node]').forEach((el) => {
+      const k = el.dataset.node;
+      el.classList.toggle('on', k === id); el.classList.toggle('up', up.has(k)); el.classList.toggle('down', down.has(k));
+    });
+    svg.querySelectorAll('.map-edge').forEach((el) => {
+      const f = el.dataset.from, t = el.dataset.to;
+      el.classList.toggle('up', (f === id || up.has(f)) && up.has(t));
+      el.classList.toggle('down', (t === id || down.has(t)) && down.has(f));
+    });
+  });
 
   const KIND_NAME = { def: 'Definition', thm: 'Theorem', ex: 'Example', note: 'Note', warn: 'Watch out' };
 
@@ -609,6 +684,7 @@ window.App = (function () {
     else if (a === 'learn' && !b) html = pageLearn();
     else if (a === 'learn') html = pageTopic(b);
     else if (a === 'technique') { html = pageTechnique(); nav = 'learn'; }
+    else if (a === 'map') { html = pageMap(); nav = 'learn'; }
     else if (a === 'flagged') html = pageFlagged(q);
     else if (a === 'drills' && !b) html = pageDrills(q);
     else if (a === 'drills') html = pageDrill(b);
