@@ -31,4 +31,13 @@ window.CONTENT.prereqs = {
   '4.3': { short: 'Mill’s inequality', needs: ['2.5'] },
   '4.4': { short: 'Jensen', needs: ['3.1'] },
   '4.5': { short: 'Cauchy–Schwarz & Hölder', needs: ['3.5', '4.4'] },
+  '5.1': { short: 'Modes of convergence', needs: ['2.1', '3.3'] },
+  '5.2': { short: 'Law of large numbers', needs: ['5.1', '4.1', '3.4'] },
+  '5.3': { short: 'Central limit theorem', needs: ['5.1', '3.4', '3.7', '2.5'] },
+  '5.4': { short: 'Slutsky & delta method', needs: ['5.2', '5.3'] },
+  '6.1': { short: 'Statistical models', needs: ['2.5'] },
+  '6.2': { short: 'Bias, se & MSE', needs: ['6.1', '3.4'] },
+  '6.3': { short: 'Consistency', needs: ['6.2', '5.2', '5.4'] },
+  '6.4': { short: 'Confidence intervals', needs: ['6.3', '5.3', '4.2'] },
+  '7.1': { short: 'Empirical CDF', needs: ['6.4', '2.4', '5.4'] },
 };

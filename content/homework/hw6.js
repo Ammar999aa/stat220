@@ -1,5 +1,5 @@
-HW({ id: 'hw6', title: 'Homework 6', summary: 'Inequalities (Ch.4). B due Oct 21: no official solutions, written here.',
-  intro: R`Topics: Chapter 4. The B problems are **due Oct 21, 8:30** on Blackboard, the same morning as the midterm. **There are no official solutions**, so these were written from scratch. The B problems are graded work: attempt them on your own first, and only then compare with these solutions. The course policy says solutions must not be copied. Problems marked ↗ also appear on a topic page; your progress on them is shared.` }, [
+HW({ id: 'hw6', title: 'Homework 6', summary: 'Inequalities (Ch.4): Chebyshev, Cantelli, Hoeffding vs Chebyshev, Young/Hölder/Lyapunov, Mill, HM ≤ GM ≤ AM.',
+  intro: R`Topics: Chapter 4. The B problems were due Oct 14. The official solutions are now out, and the solutions here match them. In B1, both minimize the Markov bound at $u^* = \sigma^2/t$; in B3(a), both prove Young's inequality from the concavity of $\log$. Problems marked ↗ also appear on a topic page, and your progress on them is shared.` }, [
   { k: 'A1', ref: 't4.1-f' },
   { k: 'A2', ref: 't4.3-a' },
   { k: 'A3', ref: 't4.5-f' },
@@ -28,5 +28,5 @@ $$E[\varphi'(U)W]\ \ge\ E[\varphi'(U)]\,E[W] = 0.$$
 
 Hence $E|X - EX|^p\ge E|Y - EY|^p$. $\blacksquare$
 
-*Intuition:* clipping pulls extreme values toward the middle, so every measure of spread around the mean shrinks. For $p = 2$ there is a one-line proof: $\operatorname{var}(Y)\le E[(Y - g(\mu))^2]\le E[(X-\mu)^2]$, because $|g(x) - g(\mu)|\le|x-\mu|$.`, src: 'HW6 C3 (solution written for this app)' },
+*Intuition:* clipping pulls extreme values toward the middle, so every measure of spread around the mean shrinks. For $p = 2$ there is a one-line proof: $\operatorname{var}(Y)\le E[(Y - g(\mu))^2]\le E[(X-\mu)^2]$, because $|g(x) - g(\mu)|\le|x-\mu|$.`, src: 'HW6 C3 (official solution uses the same association-inequality argument)' },
 ]);

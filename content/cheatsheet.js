@@ -1,6 +1,57 @@
 CHEATSHEET({
-  intro: R`Everything for Chapters 1–4 on **two A4 sides**, in the instructor's notation. Press **Print** to get a paper copy you can learn from. The exam allows one double-sided A4 sheet but **no photocopies**, so copy what you need **by hand**. Writing it is half the revision.`,
+  intro: R`Four A4 sides in the instructor's notation. Sides 1–2 cover **Chapters 5–7 (Midterm 2)**, and sides 3–4 are the Midterm 1 sheet for Chapters 1–4. Midterm 2 allows **two** double-sided A4 sheets, so all four sides fit. They must be **handwritten (no photocopies)**, so copy what you need **by hand**: writing them is half the revision. Press **Print** for a paper copy to learn from.`,
   pages: [
+R`<h3>Ch.5 Modes of convergence</h3>
+<div class="k"><b>In probability</b> $X_n\xrightarrow{P}X$: $\forall\varepsilon>0$, $P(|X_n-X|>\varepsilon)\to0$.</div>
+<div class="k"><b>In distribution</b> $X_n\xrightarrow{D}X$: $F_n(x)\to F(x)$ at every <b>continuity point</b> $x$ of $F$. (Only the CDFs matter: $X_n$, $X$ need not live together.)</div>
+<div class="k"><b>Quadratic mean</b> $X_n\xrightarrow{\text{qm}}X$: $E(X_n-X)^2\to0$. <b>Almost surely</b>: $P(\{\omega:\lim X_n(\omega)=X(\omega)\})=1$.</div>
+<div class="k box-mini"><b>Relations</b>: qm ⇒ P ⇒ D; a.s. ⇒ P. D to a <b>constant</b> $c$ ⇒ P. Proof qm⇒P: $P(|X_n-X|>\varepsilon)\le\frac{E(X_n-X)^2}{\varepsilon^2}$ (Markov). <b>Converses fail</b>: $X_n=e^n$ w.p. $\frac1n$, else $X$ ⇒ P yes, qm no ($E=\frac{e^{2n}+1}{n}\to\infty$). $X\sim N(0,1)$, $X_n=-X$ ⇒ D yes, P no.</div>
+<div class="k"><b>qm to a constant</b>: $E(X_n-b)^2=\var X_n+(EX_n-b)^2$ (bias–variance) ⇒ $X_n\xrightarrow{\text{qm}}b$ ⇔ $EX_n\to b$ and $\var X_n\to0$.</div>
+<div class="k"><b>Integer-valued</b>: $X_n\xrightarrow{D}X$ ⇔ $P(X_n=k)\to P(X=k)\ \forall k$ (use $F_n(k\pm\frac12)$).</div>
+<div class="k"><b>Via CDFs</b>: max of $\Unif(0,\theta)$: $P(|M_n-\theta|>\varepsilon)=(1-\frac\varepsilon\theta)^n\to0$. $Z_i\ge0$ iid, $f(0^+)=\lambda>0$: $n\min Z_i\xrightarrow{D}\Exp(\beta=\frac1\lambda)$ since $P(n\min>x)=(1-\int_0^{x/n}f)^n\to e^{-\lambda x}$. $(1-\frac{a_n}n)^n\to e^{-a}$ if $a_n\to a$.</div>
+<h3>LLN &amp; CLT</h3>
+<div class="k"><b>WLLN</b>: $X_i$ iid, $E|X_1|<\infty$ ⇒ $\bar X_n\xrightarrow{P}\mu$. Proof ($\sigma^2<\infty$): Chebyshev $P(|\bar X_n-\mu|>\varepsilon)\le\frac{\sigma^2}{n\varepsilon^2}\to0$. Also $\frac1n\sum g(X_i)\xrightarrow{P}E\,g(X_1)$ (e.g. $\frac1n\sum X_i^2\to\mu^2+\sigma^2$). Cauchy: $\bar X_n\sim$ Cauchy, no LLN.</div>
+<div class="k"><b>CLT</b>: $X_i$ iid, mean $\mu$, $\sigma^2<\infty$: $Z_n=\frac{\sqrt n(\bar X_n-\mu)}{\sigma}\xrightarrow{D}N(0,1)$. So $\bar X_n\approx N(\mu,\frac{\sigma^2}n)$, $\sum X_i\approx N(n\mu,n\sigma^2)$, $P(\bar X_n\le x)\approx\Phi\big(\frac{\sqrt n(x-\mu)}\sigma\big)$. Also true with $S_n$ for $\sigma$. Bernoulli: $\sqrt n(\hat p-p)\xrightarrow{D}N(0,p(1-p))$. <b>Multivariate</b>: $\sqrt n(\bar{\mathbf X}-\boldsymbol\mu)\xrightarrow{D}N(0,\Sigma)$. Proof idea: MGF of $Z_n\to e^{t^2/2}$.</div>
+<div class="k"><b>Chebyshev vs CLT interval</b> for $\bar X-\mu$ w.p. $\ge1-\alpha$: Chebyshev $\pm\frac{\sigma}{\sqrt{n\alpha}}$ (any $n$, any $F$) vs CLT $\pm z_{\alpha/2}\frac{\sigma}{\sqrt n}$ (approx., much shorter).</div>
+<div class="k">$\Phi(1.282)=.90$, $\Phi(1.645)=.95$, $\Phi(1.96)=.975$, $\Phi(2.326)=.99$, $\Phi(2.576)=.995$, $\Phi(1)=.8413$, $\Phi(2)=.9772$, $\Phi(3)=.9987$. $\Phi(-x)=1-\Phi(x)$.</div>
+<h3>Theorem 5.5 / Slutsky / CMT</h3>
+<div class="k">(a) $X_n\xrightarrow{P}X$, $Y_n\xrightarrow{P}Y$ ⇒ $X_n+Y_n\xrightarrow{P}X+Y$, $X_nY_n\xrightarrow{P}XY$. Same for qm sums.</div>
+<div class="k">(b) <b>Slutsky</b>: $X_n\xrightarrow{D}X$, $Y_n\xrightarrow{D}c$ (constant) ⇒ $X_n+Y_n\xrightarrow{D}X+c$, $X_nY_n\xrightarrow{D}cX$, $X_n/Y_n\xrightarrow{D}X/c$ ($c\ne0$).</div>
+<div class="k">(c) <b>CMT</b>: $g$ continuous: $X_n\xrightarrow{P}X$ ⇒ $g(X_n)\xrightarrow{P}g(X)$; $X_n\xrightarrow{D}X$ ⇒ $g(X_n)\xrightarrow{D}g(X)$. Deterministic $a_n\to a$ count as $\xrightarrow{P}a$.</div>
+<div class="k"><b>Trap</b>: $X_n\xrightarrow{D}X$, $Y_n\xrightarrow{D}Y$ does <b>not</b> give $X_n+Y_n\xrightarrow{D}X+Y$ (need one limit constant).</div>
+<div class="k box-mini"><b>Delta method</b>: $\sqrt n(Y_n-\mu)\xrightarrow{D}N(0,\sigma^2)$, $g$ differentiable, $g'(\mu)\ne0$ ⇒ $\sqrt n\big(g(Y_n)-g(\mu)\big)\xrightarrow{D}N\big(0,g'(\mu)^2\sigma^2\big)$, i.e. $g(Y_n)\approx N\big(g(\mu),\frac{g'(\mu)^2\sigma^2}n\big)$. Proof: Taylor $g(Y_n)=g(\mu)+g'(\mu)(Y_n-\mu)+o_P(|Y_n-\mu|)$ + Slutsky.<br>
+<b>Multivariate</b>: $\sqrt n(g(\bar{\mathbf X})-g(\boldsymbol\mu))\xrightarrow{D}N(0,\nabla g^T\Sigma\nabla g)$. Ratio $\bar X_1/\bar X_2$: $\frac{\sigma_{11}}{\mu_2^2}-\frac{2\mu_1\sigma_{12}}{\mu_2^3}+\frac{\mu_1^2\sigma_{22}}{\mu_2^4}$.<br>
+<b>$g'(\mu)=0$</b>: second order. E.g. $p=\frac12$: $\frac14-\hat p(1-\hat p)=(\hat p-\frac12)^2$, so $4n[\frac14-\hat p(1-\hat p)]=[2\sqrt n(\hat p-\frac12)]^2\xrightarrow{D}\chi^2_1$ by CMT.</div>
+<div class="k"><b>Common $g$</b> (asympt. var $=g'(\mu)^2\sigma^2$): $x^2$: $4\mu^2\sigma^2$; $\log x$: $\frac{\sigma^2}{\mu^2}$; $\frac1x$: $\frac{\sigma^2}{\mu^4}$; $\sqrt x$: $\frac{\sigma^2}{4\mu}$; $e^x$: $e^{2\mu}\sigma^2$; $x(1-x)$ (Ber): $(1-2p)^2p(1-p)$; logit (Ber): $\frac{1}{p(1-p)}$. Exp(β), $g=\frac1x$: $\sqrt n(\frac1{\bar X}-\frac1\beta)\to N(0,\frac1{\beta^2})$.</div>
+<h3>Ch.5 exam templates</h3>
+<div class="k box-mini"><b>Show $X_n\xrightarrow{P}c$</b>: compute $P(|X_n-c|>\varepsilon)$ exactly (max/min ⇒ CDF power), or bound it by Chebyshev/Markov, or show $EX_n\to c$ & $\var X_n\to0$ (qm ⇒ P). <b>Show $\xrightarrow{D}$</b>: CDF limit at continuity points, MGF limit, or CLT + Slutsky. <b>Not qm</b>: compute $E(X_n-X)^2$. Always name the theorem used (WLLN, Thm 5.5, CMT, Slutsky, CLT, delta).</div>`,
+R`<h3>Ch.6 Models, estimators</h3>
+<div class="k"><b>Model</b> $\mathfrak F$ = family of distributions. <b>Parametric</b>: $\{F(x;\theta):x\in\mathcal X,\theta\in\Theta\subset\R^p\}$ (e.g. $N$: $\theta=(\mu,\sigma)\in\R\times\R_+$; regression $Y_i=\beta_0+\beta_1X_i+\varepsilon_i$, $\varepsilon_i\iid N(0,\sigma^2)$: $\Theta=\R^2\times\R_+$). <b>Nonparametric</b>: not finitely parametrized ({all CDFs}, $\{f:\int f''^2<\infty\}$). <b>Functional</b> $T(F)$: $\mu=\int x\dd F$, $\sigma^2=\int x^2\dd F-(\int x\dd F)^2$.</div>
+<div class="k"><b>Statistic</b> $T=g(X_1..X_n)$, must not depend on $\theta$. <b>Estimator</b> $\hat\theta_n$ = statistic aimed at $\theta$ ($\hat\mu=3$ is one, a bad one).</div>
+<div class="k box-mini"><b>bias</b> $=E\hat\theta_n-\theta$ (unbiased: $=0$). <b>se</b> $=\sqrt{\var\hat\theta_n}$; $\widehat{\text{se}}$ = plug estimates in. <b>MSE</b> $=E(\hat\theta_n-\theta)^2=\text{bias}^2+\var$. Proof: $\hat\theta-\theta=(\hat\theta-E\hat\theta)+(E\hat\theta-\theta)$; cross term has $E(\hat\theta-E\hat\theta)=0$.</div>
+<div class="k box-mini"><b>Consistent</b>: $\hat\theta_n\xrightarrow{P}\theta$. MSE $\to0$ ⇒ consistent (qm ⇒ P); i.e. bias $\to0$ & se $\to0$ suffice. Or LLN + CMT: $g(\bar X_n)\xrightarrow{P}g(\mu)$ for continuous $g$. Consistent ⇏ unbiased ($\frac1n(1+\sum X_i)$); unbiased ⇏ consistent ($X_1$); $\frac1n\sum(X_i+1)\to1+\mu$: neither. $\text{logit}(\hat p)$: consistent, biased (nonlinear, Jensen).</div>
+<div class="k"><b>Asympt. normal</b>: $\frac{\hat\theta_n-\theta}{\text{se}}\xrightarrow{D}N(0,1)$ ⇔ $\hat\theta_n\approx N(\theta,\text{se}^2)$.</div>
+<div class="k box-mini"><b>$1-\alpha$ CI</b> $C_n=(a_n,b_n)$, endpoints statistics, $P(\theta\in C_n)\ge1-\alpha\ \forall\theta$ ($C_n$ random, $\theta$ fixed). <b>Wald</b> (asympt.): $\hat\theta_n\pm z_{\alpha/2}\widehat{\text{se}}$, $z_{\alpha/2}=\Phi^{-1}(1-\frac\alpha2)$. Coverage: $P(-z\le\frac{\hat\theta-\theta}{\text{se}}\le z)\to\Phi(z)-\Phi(-z)=1-\alpha$. Bernoulli: $\hat p\pm z_{\alpha/2}\sqrt{\frac{\hat p(1-\hat p)}n}$. <b>Hoeffding</b> (exact, every $n$): $\hat p\pm\varepsilon_n$, $\varepsilon_n=\sqrt{\frac1{2n}\log\frac2\alpha}$. Size for half-width $w$ (worst $p=\frac12$): $n\ge\frac{z^2}{4w^2}$.</div>
+<h3>Standard estimator results</h3>
+<table>
+<tr><th>Model, $\hat\theta$</th><th>$E\hat\theta$</th><th>$\var\hat\theta$</th><th>MSE</th></tr>
+<tr><td>any, $\bar X$</td><td>$\mu$</td><td>$\frac{\sigma^2}n$</td><td>$\frac{\sigma^2}n$</td></tr>
+<tr><td>Ber, $\hat p=\bar X$</td><td>$p$</td><td>$\frac{p(1-p)}n$</td><td>same</td></tr>
+<tr><td>Pois, $\bar X$</td><td>$\lambda$</td><td>$\frac\lambda n$</td><td>same</td></tr>
+<tr><td>$N$, $S^2$</td><td>$\sigma^2$</td><td>$\frac{2\sigma^4}{n-1}$</td><td>same</td></tr>
+<tr><td>$N$, $\frac{n-1}nS^2$</td><td>$\frac{n-1}n\sigma^2$</td><td>$\frac{2(n-1)\sigma^4}{n^2}$</td><td>$\frac{(2n-1)\sigma^4}{n^2}$</td></tr>
+<tr><td>$U(0,\theta)$, $2\bar X$</td><td>$\theta$</td><td>$\frac{\theta^2}{3n}$</td><td>same</td></tr>
+<tr><td>$U(0,\theta)$, $M=\max$</td><td>$\frac{n\theta}{n+1}$</td><td>$\frac{n\theta^2}{(n+1)^2(n+2)}$</td><td>$\frac{2\theta^2}{(n+1)(n+2)}$</td></tr>
+<tr><td>$U(0,\theta)$, $\frac{n+1}nM$</td><td>$\theta$</td><td>$\frac{\theta^2}{n(n+2)}$</td><td>same</td></tr>
+<tr><td>Exp(β), $\frac1{\bar X}$ for $\lambda=\frac1\beta$</td><td>$\frac{n\lambda}{n-1}$</td><td>$\frac{n^2\lambda^2}{(n-1)^2(n-2)}$</td><td></td></tr>
+</table>
+<div class="k">$(n-1)S^2/\sigma^2\sim\chi^2_{n-1}$ (normal). General: $\var S^2=\frac1n\big(\mu_4-\frac{n-3}{n-1}\sigma^4\big)$, $\mu_4=E(X-\mu)^4$ ($=3\sigma^4$ normal). Min-MSE $cS^2$: $c^*=\frac{\sigma^4}{\sigma^4+\var S^2}$; normal: $c^*=\frac{n-1}{n+1}$. $\max$ of $U(0,\theta)$: $F_M(m)=(\frac m\theta)^n$, $f_M=\frac{nm^{n-1}}{\theta^n}$. $\bar X_n$ of Exp(β) $\sim\Gam(n,\frac\beta n)$; $E\frac1{X_1}=\infty$.</div>
+<h3>Ch.7 Empirical CDF, plug-in</h3>
+<div class="k"><b>EDF</b> $\hat F_n(x)=\frac1n\sum_i\1(X_i\le x)$: step $\frac1n$ at each data point. $n\hat F_n(x)\sim\Bin(n,F(x))$ ⇒ $E=F(x)$, $\var=\frac{F(x)(1-F(x))}n$, MSE $\to0$ ⇒ consistent. CLT: $\sqrt n(\hat F_n(x)-F(x))\xrightarrow{D}N(0,F(1-F))$. Delta: $\sqrt n(\sqrt{\hat F_n}-\sqrt F)\xrightarrow{D}N(0,\frac{1-F}4)$.</div>
+<div class="k"><b>Glivenko–Cantelli</b>: $\sup_x|\hat F_n-F|\xrightarrow{\text{a.s.}}0$. <b>DKW</b>: $P(\sup_x|\hat F_n-F|>\varepsilon)\le2e^{-2n\varepsilon^2}$ ⇒ band $\max(\hat F_n-\varepsilon_n,0)\le F\le\min(\hat F_n+\varepsilon_n,1)$, $\varepsilon_n=\sqrt{\frac1{2n}\log\frac2\alpha}$.</div>
+<div class="k box-mini"><b>Plug-in</b> $\hat\theta=T(\hat F_n)$. Linear $T=\int r\dd F$ ⇒ $\frac1n\sum r(X_i)$. Mean $\bar X$; variance $\frac1n\sum(X_i-\bar X)^2$ (1/n!); quantile $\hat F_n^{-1}(p)=\inf\{x:\hat F_n(x)\ge p\}$; corr: sample corr. $\theta=F(b)-F(a)$: $\hat\theta$ = fraction in $(a,b]$, $n\hat\theta\sim\Bin(n,\theta)$, $\widehat{\text{se}}=\sqrt{\frac{\hat\theta(1-\hat\theta)}n}$, CI $\hat\theta\pm z_{\alpha/2}\widehat{\text{se}}$.</div>
+<h3>Ch.6–7 exam templates</h3>
+<div class="k box-mini"><b>Estimator analysis</b>: (1) $E\hat\theta$ by linearity (or the density of max/min); (2) bias; (3) $\var$ (independence ⇒ variances add; $\var(aX)=a^2\var X$); (4) se $=\sqrt{\var}$; (5) MSE = bias²+var; (6) consistent? MSE $\to0$. <b>Compare</b>: smaller MSE wins (biased max beats unbiased $2\bar X$: $\frac{2}{(n+1)(n+2)}<\frac1{3n}$ for $n\ge3$). <b>CI</b>: state model, estimator, se, $z$, then numbers; interpret in words.</div>`,
 R`<div class="wide"><h3>Distributions (this course uses the scale β: Exp(β) has mean β)</h3>
 <table>
 <tr><th>Dist.</th><th>PMF/PDF, support</th><th>Mean</th><th>Var</th><th>MGF $\psi(t)$</th></tr>

@@ -2,8 +2,8 @@
 window.App = (function () {
   const C = window.CONTENT;
   const main = document.getElementById('main');
-  const EXAM_DATE = new Date(2026, 9, 21, 8, 30); // Wed Oct 21, 2026 08:30 (local time)
-  const CH_TITLES = { 1: 'Probability', 2: 'Random Variables', 3: 'Expectation', 4: 'Inequalities' };
+  const EXAM_DATE = new Date(2026, 10, 25, 8, 30); // Midterm 2: Wed Nov 25, 2026 08:30 (local time)
+  const CH_TITLES = { 1: 'Probability', 2: 'Random Variables', 3: 'Expectation', 4: 'Inequalities', 5: 'Convergence', 6: 'Models & Estimation', 7: 'The Empirical CDF' };
   let cleanup = [];
 
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -46,7 +46,7 @@ window.App = (function () {
     const ms = EXAM_DATE - Date.now();
     const days = Math.floor(ms / 864e5), hrs = Math.floor((ms % 864e5) / 36e5);
     const countdown = ms > 0
-      ? '<div class="count"><b>' + days + '</b> days <b>' + hrs + '</b> h</div><div class="muted">until Midterm 1 · Wed Oct 21, 08:30–09:50</div>'
+      ? '<div class="count"><b>' + days + '</b> days <b>' + hrs + '</b> h</div><div class="muted">until Midterm 2 · Wed Nov 25, 08:30</div>'
       : '<div class="count"><b>Exam day!</b></div><div class="muted">Good luck — trust your cheat sheet.</div>';
 
     // Next up: first plan topic below 60% mastery
@@ -71,7 +71,7 @@ window.App = (function () {
     }).join('') : '';
 
     return '<div class="page wide">' +
-      '<div class="hero"><div><h1>Hi ' + esc(s.name) + ' 👋</h1><p class="lead">Everything you need for STAT 220 Midterm 1: Chapters 1–4 and Homeworks 1–6.</p></div>' +
+      '<div class="hero"><div><h1>Hi ' + esc(s.name) + ' 👋</h1><p class="lead">Everything you need for STAT 220 Midterm 2: Chapters 5–7 (convergence, estimation, the empirical CDF) and Homeworks 7–8. Chapters 1–4 stay here for review: the instructor reuses them inside new questions.</p></div>' +
       '<div class="card count-card">' + countdown + '</div></div>' +
       '<div class="grid3">' +
       '<div class="card stat"><div class="stat-k">Level ' + lv.n + '</div><div class="stat-v">' + esc(lv.name) + '</div>' + bar(lv.progress, 'xp') +
@@ -176,7 +176,7 @@ window.App = (function () {
     window.__mapAnc = anc;
     return '<div class="page wide"><div class="crumbs"><a href="#/learn">Learn</a></div><h1>Lesson map</h1>' +
       '<p class="lead">Which lessons rely on which. Foundations are at the bottom; a line going down from a lesson points to a lesson it directly uses. Hover a lesson to light up everything it builds on (and everything that builds on it). Click to open it. The thin green line under each name is your mastery.</p>' +
-      '<div class="map-key"><span class="ch1">Ch 1 · Probability</span><span class="ch2">Ch 2 · Random variables</span><span class="ch3">Ch 3 · Expectation</span><span class="ch4">Ch 4 · Inequalities</span></div>' +
+      '<div class="map-key"><span class="ch1">Ch 1 · Probability</span><span class="ch2">Ch 2 · Random variables</span><span class="ch3">Ch 3 · Expectation</span><span class="ch4">Ch 4 · Inequalities</span><span class="ch5">Ch 5 · Convergence</span><span class="ch6">Ch 6 · Estimation</span><span class="ch7">Ch 7 · Empirical CDF</span></div>' +
       '<div class="card map-wrap"><svg class="map" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '">' + edges + nodes + '</svg></div></div>';
   }
   document.addEventListener('mouseover', (e) => {
@@ -344,8 +344,8 @@ window.App = (function () {
 
   function pageExams() {
     const s = Store.me();
-    let h = '<div class="page wide"><h1>Exams</h1><p class="lead">The real 2025 Midterm 1, plus four original mock exams in the same format: 3 exercises worth 40 + 30 + 30 points, 80 minutes, cheat sheet allowed.</p>' +
-      '<div class="card tip">How to use these: do the <b>2025 midterm in exam mode first</b>, on paper, with your cheat sheet. Then grade yourself honestly against the solutions. Use <b>practice mode</b> (hints and per-part solutions) for the mocks you are not ready to time yet.</div>' +
+    let h = '<div class="page wide"><h1>Exams</h1><p class="lead">The real Midterm 1 papers from 2025 and 2026, two original mocks for Midterm 2 (Ch.5–7), and four Midterm 1 mocks (Ch.1–4). All use the same format: 3 exercises worth 40 + 30 + 30 points, 80 minutes, cheat sheet allowed.</p>' +
+      '<div class="card tip">How to use these: for Midterm 2, do the <b>Midterm 2 mocks in exam mode</b>, on paper, with your cheat sheets. The <b>2026 Midterm 1</b> shows this year\'s style: one long applied problem, a joint-density problem, and an MGF + inequality problem. Then grade yourself honestly against the solutions. Use <b>practice mode</b> (hints and per-part solutions) for the mocks you are not ready to time yet.</div>' +
       (s.examRun ? '<div class="card warnbox">⏱ You have an exam running: <a href="#/exams/' + s.examRun.id + '/run">return to it →</a></div>' : '') +
       '<div class="topic-grid">';
     const card = (ex) => {
@@ -425,7 +425,7 @@ window.App = (function () {
   function pageCheatsheet() {
     const cs = C.cheatsheet; if (!cs) return notFound();
     return '<div class="page wide cs-page"><div class="no-print"><h1>Cheat sheet</h1><div class="prose">' + fmt(cs.intro || '') + '</div>' +
-      '<div class="toolbar"><button class="btn primary" data-go="print">🖨 Print (2 A4 pages)</button><span class="muted small cs-fit"></span></div></div>' +
+      '<div class="toolbar"><button class="btn primary" data-go="print">🖨 Print (' + cs.pages.length + ' A4 sides)</button><span class="muted small cs-fit"></span></div></div>' +
       cs.pages.map((pg, i) => '<div class="sheet"><div class="sheet-inner">' + mathSafe(pg) + '</div><div class="sheet-num no-print">Side ' + (i + 1) + '</div></div>').join('') + '</div>';
   }
 
@@ -731,7 +731,7 @@ window.App = (function () {
       sizes.push(size);
       if (over(el)) out.push('Side ' + (i + 1) + ' overflows');
     });
-    const slot = document.querySelector('.cs-fit'); if (slot) slot.textContent = out.length ? '⚠ ' + out.join(', ') : 'Fits on exactly 2 A4 sides (font ' + sizes.join(' / ') + ' pt).';
+    const slot = document.querySelector('.cs-fit'); if (slot) slot.textContent = out.length ? '⚠ ' + out.join(', ') : 'Fits on exactly ' + sizes.length + ' A4 sides (font ' + sizes.join(' / ') + ' pt).';
     window.__sheetSizes = sizes;
     window.__sheetFit = out;
   }

@@ -348,6 +348,17 @@ input:focus { outline: 2px solid var(--accent-soft); border-color: var(--accent)
 .ch2 { --c: var(--ex); --c-soft: var(--ex-soft); }
 .ch3 { --c: var(--thm); --c-soft: var(--thm-soft); }
 .ch4 { --c: var(--warn); --c-soft: var(--warn-soft); }
+.ch5 { --c: #c0398a; --c-soft: #fbeaf4; }
+.ch6 { --c: #12807f; --c-soft: #e2f4f3; }
+.ch7 { --c: #8a6a00; --c-soft: #f8f0d6; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .ch5 { --c: #ec7ab8; --c-soft: #3a1f2e; }
+  :root:not([data-theme="light"]) .ch6 { --c: #4fc9c4; --c-soft: #17302f; }
+  :root:not([data-theme="light"]) .ch7 { --c: #e0bf55; --c-soft: #332c15; }
+}
+:root[data-theme="dark"] .ch5 { --c: #ec7ab8; --c-soft: #3a1f2e; }
+:root[data-theme="dark"] .ch6 { --c: #4fc9c4; --c-soft: #17302f; }
+:root[data-theme="dark"] .ch7 { --c: #e0bf55; --c-soft: #332c15; }
 .map-wrap { overflow-x: auto; padding: 10px; }
 .map { display: block; margin: 0 auto; font-family: var(--sans); }
 .map-edge { fill: none; stroke: var(--muted); stroke-width: 1.3; opacity: .45; transition: opacity .15s; }
