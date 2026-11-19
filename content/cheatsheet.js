@@ -1,5 +1,5 @@
 CHEATSHEET({
-  intro: R`Four A4 sides in the instructor's notation. Sides 1–2 cover **Chapters 5–7 (Midterm 2)**, and sides 3–4 are the Midterm 1 sheet for Chapters 1–4. Midterm 2 allows **two** double-sided A4 sheets, so all four sides fit. They must be **handwritten (no photocopies)**, so copy what you need **by hand**: writing them is half the revision. Press **Print** for a paper copy to learn from.`,
+  intro: R`Five A4 sides in the instructor's notation. Sides 1–3 cover **Chapters 5–9 (Midterm 2)**: convergence, estimation, the empirical CDF and plug-in, the bootstrap, and the method of moments. Sides 4–5 are the Midterm 1 sheet for Chapters 1–4. Midterm 2 allows **two** double-sided A4 sheets (4 sides), so copy sides 1–3 and pick the Ch.1–4 tools you actually used in the mocks for side 4 (the distribution table is the usual must-have). The sheets must be **handwritten (no photocopies)**, so copy what you need **by hand**: writing them is half the revision. Press **Print** for a paper copy to learn from.`,
   pages: [
 R`<h3>Ch.5 Modes of convergence</h3>
 <div class="k"><b>In probability</b> $X_n\xrightarrow{P}X$: $\forall\varepsilon>0$, $P(|X_n-X|>\varepsilon)\to0$.</div>
@@ -52,6 +52,31 @@ R`<h3>Ch.6 Models, estimators</h3>
 <div class="k box-mini"><b>Plug-in</b> $\hat\theta=T(\hat F_n)$. Linear $T=\int r\dd F$ ⇒ $\frac1n\sum r(X_i)$. Mean $\bar X$; variance $\frac1n\sum(X_i-\bar X)^2$ (1/n!); quantile $\hat F_n^{-1}(p)=\inf\{x:\hat F_n(x)\ge p\}$; corr: sample corr. $\theta=F(b)-F(a)$: $\hat\theta$ = fraction in $(a,b]$, $n\hat\theta\sim\Bin(n,\theta)$, $\widehat{\text{se}}=\sqrt{\frac{\hat\theta(1-\hat\theta)}n}$, CI $\hat\theta\pm z_{\alpha/2}\widehat{\text{se}}$.</div>
 <h3>Ch.6–7 exam templates</h3>
 <div class="k box-mini"><b>Estimator analysis</b>: (1) $E\hat\theta$ by linearity (or the density of max/min); (2) bias; (3) $\var$ (independence ⇒ variances add; $\var(aX)=a^2\var X$); (4) se $=\sqrt{\var}$; (5) MSE = bias²+var; (6) consistent? MSE $\to0$. <b>Compare</b>: smaller MSE wins (biased max beats unbiased $2\bar X$: $\frac{2}{(n+1)(n+2)}<\frac1{3n}$ for $n\ge3$). <b>CI</b>: state model, estimator, se, $z$, then numbers; interpret in words.</div>`,
+R`<h3>Ch.7 Linear functionals, plug-in theory</h3>
+<div class="k"><b>Linear</b> $T$: $T(aF+(1-a)G)=aT(F)+(1-a)T(G)$. $T(F)=\int r\dd F$ is linear ⇒ $T(\hat F_n)=\frac1n\sum r(X_i)$. Mean, moments $E X^k$, $P(X\in A)$: linear. Median: <b>not</b> ($F=\delta_0,G=\delta_1,a=.3$: median 1 ≠ 0.7). Variance $=a(T_1,T_2)=T_2-T_1^2$; skewness $\kappa=\frac{E(X-\mu)^3}{\sigma^3}$, plug-in $\hat\kappa=\frac{\frac1n\sum(X_i-\bar X)^3}{(\frac1n\sum(X_i-\bar X)^2)^{3/2}}$. Consistent by LLN + CMT.</div>
+<div class="k box-mini"><b>Theorem</b>: $\theta=\int r\dd F$, $E r(X)^2<\infty$ ⇒ $\hat\theta=\frac1n\sum r(X_i)\xrightarrow{P}\theta$ (LLN) and $\sqrt n(\hat\theta-\theta)\xrightarrow{D}N(0,\var r(X))$ (CLT). CI: $\hat\theta\pm z_{\alpha/2}\hat\sigma_n$, $\hat\sigma_n^2=\frac1{n^2}\sum(r(X_i)-\hat\theta)^2$. E.g. $\frac1n\sum X_i^2$, $N(0,\sigma^2)$: avar $2\sigma^4$; Exp(β): $20\beta^4$.</div>
+<div class="k"><b>Two points</b>: $\cov(\hat F_n(x),\hat F_n(y))=\frac{F(\min(x,y))-F(x)F(y)}n$ (only $i=j$ terms). <b>Two samples</b> (Ber $p$, $q$): $\widehat{\text{se}}(\hat p-\hat q)=\sqrt{\frac{\hat p(1-\hat p)}n+\frac{\hat q(1-\hat q)}m}$ (independent ⇒ variances add).</div>
+<h3>Ch.8 Bootstrap</h3>
+<div class="k box-mini"><b>Algorithm</b>: (1) $X_1^*..X_n^*\iid\hat F_n$ = resample data <b>with replacement</b>; (2) $T_n^*=g(X^*)$; (3) repeat $B$ times; (4) $\hat v_{\text{boot}}=\frac1B\sum(T_b^*-\bar T^*)^2$, $\widehat{\text{se}}_{\text{boot}}=\sqrt{\hat v}$. Error: $\var_F(T_n)\approx\var_{\hat F_n}(T_n)$ (statistical, fixed by $n$) $\approx\hat v_{\text{boot}}$ (simulation, $\downarrow$ as $B\uparrow$). Real world $F\to X\to T_n$; bootstrap world $\hat F_n\to X^*\to T_n^*$.</div>
+<div class="k"><b>Exact for $\bar X^*$</b>: given data $X_i^*\sim$ Unif$\{X_1..X_n\}$: $E^*\bar X^*=\bar X$, $\var^*\bar X^*=\frac{\hat\sigma^2}n$, $\hat\sigma^2=\frac1n\sum(X_i-\bar X)^2$. Unconditional: $E\bar X^*=\mu$, $\var\bar X^*=\frac{\sigma^2}n+\frac{(n-1)\sigma^2}{n^2}=\frac{(2n-1)\sigma^2}{n^2}$ (total variance).</div>
+<div class="k"><b>Counting</b>: $\binom{2n-1}{n}$ distinct samples (stars & bars), not equally likely (multinomial $\frac{n!}{\prod c_i!}n^{-n}$). $P(X_i\notin$ sample$)=(1-\frac1n)^n\to e^{-1}$. <b>Median, $n=3$, $b<c<d$</b>: $P^*(m^*=b)=P^*(m^*=d)=\frac7{27}$, $P^*(m^*=c)=\frac{13}{27}$, bias $=\frac{7(b+d-2c)}{27}$. <b>Bias</b>: $\widehat{\text{bias}}=\bar T^*-T_n$; corrected $2T_n-\bar T^*$.</div>
+<div class="k"><b>Failure (max of Unif(0,θ))</b>: $P(\hat\theta=\theta)=0$ but $P^*(\hat\theta^*=\hat\theta)=1-(1-\frac1n)^n\to1-e^{-1}\approx.632$: atom ⇒ bootstrap inconsistent for extremes/non-smooth stats. $F_{\max}(t)=(t/\theta)^n$, $f=nt^{n-1}/\theta^n$.</div>
+<div class="k box-mini"><b>Intervals</b> ($\hat\theta^*_\beta$ = bootstrap quantile): <b>Normal</b> $\hat\theta\pm z_{\alpha/2}\widehat{\text{se}}_{\text{boot}}$. <b>Percentile</b> $(\hat\theta^*_{\alpha/2},\hat\theta^*_{1-\alpha/2})$; respects monotone $g$. <b>Pivotal</b> $(2\hat\theta-\hat\theta^*_{1-\alpha/2},\ 2\hat\theta-\hat\theta^*_{\alpha/2})$. Why: $R=\hat\theta-\theta\sim H$ ⇒ $(\hat\theta-H^{-1}(1-\frac\alpha2),\hat\theta-H^{-1}(\frac\alpha2))$ has coverage $1-\alpha$; estimate $H$ by $\hat\theta^*_b-\hat\theta$. Symmetric bootstrap dist. ⇒ percentile = pivotal. $B=2000$: 95% ends ≈ 50th, 1950th sorted values.</div>
+<h3>Ch.9 Method of moments</h3>
+<div class="k box-mini"><b>MoM</b>: solve $\mu_j(\theta)=E_\theta X^j=\hat\mu_j=\frac1n\sum X_i^j$, $j=1..k$ ($k$ = # params). 2 params: match mean and $\hat\sigma^2=\frac1n\sum(X_i-\bar X)^2$. <b>Properties</b>: exists w.p.→1; consistent (LLN+CMT); $\sqrt n(\hat\theta-\theta)\xrightarrow{D}N(0,\Sigma)$ (CLT + delta). One param: $\hat\theta=\mu_1^{-1}(\bar X)$, avar $=\frac{\var_\theta X}{\mu_1'(\theta)^2}$.</div>
+<table>
+<tr><th>Model</th><th>MoM</th><th>avar</th></tr>
+<tr><td>Ber$(p)$, Pois$(\lambda)$</td><td>$\bar X$</td><td>$p(1-p)$, $\lambda$</td></tr>
+<tr><td>Exp(β) mean β / rate λ</td><td>$\bar X$ / $1/\bar X$</td><td>$\beta^2$ / $\lambda^2$</td></tr>
+<tr><td>Geom$(p)$ on $\{1,..\}$</td><td>$1/\bar X$</td><td>$p^2(1-p)$</td></tr>
+<tr><td>Unif$(0,\theta)$</td><td>$2\bar X$ (can be $<\max$!)</td><td>$\theta^2/3$</td></tr>
+<tr><td>$\theta x^{\theta-1}$ on $(0,1)$</td><td>$\frac{\bar X}{1-\bar X}$</td><td>$\frac{\theta(\theta+1)^2}{\theta+2}$</td></tr>
+<tr><td>$N(\mu,\sigma^2)$</td><td>$\bar X$, $\hat\sigma^2$ (1/n)</td><td></td></tr>
+<tr><td>Gamma$(\alpha,\beta)$</td><td>$\hat\beta=\frac{\hat\sigma^2}{\bar X}$, $\hat\alpha=\frac{\bar X^2}{\hat\sigma^2}$</td><td></td></tr>
+<tr><td>Unif$(a,b)$</td><td>$\bar X\mp\sqrt3\hat\sigma$</td><td></td></tr>
+<tr><td>Bin$(k,p)$ both</td><td>$\hat p=1-\frac{\hat\sigma^2}{\bar X}$, $\hat k=\frac{\bar X}{\hat p}$</td><td></td></tr>
+</table>
+<div class="k"><b>Template</b> (40 pts): $E X$ (and $\var X$) → solve for $\hat\theta$ → consistency: WLLN + CMT (name both, check continuity at $\mu_1$) → CLT + delta ($h=\mu_1^{-1}$, check $h'\ne0$) → plug in $\hat\theta$ for se → $\hat\theta\pm1.96\widehat{\text{se}}$ (Slutsky).</div>`,
 R`<div class="wide"><h3>Distributions (this course uses the scale β: Exp(β) has mean β)</h3>
 <table>
 <tr><th>Dist.</th><th>PMF/PDF, support</th><th>Mean</th><th>Var</th><th>MGF $\psi(t)$</th></tr>

@@ -40,4 +40,8 @@ window.CONTENT.prereqs = {
   '6.3': { short: 'Consistency', needs: ['6.2', '5.2', '5.4'] },
   '6.4': { short: 'Confidence intervals', needs: ['6.3', '5.3', '4.2'] },
   '7.1': { short: 'Empirical CDF', needs: ['6.4', '2.4', '5.4'] },
+  '7.2': { short: 'Linear functionals', needs: ['7.1', '5.3', '5.4'] },
+  '8.1': { short: 'Bootstrap', needs: ['7.1', '3.6'] },
+  '8.2': { short: 'Bootstrap CIs', needs: ['8.1', '6.4', '2.3'] },
+  '9.1': { short: 'Method of moments', needs: ['7.2', '6.3', '5.4'] },
 };

@@ -1,5 +1,5 @@
 EXAM({ id: 'mock5', title: 'Mock Midterm 2 — A', summary: 'Original Midterm 2 mock: two estimators of θ compared by MSE, the minimum of uniforms (modes of convergence), Poisson delta method + Wald CI vs the empirical CDF.',
-  intro: R`Original mock for Midterm 2 (Wed Nov 25, 08:30). Assumed scope: Chapters 5–7 (convergence, estimation, empirical CDF) and HW7–8, with earlier tools used along the way. 80 minutes, same 40/30/30 format as Midterm 1. Two handwritten A4 sheets and a simple calculator allowed. Justify every step.` }, [
+  intro: R`Original mock for Midterm 2 (Wed Nov 25, 08:30). Written before Chapters 8–9 were released, so it covers Chapters 5–7 (convergence, estimation, empirical CDF) and HW7–8 (Mock C covers Ch.7–9), with earlier tools used along the way. 80 minutes, same 40/30/30 format as Midterm 1. Two handwritten A4 sheets and a simple calculator allowed. Justify every step.` }, [
   { k: '1', pts: 40, intro: R`Let $X_1,\dots,X_n$ be iid with PDF
 $$f(x;\theta) = \begin{cases}\dfrac{2x}{\theta^2}, & 0<x<\theta,\\ 0, & \text{otherwise,}\end{cases}$$
 where $\theta>0$ is an unknown parameter.`, parts: [
