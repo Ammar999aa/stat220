@@ -375,10 +375,35 @@ window.App = (function () {
     }).join('');
   }
 
+  // Browse any lesson beside an exam (exam and practice modes). The pane is opened, closed and switched
+  // in place (see the click/change handlers), so typed answers and open hints are never re-rendered away.
+  function examLessonTopic() {
+    let t = null; try { t = localStorage.getItem('stat220.examLesson'); } catch (e) {}
+    return C.topics[t] ? t : (C.topicOrder.find((id) => C.topics[id].ch === 5) || C.topicOrder[0]);
+  }
+  function examLessonPaneHtml(tid) {
+    const t = C.topics[tid]; let ch = null;
+    const opts = C.topicOrder.map((id) => {
+      const x = C.topics[id]; let g = '';
+      if (x.ch !== ch) { g = (ch === null ? '' : '</optgroup>') + '<optgroup label="Chapter ' + x.ch + ' · ' + esc(CH_TITLES[x.ch]) + '">'; ch = x.ch; }
+      return g + '<option value="' + id + '"' + (id === tid ? ' selected' : '') + '>' + esc(id + ' ' + x.title) + '</option>';
+    }).join('') + '</optgroup>';
+    return '<aside class="lesson-pane" data-topic="' + esc(tid) + '"><div class="crumbs crumbs-row"><select class="lesson-pick" data-lesson-pick aria-label="Choose a lesson">' + opts + '</select>' +
+      '<a href="#/learn/' + tid + '" target="_blank" rel="noopener" title="Open this lesson in a new tab">Open ↗</a></div>' +
+      '<h2 class="lesson-title"><span class="topic-num">' + t.id + '</span> ' + esc(t.title) + '</h2>' + renderBlocks(t.blocks, { n: 0 }, tid) + '</aside>';
+  }
+  function lessonToggleLabel(on) { return '📖 ' + (on ? 'Hide' : 'Show') + ' lessons'; }
+  function examWithLessons(crumbs, body) {
+    const on = lessonSplit();
+    const toggle = '<button class="btn lesson-toggle' + (on ? ' sel' : '') + '" data-go="exam-lesson" aria-pressed="' + on + '" title="Browse the Learn pages side by side">' + lessonToggleLabel(on) + '</button>';
+    return '<div class="exam-split' + (on ? ' split' : '') + '">' + (on ? examLessonPaneHtml(examLessonTopic()) : '') +
+      '<div class="' + (on ? 'split-drill' : 'page') + '"><div class="crumbs crumbs-row"><span>' + crumbs + '</span>' + toggle + '</div>' + body + '</div></div>';
+  }
+
   function pageExamPractice(id) {
     const ex = C.exams.find((x) => x.id === id); if (!ex) return notFound();
-    return '<div class="page"><div class="crumbs"><a href="#/exams">Exams</a> › Practice mode</div><h1>' + esc(ex.title) + '</h1>' +
-      (ex.intro ? '<div class="prose">' + fmt(ex.intro) + '</div>' : '') + examQuestionsHtml(ex, {}) + '</div>';
+    return examWithLessons('<a href="#/exams">Exams</a> › Practice mode', '<h1>' + esc(ex.title) + '</h1>' +
+      (ex.intro ? '<div class="prose">' + fmt(ex.intro) + '</div>' : '') + examQuestionsHtml(ex, {}));
   }
 
   function pageExamRun(id) {
@@ -390,13 +415,13 @@ window.App = (function () {
     }
     if (!s.examRun) {
       return '<div class="page"><div class="crumbs"><a href="#/exams">Exams</a> › Exam mode</div><h1>' + esc(ex.title) + '</h1>' +
-        '<div class="card"><h3>Exam conditions</h3><ul><li><b>' + ex.minutes + ' minutes</b>. The timer keeps running if you close the tab.</li><li>Work on <b>paper</b>, with only your one double-sided A4 cheat sheet and a simple calculator.</li><li>No hints or solutions until you finish.</li><li>Write full derivations and justify each step. Partial credit is per 10-point part.</li><li>When you finish, you grade each part against the official-style solution. Your score is added as XP the first time.</li></ul>' +
+        '<div class="card"><h3>Exam conditions</h3><ul><li><b>' + ex.minutes + ' minutes</b>. The timer keeps running if you close the tab.</li><li>Work on <b>paper</b>, with only your one double-sided A4 cheat sheet and a simple calculator.</li><li>No hints or solutions until you finish. On a wide screen, <b>📖 Show lessons</b> lets you browse the Learn pages beside the exam (the real exam is closed-book, so use it sparingly).</li><li>Write full derivations and justify each step. Partial credit is per 10-point part.</li><li>When you finish, you grade each part against the official-style solution. Your score is added as XP the first time.</li></ul>' +
         '<button class="btn primary big" data-go="start-exam" data-id="' + id + '">Start the ' + ex.minutes + '-minute timer</button></div></div>';
     }
-    return '<div class="page"><div class="crumbs"><a href="#/exams">Exams</a> › Exam mode</div><h1>' + esc(ex.title) + '</h1>' +
+    return examWithLessons('<a href="#/exams">Exams</a> › Exam mode', '<h1>' + esc(ex.title) + '</h1>' +
       '<div class="card exam-bar"><span>⏱ Time left: <b class="exam-clock" data-exam-clock>--:--</b></span><button class="btn primary" data-go="finish-exam" data-id="' + id + '">Finish &amp; grade</button></div>' +
       examQuestionsHtml(ex, { exam: true }) +
-      '<div class="center"><button class="btn primary big" data-go="finish-exam" data-id="' + id + '">Finish &amp; grade</button></div></div>';
+      '<div class="center"><button class="btn primary big" data-go="finish-exam" data-id="' + id + '">Finish &amp; grade</button></div>');
   }
 
   let gradeState = {};
@@ -597,6 +622,15 @@ window.App = (function () {
     } else if (go === 'lesson') {
       try { localStorage.setItem('stat220.lessonSplit', lessonSplit() ? '0' : '1'); } catch (err) {}
       route();
+    } else if (go === 'exam-lesson') {
+      const on = !lessonSplit();
+      try { localStorage.setItem('stat220.lessonSplit', on ? '1' : '0'); } catch (err) {}
+      const wrap = b.closest('.exam-split');
+      const old = wrap.querySelector(':scope > .lesson-pane'); if (old) old.remove();
+      wrap.classList.toggle('split', on);
+      wrap.lastElementChild.className = on ? 'split-drill' : 'page';
+      if (on) { wrap.insertAdjacentHTML('afterbegin', examLessonPaneHtml(examLessonTopic())); renderMath(wrap.firstElementChild); }
+      b.classList.toggle('sel', on); b.setAttribute('aria-pressed', on); b.textContent = lessonToggleLabel(on);
     } else if (go === 'print') window.print();
     else if (go === 'switch') choosePlayer(b.dataset.name);
     else if (go === 'export') {
@@ -615,6 +649,15 @@ window.App = (function () {
     choosePlayer(name);
   });
   document.addEventListener('change', (e) => {
+    if (e.target.matches('[data-lesson-pick]')) {
+      const tid = e.target.value;
+      try { localStorage.setItem('stat220.examLesson', tid); } catch (err) {}
+      const pane = e.target.closest('.lesson-pane');
+      pane.insertAdjacentHTML('afterend', examLessonPaneHtml(tid));
+      const np = pane.nextElementSibling; pane.remove();
+      renderMath(np); np.scrollTop = 0; np.querySelector('[data-lesson-pick]').focus();
+      return;
+    }
     if (e.target.matches('[data-import]')) {
       const file = e.target.files[0]; if (!file) return;
       file.text().then((txt) => { try { Store.importJSON(txt); toast('Imported'); route(); } catch (err) { toast('Import failed: ' + err.message); } });

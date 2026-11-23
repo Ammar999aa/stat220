@@ -1,5 +1,5 @@
-EXAM({ id: 'mock6', title: 'Mock Midterm 2 — B', summary: 'Original Midterm 2 mock: estimating an exponential rate (shrinkage, bias of 1/X̄, delta-method CI), the empirical CDF on a small data set, and X̄² via CMT and the delta method.',
-  intro: R`Original mock for Midterm 2 (Wed Nov 25, 08:30). Written before Chapters 8–9 were released, so it covers Chapters 5–7 (convergence, estimation, empirical CDF) and HW7–8 (Mock C covers Ch.7–9), with earlier tools used along the way. 80 minutes, 40/30/30 format. Two handwritten A4 sheets and a simple calculator allowed. Justify every step.` }, [
+EXAM({ id: 'mock6', title: 'Mock Midterm 2 — B', summary: 'Original Midterm 2 mock: estimating an exponential rate (shrinkage, bias of 1/X̄, MLE + Fisher information CI), the empirical CDF on a small data set, and MLE vs MoM for the Rayleigh distribution (efficiency).',
+  intro: R`Original mock for Midterm 2 (Wed Nov 25, 08:30). Updated to cover Chapters 5–9: estimation (bias, MSE, consistency), the empirical CDF, and maximum likelihood (Fisher information, equivariance, efficiency) vs the method of moments. 80 minutes, 40/30/30 format. Two handwritten A4 sheets and a simple calculator allowed. Justify every step.` }, [
   { k: '1', pts: 40, intro: R`Let $X_1,\dots,X_n$ be iid $\Exp(\beta)$ with PDF $f(x) = \frac1\beta e^{-x/\beta}$, $x>0$ (so $E(X_1) = \beta$, $\var(X_1) = \beta^2$). Let $\lambda = 1/\beta$ be the rate. Recall from Midterm 1 that $\bar X_n\sim\Gam(n, \beta/n)$, and that if $Y\sim\Gam(\alpha, s)$ then $E(Y^k) = s^k\frac{\Gamma(\alpha+k)}{\Gamma(\alpha)}$ whenever $\alpha + k>0$.`, parts: [
     { k: 'a', pts: 10, topic: '6.2', q: R`Show that $\bar X_n$ is unbiased for $\beta$ and give its MSE. Then consider estimators $c\bar X_n$, $c>0$. Find the $c^*$ that minimizes $\operatorname{MSE}(c\bar X_n)$, and the minimal MSE.`,
       h: [R`$\operatorname{MSE}(c\bar X_n) = \var(c\bar X_n) + \operatorname{bias}(c\bar X_n)^2 = c^2\frac{\beta^2}{n} + (c-1)^2\beta^2$.`, R`Differentiate in $c$ and set to zero.`],
@@ -30,10 +30,14 @@ MSE $\to0$ implies $\hat\lambda\xrightarrow{\text{qm}}\lambda$, hence $\hat\lamb
 
 **$1/X_1$.** Its distribution does not depend on $n$, so it cannot concentrate at $\lambda$: $P(|1/X_1 - \lambda|>\varepsilon)$ is a fixed positive number for small $\varepsilon$. It is **not consistent**. Its mean is infinite:
 $$E\left(\frac{1}{X_1}\right) = \int_0^\infty\frac1x\cdot\frac1\beta e^{-x/\beta}\dd x\ \ge\ \frac{e^{-1}}{\beta}\int_0^\beta\frac{\dd x}{x} = +\infty.$$` },
-    { k: 'd', pts: 10, topic: '6.4', q: R`Use the delta method to find the limiting distribution of $\sqrt n(\hat\lambda - \lambda)$. With $n = 50$ and $\bar x = 2$, give an approximate 95% confidence interval for $\lambda$ ($\Phi^{-1}(0.975) = 1.96$).`,
-      h: [R`CLT: $\sqrt n(\bar X_n - \beta)\xrightarrow{D}N(0,\beta^2)$. Then $g(t) = 1/t$, $g'(\beta) = -1/\beta^2$.`, R`$\widehat{\operatorname{se}}(\hat\lambda) = \hat\lambda/\sqrt n$.`],
+    { k: 'd', pts: 10, topic: '9.3', q: R`Reparametrize by the rate: $f(x;\lambda) = \lambda e^{-\lambda x}$. Show that $\hat\lambda = 1/\bar X_n$ is the MLE of $\lambda$, compute the Fisher information $I_n(\lambda)$, and give the limiting distribution of $\sqrt n(\hat\lambda - \lambda)$. Check it with the delta method. With $n = 50$ and $\bar x = 2$, give an approximate 95% confidence interval for $\lambda$ ($\Phi^{-1}(0.975) = 1.96$).`,
+      h: [R`$\ell_n(\lambda) = n\log\lambda - \lambda\sum X_i$, so $\ell_n''(\lambda) = -n/\lambda^2$ (non-random).`, R`Delta-method check: CLT $\sqrt n(\bar X_n - \beta)\xrightarrow{D}N(0,\beta^2)$, then $g(t) = 1/t$, $g'(\beta) = -1/\beta^2$.`, R`$\widehat{\operatorname{se}}(\hat\lambda) = 1/\sqrt{I_n(\hat\lambda)} = \hat\lambda/\sqrt n$.`],
       a: [['asymptotic variance', 'lambda^2', { lambda: [0.3, 3] }], ['lower', '0.5-1.96*0.5/sqrt(50)'], ['upper', '0.5+1.96*0.5/sqrt(50)']],
-      s: R`**CLT:** $\sqrt n(\bar X_n - \beta)\xrightarrow{D}N(0,\beta^2)$. **Delta method** with $g(t) = \frac1t$, differentiable at $\beta>0$ with $g'(\beta) = -\frac1{\beta^2}\ne0$:
+      s: R`**MLE.** $\ell_n(\lambda) = \sum_i\log(\lambda e^{-\lambda X_i}) = n\log\lambda - \lambda\sum_iX_i$. Score: $\ell_n'(\lambda) = \frac n\lambda - \sum X_i = 0\iff\hat\lambda = \frac{1}{\bar X_n}$, and $\ell_n''(\lambda) = -\frac{n}{\lambda^2}<0$: a maximum. (Equivalently, by equivariance: $\bar X_n$ is the MLE of $\beta$, so $1/\bar X_n$ is the MLE of $\lambda = 1/\beta$.)
+
+**Fisher information.** $I_n(\lambda) = -E(\ell_n''(\lambda)) = \frac{n}{\lambda^2}$. The model is regular (support $(0,\infty)$), so $\sqrt n(\hat\lambda - \lambda)\xrightarrow{D}N(0, 1/I_1(\lambda)) = N(0,\lambda^2)$.
+
+**Check.** CLT: $\sqrt n(\bar X_n - \beta)\xrightarrow{D}N(0,\beta^2)$. **Delta method** with $g(t) = \frac1t$, differentiable at $\beta>0$ with $g'(\beta) = -\frac1{\beta^2}\ne0$:
 $$\sqrt n\left(\frac1{\bar X_n} - \frac1\beta\right)\xrightarrow{D}N\left(0,\ \frac{1}{\beta^4}\beta^2\right) = N(0,\lambda^2).$$
 So $\hat\lambda\approx N(\lambda, \lambda^2/n)$, and the plug-in standard error is $\widehat{\operatorname{se}} = \hat\lambda/\sqrt n$.
 
@@ -75,32 +79,41 @@ $$\hat\theta\pm1.96\,\widehat{\operatorname{se}} = 0.375\pm0.3355 = (0.040,\ 0.7
 
 **Comment.** The Hoeffding interval is valid for every $n$ but much wider. The Wald interval is narrower but only asymptotically valid, and with $n = 8$ the normal approximation is doubtful. Both are very wide: 8 observations tell us little about $\theta$.` },
   ] },
-  { k: '3', pts: 30, intro: R`Let $X_1,\dots,X_n$ be iid with mean $\mu$ and variance $\sigma^2\in(0,\infty)$, and let $T_n = \bar X_n^2$, an estimator of $\mu^2$.`, parts: [
-    { k: 'a', pts: 10, topic: '6.3', q: R`Show that $T_n\xrightarrow{P}\mu^2$. Compute $E(T_n)$: is $T_n$ unbiased? Using $S_n^2$, propose an unbiased estimator of $\mu^2$.`,
-      h: [R`WLLN + continuous mapping ($x\mapsto x^2$).`, R`$E(\bar X_n^2) = \var(\bar X_n) + E(\bar X_n)^2$.`, R`$E(S_n^2) = \sigma^2$, so subtract $S_n^2/n$.`],
-      a: [[R`$E(T_n)$`, 'mu^2+sigma^2/n', { mu: [-2, 2], sigma: [0.5, 2], n: [1, 30, 'int'] }], ['unbiased?', { choice: ['Yes', 'No'], v: 1 }]],
-      s: R`**Consistency.** By the WLLN, $\bar X_n\xrightarrow{P}\mu$ (finite variance). $g(x) = x^2$ is continuous, so by the continuous mapping theorem (Theorem 5.5), $T_n = g(\bar X_n)\xrightarrow{P}\mu^2$.
+  { k: '3', pts: 30, intro: R`Let $X_1,\dots,X_n$ be iid from the Rayleigh distribution with PDF
+$$f(x;\theta) = \frac{x}{\theta}\,e^{-x^2/(2\theta)},\qquad x>0,$$
+where $\theta>0$ is unknown. You may use: $E(X_1) = \sqrt{\pi\theta/2}$, and $X_1^2\sim\Exp(2\theta)$ (mean $2\theta$, variance $4\theta^2$).`, parts: [
+    { k: 'a', pts: 10, topic: '9.2', q: R`Derive the MLE $\hat\theta_{\text{ML}}$ and check that it is a maximum. Is it unbiased? Compute its exact variance.`,
+      h: [R`$\ell_n(\theta) = \sum\log X_i - n\log\theta - \frac{1}{2\theta}\sum X_i^2$.`, R`$\hat\theta_{\text{ML}}$ is an average of $X_i^2/2$, and $E(X_1^2) = 2\theta$, $\var(X_1^2) = 4\theta^2$.`],
+      a: [[R`$\hat\theta_{\text{ML}}$ (use m2 = (1/n)ΣXᵢ²)`, 'm2/2', { m2: [0.5, 5] }], ['unbiased?', { choice: ['Yes', 'No'], v: 0 }], ['variance', 'theta^2/n', { theta: [0.5, 3], n: [1, 30, 'int'] }]],
+      s: R`**Log-likelihood** (independence):
+$$\ell_n(\theta) = \sum_i\log X_i - n\log\theta - \frac{1}{2\theta}\sum_iX_i^2.$$
+**Score equation.** $\ell_n'(\theta) = -\frac n\theta + \frac{\sum X_i^2}{2\theta^2} = 0\iff\hat\theta_{\text{ML}} = \frac{1}{2n}\sum_{i=1}^nX_i^2$.
 
-**Bias.** $E(T_n) = \var(\bar X_n) + E(\bar X_n)^2 = \frac{\sigma^2}{n} + \mu^2$, so $\operatorname{bias}(T_n) = \frac{\sigma^2}{n}\ne0$: **biased** (but the bias $\to0$; consistent and biased is possible).
+**Maximum.** $\ell_n''(\theta) = \frac{n}{\theta^2} - \frac{\sum X_i^2}{\theta^3}$. At $\hat\theta$, $\sum X_i^2 = 2n\hat\theta$, so $\ell_n''(\hat\theta) = \frac n{\hat\theta^2} - \frac{2n}{\hat\theta^2} = -\frac n{\hat\theta^2}<0$. (Also $\ell_n'>0$ for $\theta<\hat\theta$ and $<0$ after, so it is the global maximum.)
 
-**Unbiased fix.** $E(S_n^2) = \sigma^2$, so $\tilde T_n = \bar X_n^2 - \frac{S_n^2}{n}$ satisfies $E(\tilde T_n) = \mu^2 + \frac{\sigma^2}n - \frac{\sigma^2}n = \mu^2$.` },
-    { k: 'b', pts: 10, topic: '5.4', q: R`For $\mu\ne0$, find the limiting distribution of $\sqrt n(T_n - \mu^2)$. For $\mu = 0$, show that this limit is degenerate and find instead the limiting distribution of $nT_n/\sigma^2$.`,
-      h: [R`Delta method with $g(t) = t^2$, $g'(\mu) = 2\mu$.`, R`If $\mu = 0$: $g'(0) = 0$. Write $\frac{nT_n}{\sigma^2} = \left(\frac{\sqrt n\bar X_n}{\sigma}\right)^2$ and use CLT + continuous mapping.`],
-      a: [['asymptotic variance (μ ≠ 0)', '4*mu^2*sigma^2', { mu: [0.5, 2], sigma: [0.5, 2] }], [R`limit of $nT_n/\sigma^2$ when $\mu = 0$`, { choice: ['N(0,1)', 'χ²₁', 'point mass at 0', 'Exp(1)'], v: 1 }]],
-      s: R`**$\mu\ne0$.** CLT: $\sqrt n(\bar X_n - \mu)\xrightarrow{D}N(0,\sigma^2)$. Delta method with $g(t) = t^2$, $g'(\mu) = 2\mu\ne0$:
-$$\sqrt n(\bar X_n^2 - \mu^2)\xrightarrow{D}N\big(0,\ 4\mu^2\sigma^2\big).$$
-**$\mu = 0$.** Then $g'(0) = 0$ and the delta method gives $N(0,0)$, a point mass at $0$: $\sqrt n\,T_n\xrightarrow{P}0$ (the first-order term vanishes). We need a bigger scaling. By the CLT, $\frac{\sqrt n\bar X_n}{\sigma}\xrightarrow{D}Z\sim N(0,1)$, and $x\mapsto x^2$ is continuous, so by continuous mapping
-$$\frac{nT_n}{\sigma^2} = \left(\frac{\sqrt n\,\bar X_n}{\sigma}\right)^2\xrightarrow{D}Z^2\sim\chi^2_1.$$
-(Same structure as HW7 B3(3).)` },
-    { k: 'c', pts: 10, topic: '5.3', q: R`Take $X_i\sim\Unif(0,2)$ (so $\mu = 1$, $\sigma^2 = \frac13$) and $n = 300$. (i) Use (b) to approximate $P(T_n>1.1)$. (ii) Give the Chebyshev upper bound for $P(|\bar X_n - 1|\ge0.05)$. Use $\Phi(1.5) = 0.9332$.`,
-      h: [R`From (b): $T_n\approx N\left(1, \frac{4\cdot1\cdot\frac13}{300}\right) = N\left(1, \left(\tfrac{1}{15}\right)^2\right)$.`, R`Chebyshev: $\frac{\var(\bar X_n)}{0.05^2}$ with $\var(\bar X_n) = \frac{1/3}{300} = \frac1{900}$.`],
-      a: [['(i) approximation', '1-0.9332'], ['(ii) Chebyshev bound', '4/9']],
-      s: R`**(i)** By (b), $T_n\approx N\left(\mu^2, \frac{4\mu^2\sigma^2}{n}\right) = N\left(1, \frac{4/3}{300}\right)$, i.e. standard deviation $\sqrt{4/900} = \frac{2}{30} = \frac1{15}\approx0.0667$. Hence
-$$P(T_n>1.1)\approx P\left(Z>\frac{0.1}{1/15}\right) = P(Z>1.5) = 1 - \Phi(1.5) = 0.0668.$$
-(Using the CLT for $\bar X_n$ directly, $P(\bar X_n>\sqrt{1.1})\approx1 - \Phi(1.464)\approx0.072$: close, as the delta method is a linearization.)
+**Unbiased: yes.** $E(\hat\theta_{\text{ML}}) = \frac{1}{2n}\cdot n\cdot2\theta = \theta$.
 
-**(ii)** $\var(\bar X_n) = \frac{\sigma^2}{n} = \frac{1/3}{300} = \frac{1}{900}$, so by Chebyshev
-$$P(|\bar X_n - 1|\ge0.05)\le\frac{1/900}{0.0025} = \frac49\approx0.444.$$
-For comparison, the CLT gives $P(|Z|\ge0.05\cdot30) = 2(1 - \Phi(1.5))\approx0.134$: Chebyshev is valid for every $n$ and distribution, but crude.` },
+**Variance** (independence): $\var(\hat\theta_{\text{ML}}) = \frac{1}{4n^2}\cdot n\cdot4\theta^2 = \frac{\theta^2}{n}$.` },
+    { k: 'b', pts: 10, topic: '9.3', q: R`Compute the Fisher information $I_n(\theta)$ and the asymptotic distribution of $\hat\theta_{\text{ML}}$. Compare $1/I_n(\theta)$ with the exact variance from (a). Then find the MLE of the mean $\mu = E(X_1)$ and its asymptotic distribution.`,
+      h: [R`$I_n(\theta) = -E(\ell_n''(\theta)) = -\frac n{\theta^2} + \frac{E\sum X_i^2}{\theta^3}$.`, R`Equivariance: $\hat\mu = \sqrt{\pi\hat\theta/2}$. Delta method with $g(\theta) = \sqrt{\pi\theta/2}$, $g'(\theta) = \frac12\sqrt{\frac{\pi}{2\theta}}$.`],
+      a: [[R`$I_n(\theta)$`, 'n/theta^2', { theta: [0.5, 3], n: [1, 30, 'int'] }], [R`asymptotic variance of $\sqrt n(\hat\mu - \mu)$`, 'pi*theta/8', { theta: [0.5, 3] }]],
+      s: R`**Fisher information.**
+$$I_n(\theta) = -E\big(\ell_n''(\theta)\big) = -\frac{n}{\theta^2} + \frac{n\cdot2\theta}{\theta^3} = \frac{n}{\theta^2}.$$
+The model is regular (support $(0,\infty)$ does not depend on $\theta$), so
+$$\sqrt n(\hat\theta_{\text{ML}} - \theta)\xrightarrow{D}N\big(0,\ 1/I_1(\theta)\big) = N(0,\theta^2).$$
+**Comparison.** $1/I_n(\theta) = \theta^2/n$ is exactly $\var(\hat\theta_{\text{ML}})$ from (a): here the MLE is unbiased and its variance equals $1/I_n(\theta)$ for **every** $n$, not just asymptotically. (Directly: $\hat\theta$ is an average of iid $X_i^2/2$, so the CLT gives the same limit.)
+
+**MLE of the mean.** $\mu = g(\theta) = \sqrt{\pi\theta/2}$, so by equivariance $\hat\mu = \sqrt{\pi\hat\theta_{\text{ML}}/2}$. $g'(\theta) = \frac12\sqrt{\frac{\pi}{2\theta}}\ne0$, and by the delta method
+$$\sqrt n(\hat\mu - \mu)\xrightarrow{D}N\left(0,\ g'(\theta)^2\theta^2\right) = N\left(0,\ \frac{\pi}{8\theta}\theta^2\right) = N\left(0,\ \frac{\pi\theta}{8}\right).$$` },
+    { k: 'c', pts: 10, topic: '9.1', q: R`Derive the method-of-moments estimator $\hat\theta_{\text{MOM}}$ (using the first moment) and its asymptotic distribution. Compute the ratio of asymptotic variances $\text{avar}(\hat\theta_{\text{ML}})/\text{avar}(\hat\theta_{\text{MOM}})$. Which estimator do you prefer, and why is that no accident?`,
+      h: [R`$\sqrt{\pi\theta/2} = \bar X_n\iff\theta = \frac{2\bar X_n^2}{\pi}$.`, R`$\var(X_1) = E(X_1^2) - (EX_1)^2 = 2\theta - \frac{\pi\theta}2$. Delta method with $h(m) = \frac{2m^2}{\pi}$, $h'(m) = \frac{4m}{\pi}$.`],
+      a: [[R`$\hat\theta_{\text{MOM}}$ (use xbar)`, '2*xbar^2/pi', { xbar: [0.5, 3] }], ['avar of MoM', '4*(4-pi)*theta^2/pi', { theta: [0.5, 3] }], ['ratio ML/MoM', 'pi/(4*(4-pi))']],
+      s: R`**MoM.** $\mu_1(\theta) = \sqrt{\pi\theta/2} = \bar X_n$ gives
+$$\hat\theta_{\text{MOM}} = \frac{2\bar X_n^2}{\pi}.$$
+**Asymptotics.** $\var(X_1) = 2\theta - \frac{\pi\theta}{2} = \frac{(4-\pi)\theta}{2}$. CLT: $\sqrt n(\bar X_n - m)\xrightarrow{D}N\left(0, \frac{(4-\pi)\theta}2\right)$ with $m = \sqrt{\pi\theta/2}$. Delta method with $h(m) = \frac{2m^2}\pi$, $h'(m) = \frac{4m}{\pi}$, so $h'(m)^2 = \frac{16}{\pi^2}\cdot\frac{\pi\theta}{2} = \frac{8\theta}{\pi}$:
+$$\sqrt n(\hat\theta_{\text{MOM}} - \theta)\xrightarrow{D}N\left(0,\ \frac{8\theta}{\pi}\cdot\frac{(4-\pi)\theta}{2}\right) = N\left(0,\ \frac{4(4-\pi)}{\pi}\theta^2\right)\approx N(0,\ 1.093\,\theta^2).$$
+**Ratio.**
+$$\frac{\theta^2}{4(4-\pi)\theta^2/\pi} = \frac{\pi}{4(4-\pi)}\approx0.915.$$
+Prefer the **MLE**: it needs about 8.5% fewer observations for the same precision, and it is also exactly unbiased. This is no accident: in a regular model the MLE is asymptotically **efficient**. No (well-behaved) estimator has asymptotic variance below $1/I_1(\theta)$, and the MLE attains it.` },
   ] },
 ]);

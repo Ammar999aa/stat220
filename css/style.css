@@ -336,6 +336,7 @@ input:focus { outline: 2px solid var(--accent-soft); border-color: var(--accent)
 .lesson-pane { position: sticky; top: calc(var(--topbar) + 12px); max-height: calc(100vh - var(--topbar) - 24px); overflow-y: auto; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 20px; overscroll-behavior: contain; }
 .lesson-title { margin: .2em 0 .4em; }
 .split-drill { min-width: 0; }
+.lesson-pick { flex: 1; min-width: 0; font: inherit; font-size: .85rem; padding: 4px 6px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-2); color: var(--text); }
 @media (max-width: 1099px) {
   .lesson-toggle, .lesson-pane { display: none; }
   .split { display: block; max-width: 780px; margin: 0 auto; }
