@@ -38,7 +38,7 @@ STUDYPLAN({
       note: 'New material, and the most likely exam topic: the 2025 Midterm 2 asked for an MLE in two of three exercises. Do 9.2 then 9.3, with their drills. Then copy cheat-sheet side 4 (MLE) by hand.',
       items: [{ type: 'topic', id: '9.2' }, { type: 'topic', id: '9.3' }, { type: 'link', href: '#/cheatsheet', text: 'Cheat sheet side 4' }] },
     { date: '2026-11-24', label: 'Tue Nov 24', title: 'Real 2025 Midterm 2 (timed), then Mock C, early night',
-      note: 'Do last year\'s paper in exam mode on paper first, and grade it against the instructor\'s solutions. Then Mock C (MoM vs MLE + bootstrap) or, if short on time, the "Retry missed" queue. Mocks A and B (now also MLE-heavy) are optional extras.',
+      note: 'Do last year\'s paper in exam mode on paper first, and grade it against the instructor\'s solutions. Then Mock C (MoM vs MLE + bootstrap) or, if short on time, the "Retry missed" queue. Mocks D and E are new full papers weighted like the 2025 exam: do one if you have 80 minutes to spare. Mocks A and B (now also MLE-heavy) are optional extras.',
       items: [{ type: 'exam', id: 'mid2y2025', mode: 'run' }, { type: 'exam', id: 'mock7', mode: 'run' }, { type: 'link', href: '#/progress', text: 'Progress: retry missed' }] },
     { date: '2026-11-25', label: 'Wed Nov 25', title: 'Exam day (08:30)',
       note: 'Bring your KAUST ID, both cheat sheets and a simple calculator. Label each MLE step (likelihood, log-likelihood, score equation, Fisher information): the instructor does.',
