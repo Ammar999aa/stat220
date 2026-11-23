@@ -1,7 +1,7 @@
 TOPIC({ id: '9.1', ch: 9, title: 'Method of moments', summary: 'Match the first k theoretical moments μⱼ(θ) to the sample moments (1/n)ΣXᵢʲ and solve for θ. Consistent and asymptotically normal (LLN + CMT + delta method).' }, [
 R`Back to **parametric** models $\{f(x;\theta):\theta\in\Theta\subseteq\R^k\}$. The question: given data, how do we *find* an estimator of $\theta$? The oldest recipe is the **method of moments (MoM)**: set the theoretical moments equal to the sample moments and solve. It is the plug-in principle again, applied to moments.
 
-(Source: Chapter 9 lecture notes, pp. 1–4. The notes released so far cover only the method of moments.)`,
+(Source: Chapter 9 lecture notes, pp. 1–5. Maximum likelihood, the other half of Chapter 9, is on pages 9.2 and 9.3.)`,
 DEF('Method of moments estimator', R`For $\theta = (\theta_1,\dots,\theta_k)$, write the theoretical and sample moments
 $$\mu_j(\theta) = \E_\theta(X^j),\qquad\hat\mu_j = \frac1n\sum_{i=1}^nX_i^j,\qquad j = 1,\dots,k.$$
 The MoM estimator $\hat\theta_{\text{MoM}}$ solves the (possibly nonlinear) system
@@ -62,5 +62,5 @@ DRILLS('9.1', [
     a: [['(b) avar (use lambda)', 'lambda*exp(-2*lambda)', { lambda: [0.2, 4] }]],
     s: R`(a) $\hat\theta = e^{-\bar X_n}$. (b) $\sqrt n(\bar X - \lambda)\xrightarrow{D}N(0,\lambda)$; delta: $e^{-2\lambda}\lambda$. (c) $\theta(1-\theta) = e^{-\lambda}(1 - e^{-\lambda})$. Since $e^\lambda - 1\ge\lambda$, $e^{-\lambda}(1 - e^{-\lambda}) = e^{-2\lambda}(e^\lambda - 1)\ge\lambda e^{-2\lambda}$: the parametric estimator is more efficient **if** the Poisson model is right; the nonparametric one is valid whatever $F$ is.` },
   { k: '12', lvl: 4, q: R`$\Unif(0,\theta)$. Compare $\hat\theta_{\text{MoM}} = 2\bar X$ (MSE $\frac{\theta^2}{3n}$) with $\tilde\theta = \frac{n+1}{n}X_{(n)}$ (unbiased, variance $\frac{\theta^2}{n(n+2)}$). Ratio of MSEs $\frac{\text{MSE}(\hat\theta)}{\text{MSE}(\tilde\theta)}$ as a function of $n$? What does it tell you?`, a: [['ratio (use n)', '(n+2)/3', { n: [1, 50, 'int'] }]],
-    s: R`$\frac{\theta^2/(3n)}{\theta^2/(n(n+2))} = \frac{n+2}{3}$, which grows linearly in $n$. MoM is consistent but far from optimal here: its MSE is $O(1/n)$, the maximum's is $O(1/n^2)$. (Chapter 9 continues with maximum likelihood, which picks the maximum.)` },
+    s: R`$\frac{\theta^2/(3n)}{\theta^2/(n(n+2))} = \frac{n+2}{3}$, which grows linearly in $n$. MoM is consistent but far from optimal here: its MSE is $O(1/n)$, the maximum's is $O(1/n^2)$. (Maximum likelihood, page 9.2, picks the maximum.)` },
 ]);

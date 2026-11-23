@@ -71,7 +71,7 @@ window.App = (function () {
     }).join('') : '';
 
     return '<div class="page wide">' +
-      '<div class="hero"><div><h1>Hi ' + esc(s.name) + ' 👋</h1><p class="lead">Everything you need for STAT 220 Midterm 2: Chapters 5–9 (convergence, estimation, the empirical CDF and plug-in, the bootstrap, the method of moments) and Homeworks 7–9. Chapters 1–4 stay here for review: the instructor reuses them inside new questions.</p></div>' +
+      '<div class="hero"><div><h1>Hi ' + esc(s.name) + ' 👋</h1><p class="lead">Everything you need for STAT 220 Midterm 2: Chapters 5–9 (convergence, estimation, the empirical CDF and plug-in, the bootstrap, the method of moments, maximum likelihood) and Homeworks 7–9. Chapters 1–4 stay here for review: the instructor reuses them inside new questions.</p></div>' +
       '<div class="card count-card">' + countdown + '</div></div>' +
       '<div class="grid3">' +
       '<div class="card stat"><div class="stat-k">Level ' + lv.n + '</div><div class="stat-v">' + esc(lv.name) + '</div>' + bar(lv.progress, 'xp') +
@@ -344,8 +344,8 @@ window.App = (function () {
 
   function pageExams() {
     const s = Store.me();
-    let h = '<div class="page wide"><h1>Exams</h1><p class="lead">The real Midterm 1 papers from 2025 and 2026, three original mocks for Midterm 2 (Ch.5–9), and four Midterm 1 mocks (Ch.1–4). All use the same format: 3 exercises worth 40 + 30 + 30 points, 80 minutes, cheat sheet allowed.</p>' +
-      '<div class="card tip">How to use these: for Midterm 2, do the <b>Midterm 2 mocks in exam mode</b>, on paper, with your cheat sheets. The <b>2026 Midterm 1</b> shows this year\'s style: one long applied problem, a joint-density problem, and an MGF + inequality problem. Then grade yourself honestly against the solutions. Use <b>practice mode</b> (hints and per-part solutions) for the mocks you are not ready to time yet.</div>' +
+    let h = '<div class="page wide"><h1>Exams</h1><p class="lead">The real 2025 Midterm 2 paper, the real Midterm 1 papers from 2025 and 2026, three original mocks for Midterm 2 (Ch.5–9), and four Midterm 1 mocks (Ch.1–4). All use the same format: 3 exercises (40 + 30 + 30 points, in some order), 80 minutes, cheat sheets allowed.</p>' +
+      '<div class="card tip">How to use these: for Midterm 2, start with the <b>real 2025 Midterm 2 in exam mode</b>, on paper, with your cheat sheets: it is the closest thing to Wednesday\'s paper (copulas via empirical CDFs, MLE + Fisher information + delta method, MoM vs MLE). Then do the <b>Midterm 2 mocks</b>. The <b>2026 Midterm 1</b> shows this year\'s style: one long applied problem, a joint-density problem, and an MGF + inequality problem. Then grade yourself honestly against the solutions. Use <b>practice mode</b> (hints and per-part solutions) for the mocks you are not ready to time yet.</div>' +
       (s.examRun ? '<div class="card warnbox">⏱ You have an exam running: <a href="#/exams/' + s.examRun.id + '/run">return to it →</a></div>' : '') +
       '<div class="topic-grid">';
     const card = (ex) => {

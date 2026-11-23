@@ -1,5 +1,5 @@
 CHEATSHEET({
-  intro: R`Five A4 sides in the instructor's notation. Sides 1–3 cover **Chapters 5–9 (Midterm 2)**: convergence, estimation, the empirical CDF and plug-in, the bootstrap, and the method of moments. Sides 4–5 are the Midterm 1 sheet for Chapters 1–4. Midterm 2 allows **two** double-sided A4 sheets (4 sides), so copy sides 1–3 and pick the Ch.1–4 tools you actually used in the mocks for side 4 (the distribution table is the usual must-have). The sheets must be **handwritten (no photocopies)**, so copy what you need **by hand**: writing them is half the revision. Press **Print** for a paper copy to learn from.`,
+  intro: R`Six A4 sides in the instructor's notation. Sides 1–4 cover **Chapters 5–9 (Midterm 2)**: convergence, estimation, the empirical CDF and plug-in, the bootstrap, the method of moments, and maximum likelihood (side 4, with the 2025 Midterm 2 templates). Sides 5–6 are the Midterm 1 sheet for Chapters 1–4. Midterm 2 allows **two** double-sided A4 sheets (4 sides), so sides 1–4 fill them; squeeze the few Ch.1–4 facts you still need (e.g. the distribution moments) into the margins. The sheets must be **handwritten (no photocopies)**, so copy what you need **by hand**: writing them is half the revision. Press **Print** for a paper copy to learn from.`,
   pages: [
 R`<h3>Ch.5 Modes of convergence</h3>
 <div class="k"><b>In probability</b> $X_n\xrightarrow{P}X$: $\forall\varepsilon>0$, $P(|X_n-X|>\varepsilon)\to0$.</div>
@@ -77,6 +77,28 @@ R`<h3>Ch.7 Linear functionals, plug-in theory</h3>
 <tr><td>Bin$(k,p)$ both</td><td>$\hat p=1-\frac{\hat\sigma^2}{\bar X}$, $\hat k=\frac{\bar X}{\hat p}$</td><td></td></tr>
 </table>
 <div class="k"><b>Template</b> (40 pts): $E X$ (and $\var X$) → solve for $\hat\theta$ → consistency: WLLN + CMT (name both, check continuity at $\mu_1$) → CLT + delta ($h=\mu_1^{-1}$, check $h'\ne0$) → plug in $\hat\theta$ for se → $\hat\theta\pm1.96\widehat{\text{se}}$ (Slutsky).</div>`,
+R`<h3>Ch.9 Maximum likelihood</h3>
+<div class="k box-mini"><b>Recipe</b> (label each line): likelihood $L_n(\theta)=\prod f(X_i;\theta)$ → log-lik $\ell_n=\sum\log f(X_i;\theta)$ → score $\ell_n'(\theta)$ → score eq. $\ell_n'(\hat\theta)=0$ → check $\ell_n''<0$. Products of powers → powers of sums; constants (e.g. $\log X_i!$) vanish.</div>
+<div class="k box-mini"><b>Support depends on θ</b> ⇒ <b>don't differentiate</b>: write the indicator. $\Unif(0,\theta)$: $L=\theta^{-n}\1(\max X_i\le\theta)$, 0 below max, decreasing above ⇒ $\hat\theta=\max$. $F=(x/\theta)^2$: $L=\theta^{-2n}2^n\prod X_j\,\1(\max\le\theta)$ ⇒ max. $e^{-(x-\theta)}$, $x\ge\theta$ ⇒ min. $\Unif(a,b)$ ⇒ (min, max). Laplace ⇒ median.</div>
+<table>
+<tr><th>Model</th><th>MLE</th><th>$I_1(\theta)$</th><th>avar $=I_1^{-1}$</th></tr>
+<tr><td>Ber$(p)$</td><td>$\bar X$</td><td>$\frac1{p(1-p)}$</td><td>$p(1-p)$</td></tr>
+<tr><td>Pois$(\lambda)$</td><td>$\bar X$</td><td>$\frac1\lambda$</td><td>$\lambda$</td></tr>
+<tr><td>Exp(β) mean β</td><td>$\bar X$</td><td>$\frac1{\beta^2}$</td><td>$\beta^2$</td></tr>
+<tr><td>Exp rate λ: $\lambda e^{-\lambda x}$</td><td>$1/\bar X$</td><td>$\frac1{\lambda^2}$</td><td>$\lambda^2$; $\log\hat\lambda$: 1</td></tr>
+<tr><td>Geom$(p)$ on $\{1,..\}$</td><td>$1/\bar X$</td><td>$\frac1{p^2(1-p)}$</td><td>$p^2(1-p)$</td></tr>
+<tr><td>$\theta x^{\theta-1}$ on $(0,1)$</td><td>$-n/\sum\log X_i$</td><td>$\frac1{\theta^2}$</td><td>$\theta^2$ (MoM worse)</td></tr>
+<tr><td>Pareto $\alpha x^{-\alpha-1}$, $x\ge1$</td><td>$n/\sum\log X_i$</td><td>$\frac1{\alpha^2}$</td><td>$\alpha^2$</td></tr>
+<tr><td>$N(\mu,\sigma^2)$</td><td>$\bar X$, $\frac1n\sum(X_i-\bar X)^2$</td><td>$\operatorname{diag}(\frac1{\sigma^2},\frac1{2\sigma^4})$</td><td>$\sigma^2$, $2\sigma^4$</td></tr>
+<tr><td>Bin$(m,p)$, $m$ known</td><td>$\bar X/m$</td><td></td><td></td></tr>
+<tr><td>Unif$(0,\theta)$</td><td>$\max$</td><td colspan="2">not regular: $\frac{n(\theta-\hat\theta)}\theta\xrightarrow{D}\Exp(1)$</td></tr>
+</table>
+<div class="k box-mini"><b>Fisher info</b> $I_n(\theta)=-E[\ell_n''(\theta)]=nI_1(\theta)$, $I_1=-E[\partial_\theta^2\log f(X;\theta)]$: differentiate twice, flip sign, replace $X_i$ by $EX_i$. <b>Properties</b> (regular: support free of θ): (1) consistent; (2) $\sqrt n(\hat\theta-\theta)\xrightarrow{D}N(0,I_1^{-1})$ ⇔ $\frac{\hat\theta-\theta}{\sqrt{1/I_n(\theta)}}\xrightarrow{D}N(0,1)$ ⇔ $\hat\theta\approx N(\theta,\frac1{I_n})$; $k$ params: inverse matrix; (3) <b>equivariant</b>: MLE of $g(\theta)$ is $g(\hat\theta)$; (4) efficient (smallest avar). CI: $\hat\theta\pm z_{\alpha/2}\sqrt{1/I_n(\hat\theta)}$.</div>
+<div class="k"><b>Delta</b>: $\sqrt n(g(\hat\theta)-g(\theta))\xrightarrow{D}N(0,g'(\theta)^2I_1^{-1})$, $g'\ne0$. Rate exp, $\psi=\log\lambda$: $\hat\psi=-\log\bar X$, avar $\frac1{\lambda^2}\lambda^2=1$. Pois $e^{-\lambda}$: $\lambda e^{-2\lambda}$. Odds $\frac p{1-p}$: $\frac p{(1-p)^3}$. $\hat\sigma=\sqrt{\hat\sigma^2}$: $\frac{\sigma^2}2$.</div>
+<div class="k box-mini"><b>Consistency of max</b>: $F_{\max}(x)=\{F(x)\}^n$; $(x/\theta)^{2n}\to0$ for $x<\theta$, 1 for $x\ge\theta$ = point mass at θ ⇒ $\xrightarrow{D}\theta$ ⇒ $\xrightarrow{P}\theta$ (constant). Or $P(|\max-\theta|>\varepsilon)=(1-\frac\varepsilon\theta)^{2n}\to0$. <b>MoM consistency</b>: LLN + CMT. <b>General proof</b>: $M_n(\theta)=\frac1n\sum\log\frac{f(X_i;\theta)}{f(X_i;\theta_\star)}$, $M(\theta)=E\log\frac{f(X;\theta)}{f(X;\theta_\star)}\le0=M(\theta_\star)$ (Jensen; $-M$ = KL); $\sup|M_n-M|\xrightarrow{P}0$ + well-separated max ⇒ $\hat\theta\xrightarrow{P}\theta_\star$.</div>
+<h3>2025 Midterm 2 templates</h3>
+<div class="k"><b>Prob. integral transform</b>: $F_X$ continuous ⇒ $P(F_X(X)\le u)=P(X\le F_X^{-1}(u))=u$ ⇒ $\Unif(0,1)$. <b>Copula</b> $C(u,v)=F(F_X^{-1}(u),F_Y^{-1}(v))$ = CDF of $(F_X(X),F_Y(Y))$. Empirical CDFs (marginal, joint) $\xrightarrow{P}$ by LLN ($E\,I(X_j\le x)=F_X(x)$); $C(\hat F_{X,n},\hat F_{Y,n})\xrightarrow{P}F$ by CMT. Empirical copula (plug-in): $\hat C_n(u,v)\approx\frac1n\sum I\big(\frac{\text{rank}X_j}{n+1}\le u,\frac{\text{rank}Y_j}{n+1}\le v\big)$.</div>
+<div class="k"><b>$F=(x/\theta)^2$ on $[0,\theta]$</b>: $f=\frac{2x}{\theta^2}$, $EX=\frac{2\theta}3$, $EX^2=\frac{\theta^2}2$, $\var X=\frac{\theta^2}{18}$; MoM $\frac32\bar X$, unbiased, MSE $=\frac{\theta^2}{8n}$, avar $\frac{\theta^2}8$; MLE $=\max$.</div>`,
 R`<div class="wide"><h3>Distributions (this course uses the scale β: Exp(β) has mean β)</h3>
 <table>
 <tr><th>Dist.</th><th>PMF/PDF, support</th><th>Mean</th><th>Var</th><th>MGF $\psi(t)$</th></tr>

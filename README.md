@@ -1,12 +1,12 @@
 # STAT 220 Study App
 
-A browser study app for STAT 220 (KAUST, Fall 2026). It now targets Midterm 2 (Wed Nov 25). The material released so far is Chapters 5–9 (convergence, estimation, the empirical CDF and plug-in, the bootstrap, the method of moments) and Homeworks 7–9, and it keeps all the Midterm 1 material (Chapters 1–4, Homeworks 1–6) for review. It has:
+A browser study app for STAT 220 (KAUST, Fall 2026). It now targets Midterm 2 (Wed Nov 25). The material released so far is Chapters 5–9 (convergence, estimation, the empirical CDF and plug-in, the bootstrap, the method of moments, maximum likelihood) and Homeworks 7–9, and it keeps all the Midterm 1 material (Chapters 1–4, Homeworks 1–6) for review. It has:
 
-- 42 topic pages with practice problems woven into the explanations;
+- 44 topic pages with practice problems woven into the explanations;
 - numbered drills for every topic;
 - all homework problems (HW1–HW9) with solutions;
-- the real 2025 and 2026 Midterm 1 papers, 3 Midterm 2 mocks and 4 Midterm 1 mocks, each with an 80-minute timed mode;
-- a 5-side A4 cheat sheet (Midterm 2 allows two sheets, so 4 sides);
+- the real 2025 Midterm 2 paper, the real 2025 and 2026 Midterm 1 papers, 3 Midterm 2 mocks and 4 Midterm 1 mocks, each with an 80-minute timed mode;
+- a 6-side A4 cheat sheet (sides 1–4 for Midterm 2, which allows two double-sided sheets);
 - progress tracking, XP and a leaderboard shared with friends.
 
 No build step: plain HTML, CSS and JS.
@@ -53,7 +53,7 @@ After changing files, bump the `?v=N` numbers in `index.html` so browsers fetch 
 |---|---|
 | `content/topics/*.js` | One file per topic: the explanation, inline practice (`P`), and that topic's drills (`DRILLS`). |
 | `content/homework/*.js` | HW1–HW9. `ref:` reuses an identical topic problem, so progress is shared. HW8 and HW9 have no official solutions; the app's are written from scratch (HW9's R results use `set.seed(220)`). |
-| `content/exams/*.js` | The 2025 and 2026 Midterm 1 papers, Midterm 1 mocks 1–4, Midterm 2 mocks 5–7, and the Chapter 1 quiz. |
+| `content/exams/*.js` | The 2025 Midterm 2 paper, the 2025 and 2026 Midterm 1 papers, Midterm 1 mocks 1–4, Midterm 2 mocks 5–7, and the Chapter 1 quiz. |
 | `content/cheatsheet.js`, `content/studyplan.js`, `content/technique.js` | The cheat sheet, the study plan, and the exam-technique page. |
 
 Problem IDs are stable, so editing a problem keeps everyone's progress.

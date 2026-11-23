@@ -44,4 +44,6 @@ window.CONTENT.prereqs = {
   '8.1': { short: 'Bootstrap', needs: ['7.1', '3.6'] },
   '8.2': { short: 'Bootstrap CIs', needs: ['8.1', '6.4', '2.3'] },
   '9.1': { short: 'Method of moments', needs: ['7.2', '6.3', '5.4'] },
+  '9.2': { short: 'Finding the MLE', needs: ['6.1', '9.1'] },
+  '9.3': { short: 'Fisher information', needs: ['9.2', '6.4', '5.4'] },
 };

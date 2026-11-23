@@ -1,5 +1,5 @@
 STUDYPLAN({
-  intro: R`Midterm 2 is on Wed Nov 25 at 08:30. The plan covers the material released so far: Chapter 5 (convergence), Chapter 6 (estimation), Chapter 7 (empirical CDF and plug-in), Chapter 8 (the bootstrap) and the start of Chapter 9 (method of moments), plus HW7–9. Chapters 8–9 arrived on Nov 20, so the last five days were re-planned around them; the exact exam scope has not been announced. Each topic is "done" when its mastery bar reaches about 60%. Expect roughly **2–3 focused hours a day**. The 2026 Midterm 1 mixed old tools (Bayes, MGFs, Chebyshev/Hoeffding) into every exercise, so one day goes to refreshing Chapters 1–4. The syllabus allows **two** handwritten A4 sheets for this exam.`,
+  intro: R`Midterm 2 is on Wed Nov 25 at 08:30. The plan covers the material released so far: Chapter 5 (convergence), Chapter 6 (estimation), Chapter 7 (empirical CDF and plug-in), Chapter 8 (the bootstrap) and Chapter 9 (method of moments and maximum likelihood), plus HW7–9. Chapters 8–9 arrived on Nov 20 and the rest of Chapter 9 (maximum likelihood) on Nov 23, so the last days were re-planned around them. The real **2025 Midterm 2** (added Nov 23) shows the format: all three exercises came from Chapters 7–9, and two of them asked for an MLE. Each topic is "done" when its mastery bar reaches about 60%. Expect roughly **2–3 focused hours a day**. The 2026 Midterm 1 mixed old tools (Bayes, MGFs, Chebyshev/Hoeffding) into every exercise, so one day goes to refreshing Chapters 1–4. The syllabus allows **two** handwritten A4 sheets for this exam.`,
   days: [
     { date: '2026-11-10', label: 'Tue Nov 10', title: 'Modes of convergence',
       note: 'The four definitions on the Ch.5 slides are the vocabulary for everything after. Learn them word for word.',
@@ -34,14 +34,14 @@ STUDYPLAN({
     { date: '2026-11-22', label: 'Sun Nov 22', title: 'Method of moments + write your cheat sheets',
       note: 'MoM + consistency (LLN + CMT) + delta-method CI is a likely 40-point exercise. Then write the two A4 sheets by hand from the cheat sheet page (sides 1–3 for Midterm 2).',
       items: [{ type: 'topic', id: '9.1' }, { type: 'link', href: '#/cheatsheet', text: 'Cheat sheet' }] },
-    { date: '2026-11-23', label: 'Mon Nov 23', title: 'Mock C (timed), then Mock A',
-      note: 'Mock C covers Ch.7–9; Mock A covers Ch.5–7. Grade yourself honestly against the solutions.',
-      items: [{ type: 'exam', id: 'mock7', mode: 'run' }, { type: 'exam', id: 'mock5', mode: 'run' }] },
-    { date: '2026-11-24', label: 'Tue Nov 24', title: 'Mock B, retry missed, early night',
-      note: 'Skim the 2026 Midterm 1 solutions for the Ch.1–4 tools it used (MGFs, Chebyshev vs Hoeffding). Then the "Retry missed" queue.',
-      items: [{ type: 'exam', id: 'mock6', mode: 'run' }, { type: 'link', href: '#/progress', text: 'Progress: retry missed' }, { type: 'link', href: '#/flagged', text: 'Flagged boxes' }] },
+    { date: '2026-11-23', label: 'Mon Nov 23', title: 'Maximum likelihood (new) + Fisher information',
+      note: 'New material, and the most likely exam topic: the 2025 Midterm 2 asked for an MLE in two of three exercises. Do 9.2 then 9.3, with their drills. Then copy cheat-sheet side 4 (MLE) by hand.',
+      items: [{ type: 'topic', id: '9.2' }, { type: 'topic', id: '9.3' }, { type: 'link', href: '#/cheatsheet', text: 'Cheat sheet side 4' }] },
+    { date: '2026-11-24', label: 'Tue Nov 24', title: 'Real 2025 Midterm 2 (timed), then Mock C, early night',
+      note: 'Do last year\'s paper in exam mode on paper first, and grade it against the instructor\'s solutions. Then Mock C (MoM + bootstrap) or, if short on time, the "Retry missed" queue. Mocks A and B are optional extras.',
+      items: [{ type: 'exam', id: 'mid2y2025', mode: 'run' }, { type: 'exam', id: 'mock7', mode: 'run' }, { type: 'link', href: '#/progress', text: 'Progress: retry missed' }] },
     { date: '2026-11-25', label: 'Wed Nov 25', title: 'Exam day (08:30)',
-      note: 'Bring your KAUST ID, both cheat sheets and a simple calculator.',
+      note: 'Bring your KAUST ID, both cheat sheets and a simple calculator. Label each MLE step (likelihood, log-likelihood, score equation, Fisher information): the instructor does.',
       items: [{ type: 'link', href: '#/technique', text: 'Re-read: common mistakes' }] },
   ],
 });
