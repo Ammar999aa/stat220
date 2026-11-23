@@ -112,6 +112,7 @@ window.App = (function () {
     const nf = Store.flagCount();
     h += '<a class="card tech-card" href="#/flagged"><b>⚑ Flagged boxes (' + nf + ')</b><div class="muted small">' + (nf ? 'Revisit the definitions, theorems and examples you flagged.' : 'Click ⚑ on any box to save it here for later.') + '</div></a>';
     if (C.prereqs) h += '<a class="card tech-card map-card" href="#/map"><b>🗺️ Lesson map</b><div class="muted small">See which lessons rely on which, so you know what to review first.</div></a>';
+    if (C.bigpicture) h += '<a class="card tech-card map-card" href="#/bigpicture"><b>🧭 ' + esc(C.bigpicture.title) + '</b><div class="muted small">' + esc(C.bigpicture.summary || '') + '</div></a>';
     if (C.technique) h +='<a class="card tech-card" href="#/technique"><b>✍️ ' + esc(C.technique.title) + '</b><div class="muted small">' + esc(C.technique.summary || '') + '</div></a>';
     Object.keys(chapters).sort().forEach((ch) => {
       h += '<h2>Chapter ' + ch + ' · ' + CH_TITLES[ch] + '</h2><div class="topic-grid">';
@@ -236,6 +237,7 @@ window.App = (function () {
   function flaggedBoxes() {
     const s = Store.me(); const out = [];
     const scan = (src, blocks) => boxKeys(src, blocks).forEach((k, i) => { if (k && s.flags[k]) out.push({ src, key: k, b: blocks[i] }); });
+    if (C.bigpicture) scan('bigpicture', C.bigpicture.blocks);
     if (C.technique) scan('technique', C.technique.blocks);
     C.topicOrder.forEach((id) => scan(id, C.topics[id].blocks));
     return out;
@@ -254,9 +256,9 @@ window.App = (function () {
     list.forEach((x) => {
       if (x.src !== cur) {
         cur = x.src;
-        h += '<h2>' + (x.src === 'technique' ? '<a href="#/technique">' + esc(C.technique.title) + '</a>' : '<a href="#/learn/' + x.src + '">' + esc(topicTitle(x.src)) + '</a>') + '</h2>';
+        h += '<h2>' + (DOC_PAGES[x.src] ? '<a href="#/' + x.src + '">' + esc(C[x.src].title) + '</a>' : '<a href="#/learn/' + x.src + '">' + esc(topicTitle(x.src)) + '</a>') + '</h2>';
       }
-      const href = (x.src === 'technique' ? '#/technique' : '#/learn/' + x.src) + '?b=' + encodeURIComponent(x.key);
+      const href = (DOC_PAGES[x.src] ? '#/' + x.src : '#/learn/' + x.src) + '?b=' + encodeURIComponent(x.key);
       h += boxHtml(x.b, x.key, '<a class="box-ctx" href="' + href + '" title="Show it on its page">in context ↗</a>');
     });
     return h + '</div>';
@@ -280,9 +282,11 @@ window.App = (function () {
       (next ? '<a href="#/learn/' + next + '">' + esc(topicTitle(next)) + ' →</a>' : '<span></span>') + '</div></div>';
   }
 
-  function pageTechnique() {
-    const t = C.technique; if (!t) return notFound();
-    return '<div class="page"><div class="crumbs"><a href="#/learn">Learn</a></div><h1>' + esc(t.title) + '</h1>' + renderBlocks(t.blocks, { n: 0 }, 'technique') + '</div>';
+  // Stand-alone prose pages (not topics); the key is both the route and the flag source.
+  const DOC_PAGES = { technique: 1, bigpicture: 1 };
+  function pageDoc(src) {
+    const t = C[src]; if (!t) return notFound();
+    return '<div class="page"><div class="crumbs"><a href="#/learn">Learn</a></div><h1>' + esc(t.title) + '</h1>' + renderBlocks(t.blocks, { n: 0 }, src) + '</div>';
   }
 
   function pageDrills(q) {
@@ -683,7 +687,8 @@ window.App = (function () {
     if (!a) html = pageHome();
     else if (a === 'learn' && !b) html = pageLearn();
     else if (a === 'learn') html = pageTopic(b);
-    else if (a === 'technique') { html = pageTechnique(); nav = 'learn'; }
+    else if (a === 'technique') { html = pageDoc('technique'); nav = 'learn'; }
+    else if (a === 'bigpicture') html = pageDoc('bigpicture');
     else if (a === 'map') { html = pageMap(); nav = 'learn'; }
     else if (a === 'flagged') html = pageFlagged(q);
     else if (a === 'drills' && !b) html = pageDrills(q);

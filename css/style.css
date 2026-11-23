@@ -382,3 +382,15 @@ input:focus { outline: 2px solid var(--accent-soft); border-color: var(--accent)
 .map.hovering .map-edge { opacity: .08; }
 .map.hovering .map-edge.up { opacity: 1; stroke: var(--accent); stroke-width: 2; }
 .map.hovering .map-edge.down { opacity: 1; stroke: var(--warn); stroke-width: 2; stroke-dasharray: 5 3; }
+
+/* ----- big picture page ----- */
+.bp-question { margin: 12px 0; padding: 12px 16px; border-left: 4px solid var(--accent); background: var(--accent-soft); border-radius: 8px; }
+.bp-map { display: flex; flex-direction: column; align-items: stretch; gap: 6px; margin: 14px 0 8px; font-family: var(--sans); }
+.bp-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.bp-node { display: flex; flex-direction: column; gap: 4px; padding: 10px 14px; border: 2px solid var(--c); background: var(--c-soft); border-radius: 10px; color: var(--text); text-decoration: none; font-size: .95rem; line-height: 1.4; }
+.bp-node:hover { text-decoration: none; filter: brightness(0.97); }
+.bp-tag { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--c); }
+.bp-sub { font-size: .86rem; color: var(--muted); }
+.bp-arrow { text-align: center; font-size: .8rem; color: var(--muted); }
+.bp-scroll { overflow-x: auto; }
+@media (max-width: 640px) { .bp-row { grid-template-columns: 1fr; } }

@@ -12,6 +12,7 @@ window.CONTENT = {
   exams: [],         // exams
   probs: {},         // problem id -> problem
   technique: null,
+  bigpicture: null,
   cheatsheet: null,
   plan: null,
 };
@@ -137,6 +138,7 @@ window.CONTENT = {
   };
 
   window.TECHNIQUE = (o) => { o.blocks = o.blocks.map((b) => (typeof b === 'string' ? { type: 'html', html: b } : b)); C.technique = o; };
+  window.BIGPICTURE = (o) => { o.blocks = o.blocks.map((b) => (typeof b === 'string' ? { type: 'html', html: b } : b)); C.bigpicture = o; };
   window.CHEATSHEET = (o) => { C.cheatsheet = o; };
   window.STUDYPLAN = (o) => { C.plan = o; };
 })();

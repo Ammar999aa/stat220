@@ -71,6 +71,7 @@ for (const [id, p] of Object.entries(C.probs)) {
 }
 for (const t of Object.values(C.topics)) t.blocks.forEach((b, i) => { if (b.html) checkTex('topic ' + t.id + ' block ' + i, b.html); if (b.title) checkTex('topic ' + t.id + ' title', b.title); });
 if (C.technique) C.technique.blocks.forEach((b, i) => { if (typeof b === 'string') checkTex('technique ' + i, b); else if (b.html) checkTex('technique ' + i, b.html); });
+if (C.bigpicture) C.bigpicture.blocks.forEach((b, i) => { if (b.html) checkTex('bigpicture ' + i, b.html); if (b.title) checkTex('bigpicture title ' + i, b.title); });
 if (C.cheatsheet) C.cheatsheet.pages.forEach((pg, i) => checkTex('cheatsheet p' + (i + 1), pg));
 for (const ex of C.exams) ex.questions.forEach((q) => checkTex(ex.id + ' intro ' + q.k, q.intro));
 for (const hw of C.hw) checkTex(hw.id + ' intro', hw.intro);
