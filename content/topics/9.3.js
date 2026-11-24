@@ -1,7 +1,7 @@
 TOPIC({ id: '9.3', ch: 9, title: 'Properties of the MLE: Fisher information', summary: 'Iₙ(θ) = −E[ℓₙ″(θ)] = n·I₁(θ). Under regularity the MLE is consistent, asymptotically N(θ, 1/Iₙ(θ)), equivariant (g(θ̂) is the MLE of g(θ)) and efficient. Delta method for g(θ̂). Uniform-type models break the rules: the max has an Exp(1) limit, not a normal one.' }, [
 R`You can now *find* an MLE. This page answers the exam's next question: **how good is it, and what is its (asymptotic) distribution?** The answer is one number, the **Fisher information**.
 
-(Source: Chapter 9 lecture notes, pp. 9–19.)`,
+(Source: Chapter 9 lecture notes, pp. 9–19.) Confused about which variance goes where, or when to use the delta method? See <a href="#/learn/9.4">9.4 Asymptotic variance: one recipe</a>.`,
 DEF('Fisher information', R`For one observation,
 $$I_1(\theta) = -\E_\theta\left[\frac{\mathrm d^2}{\mathrm d\theta^2}\log f(X_1;\theta)\right],$$
 and for the whole sample
