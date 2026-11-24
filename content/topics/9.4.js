@@ -14,6 +14,12 @@ DEF('The four variances, and which one is the "asymptotic variance"', R`<table>
 $$\sqrt n(\hat\theta_n - \theta)\xrightarrow{D}N(0,\ \tau^2)\qquad\Longleftrightarrow\qquad\hat\theta_n\ \overset{\text{approx}}{\sim}\ N\left(\theta,\ \frac{\tau^2}{n}\right).$$
 Some texts call $\tau^2/n$ "the asymptotic variance of $\hat\theta_n$". Writing both forms keeps you right whichever convention the grader uses.`),
 
+NOTE(R`Where $S_n^2$ and se fit`, R`<ul>
+<li>**$S_n^2 = \frac1{n-1}\sum(X_i - \bar X_n)^2$ estimates $\var(X)$**, the spread of **one** observation. It does **not** estimate $\var(\bar X_n)$: it does not shrink with $n$, because $S_n^2\to\sigma^2$.</li>
+<li>**$\operatorname{se}(\hat\theta_n) = \sqrt{\var(\hat\theta_n)}\approx\sqrt{\tau^2/n}$.** For $\hat\theta = \bar X_n$ this is $\sigma/\sqrt n$, i.e. $\sqrt{\var(\bar X_n)}$.</li>
+<li>**$\widehat{\operatorname{se}}$ plugs estimates into that formula:** for the mean, $\widehat{\operatorname{se}} = S_n/\sqrt n$. In general, $\widehat{\operatorname{se}} = \sqrt{\hat\tau^2/n}$ with $\hat\tau^2 = \tau^2$ evaluated at $\hat\theta$, e.g. $\sqrt{\hat p(1-\hat p)/n}$ or $\sqrt{1/I_n(\hat\theta)}$.</li>
+</ul>
+Chain for the mean: $S_n^2\approx\var(X) = \tau^2$, then $\div n$ gives $\var(\bar X_n)$, then $\sqrt{\ }$ gives $\operatorname{se}$. The CI is $\bar X_n\pm1.96\,S_n/\sqrt n$.`),
 DEF('What is the mean?', R`<ul>
 <li>The limit of $\sqrt n(\hat\theta_n - \theta)$ always has **mean $0$**.</li>
 <li>The approximate distribution of $\hat\theta_n$ is **centred at what $\hat\theta_n$ converges to**: the true $\theta$ for a consistent estimator.</li>
